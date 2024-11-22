@@ -226,14 +226,25 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             {
                 clientSecret: paymentIntentSecret
             } : undefined;
-        const onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void =
-            async ({ paymentMethod, elements, saveForFuture }) => {
+        const onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean, selectedInitiative?: string }) => void =
+            async ({ paymentMethod, elements, saveForFuture, selectedInitiative }) => {
                 const paymentOption = paymentMethod.paymentOption;
                 let stripePaymentMethod = paymentMethod.data?.stripePaymentMethod;
+                const method = paymentOption.method;
+                let paymentOptionUrl = paymentOption.url;
+                if (method === NetworkUtil.MethodType.GET && selectedInitiative) {
+                    const paymentOptionUrlObj = new URL(paymentOption.url);
+                    paymentOptionUrlObj.searchParams.set("initiativeID", selectedInitiative);
+                    paymentOptionUrl = paymentOptionUrlObj.toString();
+                }
+                paymentOption.url
+                    + (method === NetworkUtil.MethodType.GET && selectedInitiative) ? `?initiativeID=${selectedInitiative}` : "";
+                const body: any = method === NetworkUtil.MethodType.POST && selectedInitiative ?
+                    { initiativeID: selectedInitiative } : undefined;
                 if (paymentOption.paymentMode === "WALLET") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method), onSubmit, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INVOICE") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value }), onSubmit, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body: { ...body, organizationID: paymentMethod.data!.selectedSubOption!.value } }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;
                     if (!stripe || !stripePaymentMethod && !elements) {
@@ -273,7 +284,13 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         setWaiting?.(false);
                         UIUtil.errorMsg(new TKError("The payment was not successful. Please try again.", undefined, true));
                     } else {
-                        handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onSubmit, setWaiting);
+                        let paidUrlWithInitiative = paidUrl!;
+                        if (method === NetworkUtil.MethodType.GET && selectedInitiative) {
+                            const paidUrlObj = new URL(paidUrlWithInitiative);
+                            paidUrlObj.searchParams.set("initiativeID", selectedInitiative);
+                            paidUrlWithInitiative = paidUrlObj.toString();
+                        }
+                        handlePayResponse(TripGoApi.fetchAPI(paidUrlWithInitiative, { method, body }), onSubmit, setWaiting);
                     }
                 } else {    // paymentOption.paymentMode === "EXTERNAL"
                     const stripe = await stripePromise;
@@ -306,7 +323,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 .then(NetworkUtil.jsonCallback);
                         }
                     }
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id }), onSubmit, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl!, { method, body: { ...body, paymentMethod: stripePaymentMethod.id } }), onSubmit, setWaiting);
                 }
             }
         return (
@@ -328,7 +345,7 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
     paymentOptions: PaymentOption[];
     initiativeField?: BookingField;
-    onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
+    onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean, selectedInitiative?: string }) => void;
     setWaiting?: (waiting: boolean) => void;
     onClose?: () => void;
     organizationOptions?: SelectOption[];
@@ -447,9 +464,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 setErrorMsg(undefined);
             }
             if (newPaymentMethodAndPay) {
-                onConfirmPayment({ paymentMethod: { paymentOption: cardPaymentOption! }, elements: elements ?? undefined, saveForFuture });
+                onConfirmPayment({ paymentMethod: { paymentOption: cardPaymentOption! }, elements: elements ?? undefined, saveForFuture, selectedInitiative });
             } else {
-                onConfirmPayment({ paymentMethod: selectedMethod! });
+                onConfirmPayment({ paymentMethod: selectedMethod!, selectedInitiative });
             }
         };
 
