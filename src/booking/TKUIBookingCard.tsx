@@ -12,8 +12,6 @@ import TKUIBookingForm from './TKUIBookingForm';
 import BookingReview from '../model/trip/BookingReview';
 import TKLoading from '../card/TKLoading';
 import TKUIBookingReview from '../stripekit/TKUIBookingReview';
-import PaymentOption from '../model/trip/PaymentOption';
-import EphemeralResult from '../model/payment/EphemeralResult';
 import { useResponsiveUtil } from '../util/TKUIResponsiveUtil';
 import Features from '../env/Features';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
@@ -21,6 +19,7 @@ import TKUIBookingDetails from './TKUIBookingDetails';
 import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
+import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -108,12 +107,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const [bookingForm, setBookingForm] = useState<BookingInfo | undefined>(undefined);
 
     // REVIEW and PAYMENT screens data
-    const [bookingResult, setBookingResult] = useState<{
-        paymentOptions?: PaymentOption[],
-        reviews?: BookingReview[],
-        publishableApiKey: string,
-        ephemeralKey: EphemeralResult
-    } | undefined>(undefined);
+    const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
 
     useEffect(() => {
         if (booking.confirmation) {
@@ -259,10 +253,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     />}
                 {topScreen() === "PAYMENT" &&
                     config.payment?.renderPaymentCard({
-                        publicKey: bookingResult!.publishableApiKey ?? config.payment.stripePublicKey,
-                        paymentOptions: bookingResult!.paymentOptions!,
+                        bookingPaymentForm: bookingResult!,
                         setWaiting,
-                        ephemeralKeyObj: bookingResult!.ephemeralKey,
                         // Rename to onPaymentDone?
                         onSubmit: async ({ }) => {
                             setWaiting?.(true);

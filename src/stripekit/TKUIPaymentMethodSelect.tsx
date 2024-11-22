@@ -80,7 +80,7 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 
-export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], selectedSubOption?: SelectOption } };
+export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], subOptionsPlaceholder?: string, selectedSubOption?: SelectOption } };
 // selectedSubOption will be changed by mutating the object, so the clients of this component won't be aware of an update on this. That shouldn't be a problem since just need
 // to check the value on "Purchase" click (and, e.g. show a "required" error if no option was selected).
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
@@ -189,6 +189,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                                         setSelectedSubOptionMap(update);
                                         onChange(paymentMethod);
                                     }}
+                                    placeholder={paymentMethod.data!.subOptionsPlaceholder}
                                     isDisabled={paymentMethod !== value}
                                 // styles={{
                                 //     main: overrideClass(this.props.injectedStyles.walkSpeedSelect),

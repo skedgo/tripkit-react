@@ -5,11 +5,10 @@ import Trip from "../model/trip/Trip";
 import StopLocation from "../model/StopLocation";
 import { Env } from "../env/Environment";
 import Util from "../util/Util";
-import BookingInfo from "../model/trip/BookingInfo";
-import PaymentOption from "../model/trip/PaymentOption";
+import BookingInfo, { BookingField } from "../model/trip/BookingInfo";
 import BookingReview from "../model/trip/BookingReview";
-import EphemeralResult from "../model/payment/EphemeralResult";
 import { i18n } from "../i18n/TKI18nConstants";
+import { BookingPaymentForm } from "../model/payment/BookingPaymentForm";
 
 type TripGoApiHeader = "x-tripgo-version" | "x-tripgo-key" | "x-tripgo-client-id" | "x-tsp-client-userid" | "x-tsp-client-tenantid" | "x-account-access-token" | "userid" | "usertoken";
 export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
@@ -181,13 +180,7 @@ class TripGoApi {
             })
     }
 
-    public static submitBookingOption(bookingForm: BookingInfo): Promise<{
-        paymentOptions?: PaymentOption[],
-        reviews?: BookingReview[],
-        publishableApiKey: string,
-        ephemeralKey: EphemeralResult,
-        refreshURLForSourceObject: string
-    }> {
+    public static submitBookingOption(bookingForm: BookingInfo): Promise<BookingPaymentForm> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm))
             // For testing without performing booking.
             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
@@ -202,16 +195,11 @@ class TripGoApi {
         return Util.deserialize(bookingInfoJson, BookingInfo);
     }
 
-    public static deserializeBookingResult(bookingResultJson): {
-        paymentOptions?: PaymentOption[],
-        reviews?: BookingReview[],
-        publishableApiKey: string,
-        ephemeralKey: EphemeralResult,
-        refreshURLForSourceObject: string
-    } {
+    public static deserializeBookingResult(bookingResultJson): BookingPaymentForm {
         return ({
             ...bookingResultJson,
             reviews: bookingResultJson.review && Util.jsonConvert().deserializeArray(bookingResultJson.review, BookingReview),
+            initiative: bookingResultJson.initiative && Util.jsonConvert().deserialize(bookingResultJson.initiative, BookingField)
         });
     }
 

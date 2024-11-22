@@ -1,5 +1,4 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
-import { deprecate } from "util";
 import Color from "./Color";
 import TicketOption from "./TicketOption";
 

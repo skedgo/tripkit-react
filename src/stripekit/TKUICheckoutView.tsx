@@ -20,11 +20,13 @@ import { StripeElements } from '@stripe/stripe-js/types/stripe-js/elements-group
 import TKUISettingSection from '../options/TKUISettingSection';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
-import { SelectOption } from '../buttons/TKUISelect';
+import TKUISelect, { SelectOption } from '../buttons/TKUISelect';
 import { i18n } from '../i18n/TKI18nConstants';
 import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
 import { connect, mapperFromFunction } from '../config/TKConfigHelper';
 import { TKUIConfig } from '../config/TKUIConfig';
+import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
+import { BookingField } from '../model/trip/BookingInfo';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -145,9 +147,7 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
 });
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    publicKey: string;
-    paymentOptions: PaymentOption[];
-    ephemeralKeyObj: EphemeralResult;
+    bookingPaymentForm: BookingPaymentForm;
     onSubmit: (data: { updateURL?: string }) => void;
     onClose?: () => void;
     setWaiting?: (waiting: boolean) => void;
@@ -194,13 +194,14 @@ function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?:
 }
 
 const TKUICheckoutView: React.FunctionComponent<IProps> =
-    ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onSubmit, onClose, ...remainingProps }) => {
+    ({ bookingPaymentForm, setWaiting, onSubmit, onClose, ...remainingProps }) => {
+        const { publishableApiKey: publicKey, paymentOptions, ephemeralKey: ephemeralKeyObj } = bookingPaymentForm
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
         const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
 
         // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
-        const internalPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
+        const internalPaymentOption = paymentOptions!.find(option => option.paymentMode === "INTERNAL");
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
             if (internalPaymentOption) {
@@ -312,7 +313,8 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             <Elements stripe={stripePromise} options={options}>
                 <TKUICheckoutForm
                     ephemeralKeyObj={ephemeralKeyObj}
-                    paymentOptions={paymentOptions}
+                    paymentOptions={paymentOptions!}
+                    initiativeField={bookingPaymentForm.initiative}
                     onConfirmPayment={onConfirmPayment}
                     onClose={onClose}
                     setWaiting={setWaiting}
@@ -325,6 +327,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
 interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
     paymentOptions: PaymentOption[];
+    initiativeField?: BookingField;
     onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
     setWaiting?: (waiting: boolean) => void;
     onClose?: () => void;
@@ -334,7 +337,7 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
-    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, defaultPaymentMethodFc, t, classes, theme, injectedStyles }) => {
+    ({ ephemeralKeyObj, paymentOptions, initiativeField, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, defaultPaymentMethodFc, t, classes, theme, injectedStyles }) => {
         const ephemeralKey = ephemeralKeyObj.secret;
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
@@ -354,14 +357,29 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 } else {
                     const paymentMethod: SGPaymentMethod = { paymentOption: option };
                     if (option.paymentMode === "INVOICE") {
-                        paymentMethod.data = { subOptions: organizationOptions, selectedSubOption: defaultOrganizationOption };
+                        paymentMethod.data = { subOptions: organizationOptions, subOptionsPlaceholder: "Select department", selectedSubOption: defaultOrganizationOption };
                     }
                     pms.push(paymentMethod);
                 }
                 return pms;
             }, [] as SGPaymentMethod[]),
             [stripePaymentMethods]);
-        const [selectedMethod, setSelectedMethod] = useState<SGPaymentMethod | undefined>(undefined);
+        const [selectedMethod, _setSelectedMethod] = useState<SGPaymentMethod | undefined>(undefined);
+        const setSelectedMethod = (value: SGPaymentMethod | undefined) => {
+            if (selectedMethod?.paymentOption.paymentMode !== value?.paymentOption.paymentMode) {
+                setSelectedInitiative(value?.paymentOption.preFilledInitiative);
+            }
+            if (value?.paymentOption.paymentMode === "INVOICE") {
+                if ((value.data?.selectedSubOption as any)?.organization?.initiatives.length === 1) {
+                    setSelectedInitiative((value.data?.selectedSubOption as any)?.organization?.initiatives[0].id);
+                } else {    // To contemplate the case where the organization changed, so need to reset the value.
+                    setSelectedInitiative(undefined);
+                }
+            }
+            _setSelectedMethod(value);
+        };
+        const [dummyState, setDummyState] = useState<number>(0);
+        const forceRerender = () => { setDummyState(prev => prev + 1) };
         const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
 
         useEffect(() => {
@@ -532,6 +550,28 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 </div>
         }
 
+        const initiativeOptions = useMemo(() => {
+            if (selectedMethod && initiativeField) {
+                if (selectedMethod.paymentOption.paymentMode === "INVOICE" && (selectedMethod.data?.selectedSubOption as any)?.organization) {
+                    const result = [
+                        { label: "None", value: "none" },
+                        ...(selectedMethod.data?.selectedSubOption as any)?.organization
+                            .initiatives.map((initiative) => ({ label: initiative.title, value: initiative.id }))
+                    ];
+                    [...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))]; // TODO: remove repeated.
+                    return [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id })).filter(option => !result.find(r => r.value === option.value))];
+                }
+                if (selectedMethod.paymentOption.paymentMode === "WALLET") {
+                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))];
+                }
+                if (selectedMethod.paymentOption.paymentMode === "INTERNAL") {
+                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))];
+                }
+            }
+            return undefined;
+        }, [selectedMethod, dummyState]);
+        const [selectedInitiative, setSelectedInitiative] = useState<string | undefined>(undefined);
+
         return (
             <Fragment>
                 <div className={classes.main}>
@@ -578,7 +618,10 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                             <TKUIPaymentMethodSelect
                                                 value={selectedMethod}
                                                 options={paymentMethods}
-                                                onChange={setSelectedMethod}
+                                                onChange={(value) => {
+                                                    setSelectedMethod(value);
+                                                    forceRerender();
+                                                }}
                                                 onRemove={onRemovePM}
                                             />}
                                     </div>}
@@ -586,6 +629,22 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                     <div className={classes.error}>{errorMsg}</div>}
                             </div>
                         </TKUISettingSection>
+                        {initiativeOptions &&
+                            <TKUISettingSection styles={sectionStyles} title={"Select initiative"}>
+                                <div className={classes.group}>
+                                    <div className={classes.label}>Initiative</div>
+                                    <div className={classNames(classes.value, classes.priceValue)}>
+                                        <TKUISelect
+                                            options={initiativeOptions}
+                                            value={initiativeOptions.find(option => option.value === (selectedInitiative ?? "none"))}
+                                            onChange={(option) => {
+                                                setSelectedInitiative(option?.value === "none" ? undefined : option?.value);
+                                            }}
+                                            placeholder="Select initiative"
+                                        />
+                                    </div>
+                                </div>
+                            </TKUISettingSection>}
                         {review}
                     </div>
                     <div className={classes.buttonsPanel}>

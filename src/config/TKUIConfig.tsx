@@ -71,7 +71,6 @@ import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
 import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 import Trip from "../model/trip/Trip";
@@ -314,7 +313,6 @@ export interface ITKUIConfigOptional {
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
     TKUISubscription: TKComponentConfig<TKUISubscriptionProps, TKUISubscriptionStyle>;
     TKUISubscriptionView: TKComponentConfig<TKUISubscriptionViewProps, TKUISubscriptionViewStyle>;
-    TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
     TKUIBookingActions: TKComponentConfig<TKUIBookingActionsProps, TKUIBookingActionsStyle>;
     TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;

@@ -11,6 +11,7 @@ interface PaymentOption {
     sponsorImageURL?: string;
     sponsorTitle?: string;
     sponsorDescription?: string;
+    preFilledInitiative?: string;
 }
 
 export default PaymentOption;
