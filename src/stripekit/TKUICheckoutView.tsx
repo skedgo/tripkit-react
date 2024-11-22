@@ -1,7 +1,7 @@
 import React, { Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
-import { TKUIWithClasses, TKUIWithStyle, overrideClass } from '../jss/StyleHelper';
+import { TKUIWithClasses, TKUIWithStyle, overrideClass, withStyles } from '../jss/StyleHelper';
 import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
@@ -27,6 +27,7 @@ import { connect, mapperFromFunction } from '../config/TKConfigHelper';
 import { TKUIConfig } from '../config/TKUIConfig';
 import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import { BookingField } from '../model/trip/BookingInfo';
+import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -111,6 +112,14 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         ...genStyles.alignEnd
+    },
+    initiativeValue: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        ...genStyles.alignEnd,
+        '& > *': {
+            width: '300px'
+        }
     },
     section: {
         border: '1px solid ' + black(4, theme.isDark),
@@ -340,6 +349,39 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             </Elements>
         );
     }
+
+const selectOptionJss = (theme: TKUITheme) => ({
+    option: (props) => ({
+        ...genStyles.flex,
+        padding: '8px',
+        ...genStyles.borderRadius(6),
+        '&$selected': {
+            backgroundColor: '#ebebeb'
+        },
+        '&$focused': {
+            backgroundColor: black(4)
+        },
+        '& path, polygon': {
+            fill: 'gray'
+        }
+    }),
+    selected: {},
+    focused: {}
+});
+
+export const InitiativeSelectOption = withStyles(props => {
+    const { isFocused, isSelected, classes, data, innerProps } = props as any;
+    console.log(data);
+    return (
+        <div className={classNames(classes.option,
+            isSelected && classes.selected, !isSelected && isFocused && classes.focused)} {...innerProps}>
+            <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1, justifyContent: 'space-between' }}>
+                {data.label}
+                {(data.option?.lastUsed || data.option?.atUserProfile) && <IconRecent style={{ marginLeft: '10px' }} />}
+            </div>
+        </div>
+    );
+}, selectOptionJss);
 
 interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
@@ -575,14 +617,13 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                         ...(selectedMethod.data?.selectedSubOption as any)?.organization
                             .initiatives.map((initiative) => ({ label: initiative.title, value: initiative.id }))
                     ];
-                    [...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))]; // TODO: remove repeated.
-                    return [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id })).filter(option => !result.find(r => r.value === option.value))];
+                    return [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option })).filter(option => !result.find(r => r.value === option.value))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "WALLET") {
-                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))];
+                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "INTERNAL") {
-                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id }))];
+                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
                 }
             }
             return undefined;
@@ -650,7 +691,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             <TKUISettingSection styles={sectionStyles} title={"Select initiative"}>
                                 <div className={classes.group} style={{ ...genStyles.justifyStart }}>
                                     <div className={classes.label}>Initiative</div>
-                                    <div className={classNames(classes.value, classes.priceValue)} style={{ marginLeft: '30px' }}>
+                                    <div className={classNames(classes.value, classes.initiativeValue)} style={{ marginLeft: '30px' }}>
                                         <TKUISelect
                                             options={initiativeOptions}
                                             value={initiativeOptions.find(option => option.value === (selectedInitiative ?? "none"))}
@@ -658,6 +699,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                                 setSelectedInitiative(option?.value === "none" ? undefined : option?.value);
                                             }}
                                             placeholder="Select initiative"
+                                            components={{
+                                                Option: InitiativeSelectOption
+                                            }}
                                         />
                                     </div>
                                 </div>

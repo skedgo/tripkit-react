@@ -8,6 +8,10 @@ class BookingFieldOption {
     public id: string = "";
     @JsonProperty("title", String, true)
     public title: string = "";
+    @JsonProperty("lastUsed", String, true)
+    public lastUsed: string = "";
+    @JsonProperty("atUserProfile", Boolean, true)
+    public atUserProfile: boolean = false;
 }
 
 @JsonObject
