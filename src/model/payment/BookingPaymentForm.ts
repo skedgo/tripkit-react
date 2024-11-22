@@ -8,5 +8,5 @@ export interface BookingPaymentForm {
     reviews?: BookingReview[],
     publishableApiKey: string,
     ephemeralKey: EphemeralResult,
-    initiative: BookingField
+    initiative?: BookingField
 }

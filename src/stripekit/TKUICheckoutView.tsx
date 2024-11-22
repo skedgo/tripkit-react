@@ -648,9 +648,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                         </TKUISettingSection>
                         {initiativeOptions &&
                             <TKUISettingSection styles={sectionStyles} title={"Select initiative"}>
-                                <div className={classes.group}>
+                                <div className={classes.group} style={{ ...genStyles.justifyStart }}>
                                     <div className={classes.label}>Initiative</div>
-                                    <div className={classNames(classes.value, classes.priceValue)}>
+                                    <div className={classNames(classes.value, classes.priceValue)} style={{ marginLeft: '30px' }}>
                                         <TKUISelect
                                             options={initiativeOptions}
                                             value={initiativeOptions.find(option => option.value === (selectedInitiative ?? "none"))}

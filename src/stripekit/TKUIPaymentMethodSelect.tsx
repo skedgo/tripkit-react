@@ -178,7 +178,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                                 <IconBalance />
                             </div>
                             <div>{paymentMethod.paymentOption.description} to</div>
-                            <div style={{ marginLeft: '6px', color: black(1) }}>
+                            <div style={{ marginLeft: '30px', color: black(1) }}>
                                 <TKUISelect
                                     options={selectOptions}
                                     value={selectedSubOptionMap.get(paymentMethod)}
