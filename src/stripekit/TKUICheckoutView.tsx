@@ -28,6 +28,7 @@ import { TKUIConfig } from '../config/TKUIConfig';
 import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import { BookingField } from '../model/trip/BookingInfo';
 import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
+import DateTimeUtil from '../util/DateTimeUtil';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -365,19 +366,43 @@ const selectOptionJss = (theme: TKUITheme) => ({
             fill: 'gray'
         }
     }),
+    optionLeft: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    subtitle: {
+        ...theme.textSizeCaption,
+        ...theme.textColorGray
+    },
     selected: {},
     focused: {}
 });
 
 export const InitiativeSelectOption = withStyles(props => {
     const { isFocused, isSelected, classes, data, innerProps } = props as any;
-    console.log(data);
+    const subtitleParts: string[] = [];
+    if (data.option?.lastUsed) {
+        subtitleParts.push("Last used " + DateTimeUtil.momentFromStringTZ(data.option.lastUsed, DateTimeUtil.defaultTZ).format(DateTimeUtil.dateFormat()));
+    }
+    if (data.organization) {
+        subtitleParts.push("From " + data.organization.name);
+    }
+    if (data.option?.atUserProfile) {
+        subtitleParts.push("At user profile");
+    }
     return (
         <div className={classNames(classes.option,
             isSelected && classes.selected, !isSelected && isFocused && classes.focused)} {...innerProps}>
             <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1, justifyContent: 'space-between' }}>
-                {data.label}
-                {(data.option?.lastUsed || data.option?.atUserProfile) && <IconRecent style={{ marginLeft: '10px' }} />}
+                <div className={classes.optionLeft}>
+                    <div>
+                        {data.label}
+                    </div>
+                    <div className={classes.subtitle}>
+                        {subtitleParts.join(" ⋅ ")}
+                    </div>
+                </div>
+                {data.option?.lastUsed && <IconRecent style={{ marginLeft: '10px' }} />}
             </div>
         </div>
     );
@@ -611,20 +636,54 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
 
         const initiativeOptions = useMemo(() => {
             if (selectedMethod && initiativeField) {
+                let result: any[] = [];
                 if (selectedMethod.paymentOption.paymentMode === "INVOICE" && (selectedMethod.data?.selectedSubOption as any)?.organization) {
-                    const result = [
+                    result = [
                         { label: "None", value: "none" },
                         ...(selectedMethod.data?.selectedSubOption as any)?.organization
-                            .initiatives.map((initiative) => ({ label: initiative.title, value: initiative.id }))
+                            .initiatives.map((initiative) => ({ label: initiative.title, value: initiative.id, organization: (selectedMethod.data?.selectedSubOption as any)?.organization }))
                     ];
-                    return [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option })).filter(option => !result.find(r => r.value === option.value))];
+                    result = [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option })).filter(option => !result.find(r => r.value === option.value))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "WALLET") {
-                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
+                    result = [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "INTERNAL") {
-                    return [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
+                    result = [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
                 }
+                result.sort((a, b) => {
+                    if (a.value === "none") {
+                        return -1;
+                    }
+                    if (b.value === "none") {
+                        return 1;
+                    }
+                    if (a.organization && b.organization) {
+                        return a.organization.name.localeCompare(b.organization.name);
+                    }
+                    if (a.organization) {
+                        return -1;
+                    }
+                    if (b.organization) {
+                        return 1;
+                    }
+                    if (a.option.lastUsed && b.option.lastUsed) {
+                        return b.option.lastUsed.localeCompare(a.option.lastUsed);
+                    }
+                    if (a.option.lastUsed) {
+                        return -1;
+                    }
+                    if (b.option.lastUsed) {
+                        return 1;
+                    }
+                    if (a.option.atUserProfile) {
+                        return -1;
+                    }
+                    if (b.option.atUserProfile) {
+                        return 1;
+                    }
+                });
+                return result;
             }
             return undefined;
         }, [selectedMethod, dummyState]);
