@@ -8,6 +8,7 @@ interface PaymentOption {
     description: string;
     currentBalance?: number;
     newBalance?: number;
+    walletName?: string;
     sponsorImageURL?: string;
     sponsorTitle?: string;
     sponsorDescription?: string;

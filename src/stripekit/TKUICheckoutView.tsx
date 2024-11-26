@@ -384,6 +384,9 @@ export const InitiativeSelectOption = withStyles(props => {
     if (data.option?.lastUsed) {
         subtitleParts.push("Last used " + DateTimeUtil.momentFromStringTZ(data.option.lastUsed, DateTimeUtil.defaultTZ).format(DateTimeUtil.dateFormat()));
     }
+    if (data.walletName) {
+        subtitleParts.push("From " + data.walletName + " wallet");
+    }
     if (data.organization) {
         subtitleParts.push("From " + data.organization.name);
     }
@@ -646,7 +649,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                     result = [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option })).filter(option => !result.find(r => r.value === option.value))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "WALLET") {
-                    result = [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
+                    // Add walletName for that initiative option that corresponds to the prefilled initiative, and so, we know it's the wallet initiative.
+                    result = [{ label: "None", value: "none" },
+                    ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option, walletName: selectedMethod.paymentOption.preFilledInitiative === option.id ? selectedMethod.paymentOption.walletName : undefined }))];
                 }
                 if (selectedMethod.paymentOption.paymentMode === "INTERNAL") {
                     result = [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
@@ -656,6 +661,12 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                         return -1;
                     }
                     if (b.value === "none") {
+                        return 1;
+                    }
+                    if (a.walletName) {
+                        return -1;
+                    }
+                    if (b.walletName) {
                         return 1;
                     }
                     if (a.organization && b.organization) {
