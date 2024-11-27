@@ -451,20 +451,19 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 return pms;
             }, [] as SGPaymentMethod[]),
             [stripePaymentMethods]);
-        const [selectedMethod, _setSelectedMethod] = useState<SGPaymentMethod | undefined>(undefined);
-        const setSelectedMethod = (value: SGPaymentMethod | undefined) => {
-            if (selectedMethod?.paymentOption.paymentMode !== value?.paymentOption.paymentMode) {
-                setSelectedInitiative(value?.paymentOption.preFilledInitiative);
-            }
-            if (value?.paymentOption.paymentMode === "INVOICE") {
-                if ((value.data?.selectedSubOption as any)?.organization?.initiatives.length === 1) {
-                    setSelectedInitiative((value.data?.selectedSubOption as any)?.organization?.initiatives[0].id);
+        const [selectedMethod, setSelectedMethod] = useState<SGPaymentMethod | undefined>(undefined);
+        const paymentMode = newPaymentMethodAndPay ? "INTERNAL" : selectedMethod?.paymentOption.paymentMode;
+        useEffect(() => {
+            if (paymentMode === "INVOICE") {
+                if ((selectedMethod?.data?.selectedSubOption as any)?.organization?.initiatives.length === 1) {
+                    setSelectedInitiative((selectedMethod?.data?.selectedSubOption as any)?.organization?.initiatives?.[0].id);
                 } else {    // To contemplate the case where the organization changed, so need to reset the value.
                     setSelectedInitiative(undefined);
                 }
+            } else {
+                setSelectedInitiative(newPaymentMethodAndPay ? cardPaymentOption?.preFilledInitiative : selectedMethod?.paymentOption.preFilledInitiative);
             }
-            _setSelectedMethod(value);
-        };
+        }, [paymentMode, selectedMethod?.data?.selectedSubOption]); // The default initiative selection should be updated on any update of these data.        
         const [dummyState, setDummyState] = useState<number>(0);
         const forceRerender = () => { setDummyState(prev => prev + 1) };
         const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
@@ -473,7 +472,6 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             if (newPaymentMethodAndPay || (selectedMethod && selectedMethod.paymentOption.paymentMode !== "INVOICE")) {
                 setErrorMsg(undefined);
             }
-
         }, [selectedMethod, newPaymentMethodAndPay])
 
         useEffect(() => {
