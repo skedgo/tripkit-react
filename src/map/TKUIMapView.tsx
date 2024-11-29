@@ -681,7 +681,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         />
                     }
                     {this.state.modeLocations?.map((location, i) =>
-                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={i} />)}
+                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={location.getKey() ?? i} />)}
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => (
                         <MapTripSegment
                             segment={segment}
