@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import BBox from "../model/BBox";
 import LocationsData from "../data/LocationsData";
 import Location from "../model/Location";
@@ -14,6 +14,8 @@ import TKTransportOptions from "../model/options/TKTransportOptions";
 import { renderToStaticMarkup } from "../jss/StyleHelper";
 import ModeLocation from "../model/location/ModeLocation";
 import TKUIConfigProvider, { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import TransportUtil from "../trip/TransportUtil";
+import NetworkUtil from "../util/NetworkUtil";
 
 interface TKUIModeLocationMarkerProps {
     loc: ModeLocation;
@@ -23,12 +25,20 @@ interface TKUIModeLocationMarkerProps {
 
 export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMarkerProps> =
     ({ loc, onClick, isDarkMode }) => {
+        const [imgHtml, setImgHtml] = React.useState<string>("");
+        useEffect(() => {
+            if (loc.modeInfo.remoteIconIsTemplate && TransportUtil.getTransportIconRemote(loc.modeInfo)) {
+                NetworkUtil.fetch(TransportUtil.getTransportIconRemote(loc.modeInfo)!, {}, true)
+                    .then((data) => setImgHtml(data))
+                    .catch((error) => console.error('Error fetching SVG:', error));
+            }
+        }, [loc, isDarkMode]);
         const config = useContext(TKUIConfigContext);
         const key = loc.getKey();
         const icon = useMemo(() => {
             const transIconHTML = renderToStaticMarkup(
                 <TKUIConfigProvider config={config}>
-                    <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
+                    <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} imgHtml={imgHtml} />
                 </TKUIConfigProvider>
             );
             return L.divIcon({
@@ -37,7 +47,7 @@ export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMar
                 iconAnchor: [10, 10],
                 className: ""
             });
-        }, [loc, isDarkMode]);
+        }, [loc, isDarkMode, imgHtml]);
         return (
             <Marker
                 position={loc}

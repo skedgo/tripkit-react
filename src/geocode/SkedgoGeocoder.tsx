@@ -8,7 +8,7 @@ import LatLng from "../model/LatLng";
 import TripGoApi from "../api/TripGoApi";
 import { LocationConverter } from "../model/location/LocationConverter";
 import Util from "../util/Util";
-import { tKUIColors } from "../jss/TKUITheme";
+import { black, tKUIColors } from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import { ReactComponent as IconPin } from '../images/ic-pin-start.svg';
@@ -35,6 +35,11 @@ const defaultRenderIcon = (location: Location) =>
                 height: undefined,
                 ...!isRemoteIcon(location.modeInfo) && {
                     background: tKUIColors.black1
+                },
+                ...location.modeInfo.remoteIconIsTemplate && {
+                    background: 'none',
+                    color: black(0),
+                    padding: 0
                 }
             }}
         /> :

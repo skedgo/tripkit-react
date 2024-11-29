@@ -13,14 +13,13 @@ import TKUIIcon from "../service/TKUIIcon";
 import CarParkLocation from "../model/location/CarParkLocation";
 import Util from "../util/Util";
 import SchoolLocation from "../model/location/SchoolLocation";
+import TKUIInlineSVG from "../util_components/TKUIInlineSVG";
+import { genClassNames } from "../css/GenStyle.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     from?: boolean;
-    selected?: boolean; // TODO: if false it's a circle, if true is a drop. MapLocations changes selected for drop,
-    // and from/to pin uses this always as drop. MapLocations pin will be behind from/to pin (at least until dissapears)
-    // but will be identical. Selected is on MapLocations state, so update should be without delay?
-    renderIcon?: () => React.ReactNode;
+    imgHtml?: string;
 }
 
 export interface IStyle {
@@ -71,9 +70,19 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const location = this.props.location;
+        const { location, imgHtml, classes } = this.props;
         let transIcon: React.ReactNode;
         let invertedWrtMode = false;
+        if (imgHtml) {
+            return (
+                <div className={classes.main} id={this.id}>
+                    <IconPin className={classes.iconPin} />
+                    <div
+                        className={classNames(classes.icon, genClassNames.svgLastPathFillCurrColor)}
+                        style={{ color: 'white' }} dangerouslySetInnerHTML={{ __html: imgHtml }}></div>
+                </div>
+            );
+        }
         if (location instanceof FacilityLocation) {
             transIcon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} />;
         } else if (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE")) {
@@ -85,25 +94,29 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
             const wantLocalIcon = !!modeInfo.identifier &&
                 (modeInfo.identifier.startsWith("me_car-s") || modeInfo.identifier.startsWith("cy_bic-s"));
-            transIcon =
-                <img src={TransportUtil.getTransIcon(modeInfo,
-                    {
-                        isRealtime: false,
-                        onDark: wantIconForDark,
-                        useLocal: wantLocalIcon
-                    })} />
+            if (modeInfo.remoteIconIsTemplate && !wantLocalIcon && TransportUtil.getTransportIconRemote(modeInfo)) {
+                transIcon = <TKUIInlineSVG url={TransportUtil.getTransportIconRemote(modeInfo)!} />;
+            } else {
+                transIcon =
+                    <img src={TransportUtil.getTransIcon(modeInfo,
+                        {
+                            isRealtime: false,
+                            onDark: wantIconForDark,
+                            useLocal: wantLocalIcon
+                        })} />
+            }
             invertedWrtMode = !wantLocalIcon && isRemoteIcon(modeInfo);
         }
-        const classes = this.props.classes;
         const icon = transIcon &&
             <div className={classNames(classes.icon, invertedWrtMode && classes.iconInverted)}>
                 {transIcon}
             </div>;
-        return <div className={classes.main}
-            id={this.id}>
-            <IconPin className={classes.iconPin} />
-            {icon}
-        </div>;
+        return (
+            <div className={classes.main} id={this.id}>
+                <IconPin className={classes.iconPin} />
+                {icon}
+            </div>
+        );
     }
 }
 
