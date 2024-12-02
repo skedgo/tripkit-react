@@ -57,7 +57,7 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                 height: '26px',
                 width: '26px',
                 padding: props => props.location instanceof FacilityLocation ? '1px' : '4px',
-                '& img': {
+                '& img, svg': {
                     width: '100%',
                     height: '100%',
                     opacity: (props: TKUIMapLocationIconProps) => props.location instanceof ModeLocation ?
@@ -74,7 +74,7 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                 }
             },
             clickAndHold: {
-                '& img': {
+                '& $icon img, $icon svg': {
                     display: 'none'
                 }
             }

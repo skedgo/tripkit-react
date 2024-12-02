@@ -1,6 +1,6 @@
 import * as React from "react";
 import TransportUtil from "../trip/TransportUtil";
-import genStyles from "../css/GenStyle.css";
+import genStyles, { genClassNames } from "../css/GenStyle.css";
 import * as CSS from 'csstype';
 import { black, white } from "../jss/TKUITheme";
 import { getTransIconOpacity, isRemoteIcon } from "./TKUIMapLocationIcon.css";
@@ -10,26 +10,29 @@ import FacilityLocation from "../model/location/FacilityLocation";
 import TKUIIcon from "../service/TKUIIcon";
 import Util from "../util/Util";
 import CarParkLocation from "../model/location/CarParkLocation";
+import TKUIInlineSVG from "../util_components/TKUIInlineSVG";
 
 interface IProps {
     location: ModeLocation;
     style?: CSS.Properties;
     isDarkMode?: boolean;
+    imgHtml?: string;
 }
 
 class TKUIModeLocationIcon extends React.Component<IProps, {}> {
-
     public render(): React.ReactNode {
-        const { location } = this.props;
+        const { location, imgHtml } = this.props;
         if (location instanceof FreeFloatingVehicleLocation) {
             let providerColor = TransportUtil.getTransportColor(location.modeInfo) || black(0);
-            return <div style={{
-                width: '12px',
-                height: '12px',
-                ...genStyles.borderRadius(50, '%'),
-                background: providerColor,
-                border: '2px solid ' + white(0)
-            } as any} />
+            return (
+                <div style={{
+                    width: '12px',
+                    height: '12px',
+                    ...genStyles.borderRadius(50, '%'),
+                    background: providerColor,
+                    border: '2px solid ' + white(0)
+                } as any} />
+            );
         }
         const modeInfo = location.modeInfo;
         const wantIconForDark = true;
@@ -44,7 +47,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
         if (transportColor === null) {
             transportColor = wantIconForDark ? black(0) : white(1);
         }
-        const transportIconIsRemote = !wantLocalIcon && isRemoteIcon(modeInfo);
+        const transportIconIsRemote = !wantLocalIcon && !imgHtml && !modeInfo.remoteIconIsTemplate && isRemoteIcon(modeInfo);
         // If the obtained icon changes if we don't prefer remote over appearance mode (dark / light), then it means
         // transIcon is inverted w.r.t. mode.
         const invertedWrtMode = isRemoteIcon(modeInfo);
@@ -72,7 +75,13 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
             height: '100%'
         };
         let icon;
-        if (location instanceof FacilityLocation) {
+        if (imgHtml) {
+            return (
+                <div style={{ color: 'white', ...style }} dangerouslySetInnerHTML={{ __html: imgHtml }} className={genClassNames.svgLastPathFillCurrColor}></div>
+            );
+        } else if (modeInfo.remoteIconIsTemplate && !wantLocalIcon && TransportUtil.getTransportIconRemote(modeInfo)) {
+            return <TKUIInlineSVG url={TransportUtil.getTransportIconRemote(modeInfo)!} style={{ color: 'white', ...style }} className={genClassNames.svgLastPathFillCurrColor} />;
+        } else if (location instanceof FacilityLocation) {
             icon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} style={imgStyle} />;
             style.background = white();
             style.padding = 0;
@@ -89,12 +98,11 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
                 />
         }
         return (
-            <div style={style as any}>
+            <div style={style}>
                 {icon}
             </div>
         );
     }
-
 }
 
 export default TKUIModeLocationIcon;

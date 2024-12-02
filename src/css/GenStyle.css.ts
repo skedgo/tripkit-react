@@ -31,6 +31,7 @@ interface ITKUIGenStyleClasses {
     animateFadeIn: any;
     svgFillCurrColor: any;
     svgPathFillCurrColor: any;
+    svgLastPathFillCurrColor: any;
     scrollableY: any;
     relative: any;
     hidden: any;
@@ -318,6 +319,15 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     svgPathFillCurrColor: {
         '& path': {
             fill: 'currentColor'
+        }
+    },
+
+    svgLastPathFillCurrColor: {
+        '& path:last-child': {
+            fill: 'currentColor'
+        },
+        '& path:not(:last-child)': {
+            fill: 'rgba(0,0,0,0)'
         }
     },
 
