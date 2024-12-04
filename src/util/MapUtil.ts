@@ -207,10 +207,11 @@ class MapUtil {
         });
     }
 
-    public static toLeafletMultiPolygon(geoJson: MultiPolygon): LatLngExpression[][] {
-        return geoJson.coordinates[0]
-            .map((positions: Position[]) => positions
-                .map((position: Position) => [position[1], position[0]]));
+    public static toLeafletMultiPolygon(geoJson: MultiPolygon): LatLngExpression[][][] {
+        return geoJson.coordinates
+            .map((polygons: Position[][]) => polygons
+                .map((positions: Position[]) => positions
+                    .map((position: Position) => [position[1], position[0]])));
     }
 
 }

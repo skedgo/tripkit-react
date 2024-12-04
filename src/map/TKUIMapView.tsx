@@ -293,7 +293,7 @@ interface IState {
     refreshTiles?: boolean;
     modeLocations?: ModeLocation[];
     onModeLocationClick?: (location: ModeLocation) => void;
-    coveragePolygon?: LatLngExpression[][];
+    coveragePolygon?: LatLngExpression[][][];
     layer?: MapLayer
 }
 
