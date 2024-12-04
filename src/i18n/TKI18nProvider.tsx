@@ -52,13 +52,13 @@ class TKI18nProvider extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
+        const data = (!props.dataPromise || props.dataPromise instanceof Promise) ? undefined : props.dataPromise;
         // Compose messages by overriding untranslated with messages_en and then with config translations 
         // (if it's not a promise, address the promise case after component mounted).
-        const configTranslations = (!props.dataPromise || props.dataPromise instanceof Promise) ? {} : props.dataPromise?.translations;
+        const configTranslations = data?.translations ?? {};
         const messages = Object.assign({}, untranslated, messages_en, configTranslations);
-        const defaultLocale = 'en';
         this.state = {
-            locale: defaultLocale,
+            locale: data?.locale ?? 'en',
             messages: messages,
             overridden: false
         }
