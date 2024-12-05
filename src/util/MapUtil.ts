@@ -29,6 +29,12 @@ class MapUtil {
         return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
     }
 
+    public static createBBoxGeoJson(geojson: any): BBox {
+        const turfbbox = bbox(geojson);
+        const [minX, minY, maxX, maxY] = turfbbox;
+        return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
+    }
+
     public static inBBox(latLng: LatLng, bounds: BBox): boolean {
         const turfPoint = point([latLng.lng, latLng.lat]);
         const turfpolygon = bboxPolygon(bbox(lineString([[bounds.minLng, bounds.minLat], [bounds.maxLng, bounds.maxLat]])));
