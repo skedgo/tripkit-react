@@ -1,6 +1,7 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
 import Color from "./Color";
 import TicketOption from "./TicketOption";
+import ModeInfo from "./ModeInfo";
 
 @JsonObject
 class BookingFieldOption {
@@ -40,6 +41,10 @@ class BookingField {
 class BookingInfo {
     @JsonProperty("bookingURL", String, true)
     public bookingURL: string = "";
+    @JsonProperty("bookingURLIsDeepLink", Boolean, true)
+    public bookingURLIsDeepLink: boolean = false;
+    @JsonProperty("bookingResponseType", String, true)
+    public bookingResponseType: string = "";    // values: OPTIONS, REVIEW
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("bookingTitle", String, true)
@@ -50,6 +55,46 @@ class BookingInfo {
     public tickets: TicketOption[] | undefined = undefined;
 }
 
+@JsonObject
+class ProviderOptionAvailable {
+    @JsonProperty("bookingURL", String, true)
+    public bookingURL: string = "";
+    @JsonProperty("bookingResponseType", String, true)
+    public bookingResponseType: string = ""; // values: REVIEW
+    @JsonProperty("minPrice", Number, true)
+    public minPrice: number = 0;
+    @JsonProperty("maxPrice", Number, true)
+    public maxPrice: number = 0;
+    @JsonProperty("fares", [TicketOption], true)
+    public fares: TicketOption[] | undefined = undefined;
+    @JsonProperty("modeInfo", ModeInfo, true)
+    public modeInfo: ModeInfo = new ModeInfo();
+    @JsonProperty("singleFareOnly", Boolean, true)
+    public singleFareOnly: boolean = false;
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("bookingTitle", String, true)
+    public bookingTitle: string = "";
+}
+@JsonObject
+class ProviderOptionUnavailable {
+    @JsonProperty("warningMessage", String, true)
+    public warningMessage: string = "";
+    @JsonProperty("modeInfo", ModeInfo, true)
+    public modeInfo: ModeInfo = new ModeInfo();
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("bookingTitle", String, true)
+    public bookingTitle: string = "";
+}
+
+@JsonObject
+class ProviderOptionsForm {
+    @JsonProperty("availableList", [ProviderOptionAvailable], true)
+    public availableList: ProviderOptionAvailable[] = [];
+    @JsonProperty("unavailableList", [ProviderOptionUnavailable], true)
+    public unavailableList: ProviderOptionUnavailable[] = [];
+}
 @JsonObject
 export class ConfirmationPrompt {
     @JsonProperty("message", String, true)
@@ -167,4 +212,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus }
+export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus, ProviderOptionsForm, ProviderOptionAvailable, ProviderOptionUnavailable };

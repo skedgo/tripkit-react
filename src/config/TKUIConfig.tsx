@@ -93,6 +93,7 @@ import { TKUIBookingFormProps, TKUIBookingFormStyle } from "../booking/TKUIBooki
 import { TKUICheckoutViewClientProps, TKUICheckoutViewProps, TKUICheckoutViewStyle } from "../stripekit/TKUICheckoutView";
 import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKUIBookingDetails";
 import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKUIBookingReview";
+import { TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle } from "../booking/TKUIBookingProviderOptions";
 
 /**
  * SDK configuration
@@ -304,6 +305,7 @@ export interface ITKUIConfigOptional {
     TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
     TKUIBookingCard: TKComponentConfig<TKUIBookingCardProps, TKUIBookingCardStyle>;
     TKUIBookingForm: TKComponentConfig<TKUIBookingFormProps, TKUIBookingFormStyle>;
+    TKUIBookingProviderOptions: TKComponentConfig<TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle>;
     TKUIBookingReview: TKComponentConfig<TKUIBookingReviewProps, TKUIBookingReviewStyle>;
     TKUICheckoutView: TKComponentConfig<TKUICheckoutViewProps, TKUICheckoutViewStyle>;
     TKUIBookingDetails: TKComponentConfig<TKUIBookingDetailsProps, TKUIBookingDetailsStyle>;

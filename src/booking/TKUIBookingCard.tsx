@@ -6,7 +6,7 @@ import { tKUIBookingCardDefaultStyle } from "./TKUIBookingCard.css";
 import Trip from '../model/trip/Trip';
 import TKUICard, { CardPresentation, TKUICardClientProps } from '../card/TKUICard';
 import TripGoApi from '../api/TripGoApi';
-import BookingInfo from '../model/trip/BookingInfo';
+import BookingInfo, { ProviderOptionsForm } from '../model/trip/BookingInfo';
 import UIUtil from '../util/UIUtil';
 import TKUIBookingForm from './TKUIBookingForm';
 import BookingReview from '../model/trip/BookingReview';
@@ -20,6 +20,7 @@ import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
+import TKUIBookingProviderOptions from './TKUIBookingProviderOptions';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -43,12 +44,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingCard"
 };
 
-type Screens = "BOOKING" | "REVIEW" | "PAYMENT" | "DETAILS";
+type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "REVIEW" | "PAYMENT" | "DETAILS";
 
 function screenTitle(screen: Screens): string {
     switch (screen) {
         case "BOOKING":
             return "Add booking details";
+        case "PROVIDER_OPTIONS":
+            return "Select provider";
         case "REVIEW":
             return "Review booking";
         case "PAYMENT":
@@ -62,6 +65,8 @@ function screenCloseButton(screen: Screens): string {
     switch (screen) {
         case "BOOKING":
             return "Cancel";
+        case "PROVIDER_OPTIONS":
+            return "Back";
         case "REVIEW":
             return "Back";
         case "PAYMENT":
@@ -105,6 +110,9 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
 
     // BOOKING screen data
     const [bookingForm, setBookingForm] = useState<BookingInfo | undefined>(undefined);
+
+    // PROVIDER_OPTIONS screens data
+    const [providerOptionsForm, setProviderOptionsForm] = useState<ProviderOptionsForm | undefined>(undefined);
 
     // REVIEW and PAYMENT screens data
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
@@ -195,32 +203,45 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         trip={trip!}
                         onSubmit={() => {
                             setWaiting(true);
-                            TripGoApi.submitBookingOption(bookingForm!).then(bookingResult => {
-                                setWaiting(false);
-                                setBookingResult(bookingResult);
-                                const { reviews } = bookingResult;
-                                if (reviews) {
-                                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
-                                    reviews.forEach((review: BookingReview) => {
-                                        const timezone = trip!.segments[0].from.timezone;
-                                        if (review.origin) {
-                                            review.origin.timezone = timezone;
-                                        }
-                                        if (review.destination) {
-                                            review.destination.timezone = timezone;
-                                        }
-                                    })
-                                    pushScreen("REVIEW");
-                                } else {
-                                    // bookingResult will be something like:
-                                    // {"refreshURLForSourceObject":"https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b963c582-bcb1-416b-aaad-ea3d03a01a8d/update?bsb=1&psb=1","action":{"done":true}}
-                                    // ***** TODO: ***** go to "DETAILS" screen.
-                                    // onRequestClose?.(true, { ...bookingResult, userId: user!.id });
-                                }
-                            })
-                                .catch(UIUtil.errorMsg)
-                                .finally(() => setWaiting(false));
+                            if (bookingForm.bookingResponseType === "OPTIONS") {
+                                TripGoApi.submitBookingOptionToGetProviderOptions(bookingForm!).then(providerOptions => {
+                                    setWaiting(false);
+                                    setProviderOptionsForm(providerOptions);
+                                    pushScreen("PROVIDER_OPTIONS");
+                                });
+                            } else {
+                                TripGoApi.submitBookingOption(bookingForm!).then(bookingResult => {
+                                    setWaiting(false);
+                                    setBookingResult(bookingResult);
+                                    const { reviews } = bookingResult;
+                                    if (reviews) {
+                                        // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                                        reviews.forEach((review: BookingReview) => {
+                                            const timezone = trip!.segments[0].from.timezone;
+                                            if (review.origin) {
+                                                review.origin.timezone = timezone;
+                                            }
+                                            if (review.destination) {
+                                                review.destination.timezone = timezone;
+                                            }
+                                        })
+                                        pushScreen("REVIEW");
+                                    } else {
+                                        // bookingResult will be something like:
+                                        // {"refreshURLForSourceObject":"https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b963c582-bcb1-416b-aaad-ea3d03a01a8d/update?bsb=1&psb=1","action":{"done":true}}
+                                        // ***** TODO: ***** go to "DETAILS" screen.
+                                        // onRequestClose?.(true, { ...bookingResult, userId: user!.id });
+                                    }
+                                })
+                                    .catch(UIUtil.errorMsg)
+                                    .finally(() => setWaiting(false));
+                            }
+
                         }}
+                    />}
+                {topScreen() === "PROVIDER_OPTIONS" &&
+                    <TKUIBookingProviderOptions
+                        form={providerOptionsForm!}
                     />}
                 {topScreen() === "REVIEW" &&
                     <TKUIBookingReview
