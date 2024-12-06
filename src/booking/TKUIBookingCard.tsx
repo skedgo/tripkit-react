@@ -123,10 +123,11 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         }
         const bookingInfosUrl = booking.quickBookingsUrl!;
         setWaiting(true);
-        // if (process.env.NODE_ENV === 'development') {
-        //     setMockData();
-        //     return;
-        // }        
+        if (process.env.NODE_ENV === 'development') {
+            // setMockData();
+            setMockData2();
+            return;
+        }
         TripGoApi.requestBookingOptions(bookingInfosUrl)
             .then(bookingInfos => {
                 pushScreen("BOOKING");
@@ -158,6 +159,18 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         setScreensStack(["BOOKING"]);
         setBookingResult(TripGoApi.deserializeBookingResult(require("../mock/data/booking/quick_1.json")));
         setScreensStack(["REVIEW", "BOOKING"]);
+        // setScreensStack(["PAYMENT", "REVIEW", "BOOKING", "TRIPS", "QUERY"]);            
+    }
+
+    async function setMockData2() {
+        Features.instance.realtimeEnabled = false;
+        setScreensStack([]);
+        setBookingForm(require("../mock/data/provider_mobility_options/quick.json")
+            .map(infoJson => TripGoApi.deserializeBookingInfo(infoJson))[0]);
+        setWaiting(false);
+        setScreensStack(["BOOKING"]);
+        setProviderOptionsForm(TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1.json")));
+        setScreensStack(["PROVIDER_OPTIONS", "BOOKING"]);
         // setScreensStack(["PAYMENT", "REVIEW", "BOOKING", "TRIPS", "QUERY"]);            
     }
 

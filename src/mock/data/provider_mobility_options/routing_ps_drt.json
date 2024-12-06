@@ -1,0 +1,170 @@
+{
+  "groups": [
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "appInfo": {
+              "appURLAndroid": "https://play.google.com/store/apps/details?hl=en&id=com.ubercab",
+              "appURLiOS": "https://itunes.apple.com/us/app/uber/id368677368?mt=8",
+              "name": "Uber"
+            },
+            "color": {
+              "blue": 186,
+              "green": 213,
+              "red": 47
+            },
+            "name": "Uber - API",
+            "phone": " (844) 544-7222",
+            "remoteIcon": "uber",
+            "website": "https://providers-beta.skedgo.com/?provider=michigan-uber-api"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-12-05T13:37:42-05:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 0,
+          "carbonCost": 9.3,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-12-05T13:20:07-05:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "id": "cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "mainSegmentHashCode": -1420228218,
+          "moneyCost": 24.94,
+          "moneyUSDCost": 24.94,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-12-05T13:20:07-05:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/cc61c788-29ef-4c57-8152-54cd81ec46b3/1wXXEQvj/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -767582345,
+              "endTime": "2024-12-05T13:37:42-05:00",
+              "id": "1wXXEQvj",
+              "segmentTemplateHashCode": -1420228218,
+              "startTime": "2024-12-05T13:20:07-05:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/cc61c788-29ef-4c57-8152-54cd81ec46b3",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/cc61c788-29ef-4c57-8152-54cd81ec46b3?hash=-628066253",
+          "weightedScore": 53.5
+        }
+      ]
+    }
+  ],
+  "query": {
+    "depart": "2024-12-05T18:20:07Z",
+    "from": {
+      "address": "7RR3+6V ,Allen Park, MI, USA",
+      "class": "Location",
+      "lat": 42.29052,
+      "lng": -83.19534,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    },
+    "to": {
+      "address": "5729 Rohns St, Detroit, MI 48213, USA",
+      "class": "Location",
+      "lat": 42.38492,
+      "lng": -83.0072,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    }
+  },
+  "region": "US_MI_Detroit",
+  "regions": [
+    "US_MI_Detroit"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "Take shuttle about 15 miles",
+      "durationWithoutTraffic": 1110,
+      "from": {
+        "address": "7RR3+6V ,Allen Park, MI, USA",
+        "class": "Location",
+        "lat": 42.29052,
+        "lng": -83.19534,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "geofences": [
+        {
+          "center": {
+            "lat": 42.38493143127921,
+            "lng": -83.00718040261482
+          },
+          "id": "TRIP_END_1wXXEQvj",
+          "messageBody": "You are about to arrive at 5729 Rohns St, Detroit, MI 48213, USA",
+          "messageTitle": "Arriving at your destination",
+          "messageType": "TRIP_END",
+          "radius": 100,
+          "trigger": "ENTER",
+          "type": "CIRCLE"
+        }
+      ],
+      "hashCode": -1420228218,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "external_estimate",
+        "cost": 24.94,
+        "currency": "USD"
+      },
+      "metres": 23163,
+      "mini": {
+        "description": "5729 Rohns St, Detroit, MI 48213, USA",
+        "instruction": "Take shuttle",
+        "mainValue": "$25"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 243,
+          "green": 169,
+          "red": 115
+        },
+        "identifier": "ps_drt",
+        "localIcon": "shuttlebus"
+      },
+      "notes": "Fare: about $25\n15 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "c{baGlaxzNL_@Pg@Pc@zDtCf@^R]@?FDh@VJ]LOLKJEH?D@l@b@HJLJbA|@D?ZZ\\P~BrA`@TXRTTP\\J^Fb@BD?XAd@G`@KZaCdHv@h@??b@qAlAwDN]Rg@^cAXw@t@qB~@mCVm@`CiET[ZUXK^C^D\\P`@VV`@Rf@Nt@Bn@Er@Oh@Uj@[^]Re@Lc@?a@CUIy@i@q@Y??k@e@o@i@sA}@qDuCqRkOeG{EuEoD_P{MiEoDwCiC{SwQuAmAgM_L_Aw@uKsJcCuByCiCiPuNoKkJiJwHeLkJ{G_FmMgJm@c@gNyJqIeGuOcLaBoAeCmBwAkB}@oAaAeBq@cBg@_Ba@iBa@wBo@cEc@qD{@oG??oBqNsAmJe@eDq@_Fa@gDYwCc@uFmAiOi@_HWuCMkAg@uEc@qC_AcFyAkG_JqZeB_GoQmm@Oe@s@eCaAyC_@}@s@aBcAuBcBgCmCmDo@u@UY}LqOcAwAwA}Bq@gAg@{@eAoBy@iBi@eAg@mAkAcDyAiEmB}G}@oDwBuJiG_YkHk\\yB{KgFmUqGsZwA_HoAkFo@cCeBiF}AwDmAeCMUm@eAgFuJa@w@eG_LmCsEcBqCU[mJuPeCsFcCkGqBkFoBuFw@_CISqBaHc@wAw@uCmAkE}@qCgAyC??sA{C_@w@cB}Cg@y@iAuBq@iAQ[cAgBcEsHKSWc@u@yAy@cBsAcDcF{P??s@mCm@gCyHcZs@gCmEkPcA_EaCgJoBwH]gA_AiCy@kB_BmCkA}A_B_BcBqAm@c@WSgBeAw@a@wAgAaAy@c@c@c@g@oAiBk@eAk@mAUg@Us@Qi@[iAYmA[qBiAkJcAiJa@aDc@}C]{B_@kBu@cDq@_CaB}Fw@uCo@yBcAcDkEoNiA{DcD}KCKqAyESiAOy@c@yBu@}Da@eCIo@Bm@Fa@NYb@SXEZHPHLRHT@\\Cb@Sv@Ob@WTED_@Z??CAv@b@TN`Ah@FDLHLD@BZNRHRNr@b@f@ZjAp@z@f@pAt@tAv@zAz@??^UDCZUPK|KmH"
+        }
+      ],
+      "to": {
+        "address": "5729 Rohns St, Detroit, MI 48213, USA",
+        "class": "Location",
+        "lat": 42.38493,
+        "lng": -83.00718,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 229,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    }
+  ]
+}
