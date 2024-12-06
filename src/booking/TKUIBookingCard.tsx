@@ -6,7 +6,7 @@ import { tKUIBookingCardDefaultStyle } from "./TKUIBookingCard.css";
 import Trip from '../model/trip/Trip';
 import TKUICard, { CardPresentation, TKUICardClientProps } from '../card/TKUICard';
 import TripGoApi from '../api/TripGoApi';
-import BookingInfo, { ProviderOptionsForm } from '../model/trip/BookingInfo';
+import BookingInfo, { AvailableProviderOption, ProviderOptionsForm } from '../model/trip/BookingInfo';
 import UIUtil from '../util/UIUtil';
 import TKUIBookingForm from './TKUIBookingForm';
 import BookingReview from '../model/trip/BookingReview';
@@ -21,6 +21,8 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import TKUIBookingProviderOptions from './TKUIBookingProviderOptions';
+import TicketOption from '../model/trip/TicketOption';
+import TKUIProviderTicketsForm from '../stripekit/TKUIProviderTicketsForm';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -44,7 +46,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingCard"
 };
 
-type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "REVIEW" | "PAYMENT" | "DETAILS";
+type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "TICKETS" | "REVIEW" | "PAYMENT" | "DETAILS";
 
 function screenTitle(screen: Screens): string {
     switch (screen) {
@@ -52,6 +54,8 @@ function screenTitle(screen: Screens): string {
             return "Add booking details";
         case "PROVIDER_OPTIONS":
             return "Select provider";
+        case "TICKETS":
+            return "Select Tickets";
         case "REVIEW":
             return "Review booking";
         case "PAYMENT":
@@ -66,9 +70,8 @@ function screenCloseButton(screen: Screens): string {
         case "BOOKING":
             return "Cancel";
         case "PROVIDER_OPTIONS":
-            return "Back";
+        case "TICKETS":
         case "REVIEW":
-            return "Back";
         case "PAYMENT":
             return "Back";
         case "DETAILS":
@@ -113,6 +116,10 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
 
     // PROVIDER_OPTIONS screens data
     const [providerOptionsForm, setProviderOptionsForm] = useState<ProviderOptionsForm | undefined>(undefined);
+    const [selectedProvider, setSelectedProvider] = useState<AvailableProviderOption | undefined>(undefined);
+
+    // TICKETS screens data
+    // const [selectedTicket, setSelectedTicket] = useState<TicketOption | undefined>(undefined);
 
     // REVIEW and PAYMENT screens data
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
@@ -255,6 +262,17 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                 {topScreen() === "PROVIDER_OPTIONS" &&
                     <TKUIBookingProviderOptions
                         form={providerOptionsForm!}
+                        onProviderSelected={(value: AvailableProviderOption) => {
+                            setSelectedProvider(value);
+                            pushScreen("TICKETS");
+                        }}
+                    />}
+                {topScreen() === "TICKETS" &&
+                    <TKUIProviderTicketsForm
+                        provider={selectedProvider!}
+                        onTicketSelected={(ticket: TicketOption) => {
+
+                        }}
                     />}
                 {topScreen() === "REVIEW" &&
                     <TKUIBookingReview

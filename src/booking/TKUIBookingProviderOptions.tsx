@@ -5,12 +5,13 @@ import { tKUIBookingProviderOptionsDefaultStyle } from "./TKUIBookingProviderOpt
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIConfig } from "../config/TKUIConfig";
 import { TKUICardClientProps } from "../card/TKUICard";
-import { ProviderOptionsForm } from "../model/trip/BookingInfo";
+import { AvailableProviderOption, ProviderOptionsForm } from "../model/trip/BookingInfo";
 import FormatUtil from "../util/FormatUtil";
 import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     form: ProviderOptionsForm;
+    onProviderSelected: (provider: AvailableProviderOption) => void;
 }
 
 export type TKUIBookingProviderOptionsClientProps = IClientProps;
@@ -29,7 +30,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { form, classes } = props;
+    const { form, onProviderSelected, classes } = props;
     return (
         <div className={classes.main}>
             <div className={classes.title}>
@@ -37,7 +38,7 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
             </div>
             <div className={classes.available}>
                 {form.availableList.map((option, i) => (
-                    <div className={classes.option} key={i}>
+                    <div className={classes.option} key={i} onClick={() => { onProviderSelected(option) }}>
                         <div className={classes.optionTitle}>
                             {option.title}
                         </div>

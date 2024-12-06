@@ -56,7 +56,7 @@ class BookingInfo {
 }
 
 @JsonObject
-class ProviderOptionAvailable {
+class AvailableProviderOption {
     @JsonProperty("bookingURL", String, true)
     public bookingURL: string = "";
     @JsonProperty("bookingResponseType", String, true)
@@ -77,7 +77,7 @@ class ProviderOptionAvailable {
     public bookingTitle: string = "";
 }
 @JsonObject
-class ProviderOptionUnavailable {
+class UnavailableProviderOption {
     @JsonProperty("warningMessage", String, true)
     public warningMessage: string = "";
     @JsonProperty("modeInfo", ModeInfo, true)
@@ -90,10 +90,10 @@ class ProviderOptionUnavailable {
 
 @JsonObject
 class ProviderOptionsForm {
-    @JsonProperty("availableList", [ProviderOptionAvailable], true)
-    public availableList: ProviderOptionAvailable[] = [];
-    @JsonProperty("unavailableList", [ProviderOptionUnavailable], true)
-    public unavailableList: ProviderOptionUnavailable[] = [];
+    @JsonProperty("availableList", [AvailableProviderOption], true)
+    public availableList: AvailableProviderOption[] = [];
+    @JsonProperty("unavailableList", [UnavailableProviderOption], true)
+    public unavailableList: UnavailableProviderOption[] = [];
 }
 @JsonObject
 export class ConfirmationPrompt {
@@ -212,4 +212,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus, ProviderOptionsForm, ProviderOptionAvailable, ProviderOptionUnavailable };
+export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus, ProviderOptionsForm, AvailableProviderOption, UnavailableProviderOption };

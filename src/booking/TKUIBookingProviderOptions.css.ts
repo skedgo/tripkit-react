@@ -29,8 +29,8 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter
     },
     optionTitle: {
-        ...genStyles.fontL,
-        // fontWeight: 'bold'
+        ...genStyles.fontM,
+        fontWeight: 'bold'
     },
     priceRange: {
         background: colorWithOpacity(theme.colorPrimary, .2),
@@ -52,10 +52,10 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column
     },
     uOptionTitle: {
-        ...theme.textColorGray,
+        ...theme.textColorDisabled,
         marginBottom: '12px',
-        ...genStyles.fontL,
-        // fontWeight: 'bold'
+        ...genStyles.fontM,
+        fontWeight: 'bold'
     },
     warningMessage: {
         ...genStyles.flex,
