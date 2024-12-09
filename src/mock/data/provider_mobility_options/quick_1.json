@@ -268,23 +268,6 @@
       "bookingTitle": "Take Ride Your Way - RG"
     },
     {
-      "warningMessage": "Rides cannot be requested less than 18 hours in advance. Please call for assistance.",
-      "modeInfo": {
-        "identifier": "ps_drt_washtenaw-stadium-taxi",
-        "localIcon": "shuttlebus",
-        "alt": "Shuttle",
-        "description": "Stadium Taxi",
-        "color": {
-          "red": 51,
-          "green": 255,
-          "blue": 102
-        },
-        "remoteIconIsTemplate": false
-      },
-      "title": "Stadium Taxi",
-      "bookingTitle": "Take Stadium Taxi"
-    },
-    {
       "warningMessage": "Rides cannot be requested less than 24 hours in advance. Please call for assistance.",
       "modeInfo": {
         "identifier": "ps_drt_michigan-uber",

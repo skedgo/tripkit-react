@@ -8,10 +8,13 @@ import { TKUICardClientProps } from "../card/TKUICard";
 import { AvailableProviderOption } from "../model/trip/BookingInfo";
 import TicketOption from "../model/trip/TicketOption";
 import TKUITicketSelect from "./TKUITicketSelect";
+import TKUIButton from "../buttons/TKUIButton";
+import FormatUtil from "../util/FormatUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     provider: AvailableProviderOption;
-    onTicketSelected: (ticket: TicketOption) => void;
+    onChange: (update: TicketOption[]) => void;
+    onSubmit: () => void;
 }
 
 export type TKUIProviderTicketsFormClientProps = IClientProps;
@@ -28,15 +31,36 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     styles: tKUIProviderTicketsFormDefaultStyle,
     classNamePrefix: "TKUIProviderTicketsForm"
 };
-
 const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { provider, onTicketSelected, classes } = props;
+    const { provider, onChange, onSubmit, classes, t } = props;
+    const numOfTickets = provider.fares!.reduce((acc, ticket) => acc + ticket.value, 0);
+    const totalPrice = provider.fares!.reduce((acc, ticket) => acc + ticket.price * ticket.value, 0);
     return (
         <div className={classes.main}>
             <TKUITicketSelect
                 tickets={provider.fares!}
-                onChange={(tickets) => onTicketSelected(tickets[0])}
+                singleFareOnly={provider.singleFareOnly}
+                onChange={(tickets) => {
+                    onChange(tickets);
+                }}
             />
+            <div className={classes.divider} />
+            <div className={classes.footer}>
+                <div className={classes.fareSummary}>
+                    <div>
+                        {numOfTickets + " " + (numOfTickets === 1 ? "ticket" : "tickets")}
+                    </div>
+                    <div>⋅</div>
+                    <div>
+                        {FormatUtil.toMoney(totalPrice, { nInCents: true, forceDecimals: true, zeroAsFree: false })}
+                    </div>
+                </div>
+                <TKUIButton
+                    text={t("Continue")}
+                    onClick={onSubmit}
+                    disabled={!provider.fares!.some(ticket => ticket.value > 0)}
+                />
+            </div>
         </div>
     );
 }

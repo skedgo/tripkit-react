@@ -11,9 +11,11 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKComponentDefaultConfig } from '../config/TKUIConfig';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Util from '../util/Util';
-import { black, TKUITheme } from '../jss/TKUITheme';
+import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
 import TKUIHTMLTicketView from './TKUIHTMLTicketView';
 import { tKUIBookingFormDefaultStyle } from '../booking/TKUIBookingForm.css';
+import Radio from '@material-ui/core/Radio/Radio';
+import { withStyles as muiWithStyles } from '@material-ui/core/styles';
 
 const ticketSelectJss = (theme: TKUITheme) => {
     const { form, group, icon } = tKUIBookingFormDefaultStyle(theme);
@@ -93,6 +95,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     tickets: TicketOption[];
     title?: string;
     onChange?: (update: TicketOption[]) => void;
+    singleFareOnly?: boolean;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -106,14 +109,26 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUITicketSelect: React.FunctionComponent<IProps> =
-    ({ tickets, title, onChange, classes, injectedStyles }) => {
+    ({ tickets, title, onChange, singleFareOnly, classes, injectedStyles, theme }) => {
         const readonly = !onChange;
+        const useRadio = singleFareOnly && tickets.every(t => t.max === 1);
         const onTicketValueChange = (ticketNumber: number, increase: boolean) => {
             const update = tickets.slice();
             const newValue = update[ticketNumber].value + (increase ? 1 : -1);
             update[ticketNumber] = Util.iAssign(update[ticketNumber], { value: newValue });
             onChange!(update);
         }
+        const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
+            root: {
+                marginLeft: '0',
+                width: '50px',
+                color: colorWithOpacity(theme.colorPrimary, .5),
+                '&$checked': {
+                    color: theme.colorPrimary
+                }
+            },
+            checked: {},
+        })(Radio));
         const [showTicket, setShowTicket] = useState<boolean>(false);
         const purchasedTickets = tickets?.reduce((ptickets, ticket) => ptickets.concat(ticket.purchasedTickets ?? []), [] as PurchasedTicket[]);
         return (
@@ -157,36 +172,52 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                         main: overrideClass(injectedStyles.row)
                                     }}
                                 />
-                                {ticket.value === 0 ?
-                                    <TKUIButton
-                                        text={"Select"}
-                                        onClick={() => {
-                                            const update = tickets.slice();
-                                            update[i] = Util.iAssign(update[i], { value: 1 });
-                                            onChange!(update);
-                                        }}
-                                        type={TKUIButtonType.SECONDARY}
-                                        styles={{
-                                            secondary: overrideClass(injectedStyles.formButton)
+                                {useRadio ?
+                                    <StyledRadio
+                                        checked={ticket.value === 1}
+                                        onChange={(_e, checked) => {
+                                            if (checked) {
+                                                const update = tickets.slice();
+                                                update.forEach((t) => t.value = 0);
+                                                update[i] = Util.iAssign(update[i], { value: 1 });
+                                                onChange!(update);
+                                            }
                                         }}
                                     /> :
-                                    <div className={classes.passengersStepper}>
-                                        <span style={{ marginRight: '14px' }}>{"x" + ticket.value}</span>
-                                        <div className={classes.stepperButtons}>
-                                            <TKUIButton
-                                                type={TKUIButtonType.SECONDARY_VERTICAL}
-                                                onClick={() => onTicketValueChange(i, false)}
-                                                icon={<IconRemove />}
-                                                styles={{ secondary: overrideClass(injectedStyles.stepperBtn) }}
-                                            />
-                                            <TKUIButton
-                                                type={TKUIButtonType.SECONDARY_VERTICAL}
-                                                onClick={() => onTicketValueChange(i, true)}
-                                                icon={<IconAdd />}
-                                                styles={{ secondary: overrideClass(injectedStyles.stepperBtn) }}
-                                            />
+                                    ticket.value === 0 ?
+                                        <TKUIButton
+                                            text={"Select"}
+                                            onClick={() => {
+                                                const update = tickets.slice();
+                                                if (singleFareOnly) {   // Reset all other tickets to 0 if singleFareOnly is true
+                                                    update.forEach((t) => t.value = 0);
+                                                }
+                                                update[i] = Util.iAssign(update[i], { value: 1 });
+                                                onChange!(update);
+                                            }}
+                                            type={TKUIButtonType.SECONDARY}
+                                            styles={{
+                                                secondary: overrideClass(injectedStyles.formButton)
+                                            }}
+                                        /> :
+                                        <div className={classes.passengersStepper}>
+                                            <span style={{ marginRight: '14px' }}>{"x" + ticket.value}</span>
+                                            <div className={classes.stepperButtons}>
+                                                <TKUIButton
+                                                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                                                    onClick={() => onTicketValueChange(i, false)}
+                                                    icon={<IconRemove />}
+                                                    styles={{ secondary: overrideClass(injectedStyles.stepperBtn) }}
+                                                />
+                                                <TKUIButton
+                                                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                                                    onClick={() => onTicketValueChange(i, true)}
+                                                    icon={<IconAdd />}
+                                                    styles={{ secondary: overrideClass(injectedStyles.stepperBtn) }}
+                                                    disabled={ticket.max !== undefined && (ticket.value >= ticket.max)}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
                                 }
                             </div>
                         )}

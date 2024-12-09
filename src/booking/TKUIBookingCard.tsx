@@ -23,6 +23,7 @@ import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import TKUIBookingProviderOptions from './TKUIBookingProviderOptions';
 import TicketOption from '../model/trip/TicketOption';
 import TKUIProviderTicketsForm from '../stripekit/TKUIProviderTicketsForm';
+import Util from '../util/Util';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -116,7 +117,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
 
     // PROVIDER_OPTIONS screens data
     const [providerOptionsForm, setProviderOptionsForm] = useState<ProviderOptionsForm | undefined>(undefined);
-    const [selectedProvider, setSelectedProvider] = useState<AvailableProviderOption | undefined>(undefined);
+    const [selectedProviderIndex, setSelectedProviderIndex] = useState<number | undefined>(undefined);
+    const selectedProvider: AvailableProviderOption | undefined = selectedProviderIndex !== undefined ? providerOptionsForm?.availableList[selectedProviderIndex!] : undefined;
 
     // TICKETS screens data
     // const [selectedTicket, setSelectedTicket] = useState<TicketOption | undefined>(undefined);
@@ -176,7 +178,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
             .map(infoJson => TripGoApi.deserializeBookingInfo(infoJson))[0]);
         setWaiting(false);
         setScreensStack(["BOOKING"]);
-        setProviderOptionsForm(TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1.json")));
+        const providerOptionsForm = TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1.json"));
+        setProviderOptionsForm(providerOptionsForm);
         setScreensStack(["PROVIDER_OPTIONS", "BOOKING"]);
         // setScreensStack(["PAYMENT", "REVIEW", "BOOKING", "TRIPS", "QUERY"]);            
     }
@@ -263,15 +266,45 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     <TKUIBookingProviderOptions
                         form={providerOptionsForm!}
                         onProviderSelected={(value: AvailableProviderOption) => {
-                            setSelectedProvider(value);
+                            setSelectedProviderIndex(providerOptionsForm!.availableList.indexOf(value));
                             pushScreen("TICKETS");
                         }}
                     />}
                 {topScreen() === "TICKETS" &&
                     <TKUIProviderTicketsForm
                         provider={selectedProvider!}
-                        onTicketSelected={(ticket: TicketOption) => {
-
+                        onChange={(tickets: TicketOption[]) => {
+                            const providerOptionsFormUpdate = Util.deepClone(providerOptionsForm!);
+                            providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
+                            setProviderOptionsForm(providerOptionsFormUpdate);
+                        }}
+                        onSubmit={() => {
+                            setWaiting(true);
+                            TripGoApi.submitProviderAndFares(selectedProvider!).then(bookingResult => {
+                                setWaiting(false);
+                                setBookingResult(bookingResult);
+                                const { reviews } = bookingResult;
+                                if (reviews) {
+                                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                                    reviews.forEach((review: BookingReview) => {
+                                        const timezone = trip!.segments[0].from.timezone;
+                                        if (review.origin) {
+                                            review.origin.timezone = timezone;
+                                        }
+                                        if (review.destination) {
+                                            review.destination.timezone = timezone;
+                                        }
+                                    })
+                                    pushScreen("REVIEW");
+                                } else {
+                                    // bookingResult will be something like:
+                                    // {"refreshURLForSourceObject":"https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b963c582-bcb1-416b-aaad-ea3d03a01a8d/update?bsb=1&psb=1","action":{"done":true}}
+                                    // ***** TODO: ***** go to "DETAILS" screen.
+                                    // onRequestClose?.(true, { ...bookingResult, userId: user!.id });
+                                }
+                            })
+                                .catch(UIUtil.errorMsg)
+                                .finally(() => setWaiting(false));
                         }}
                     />}
                 {topScreen() === "REVIEW" &&

@@ -5,7 +5,7 @@ import Trip from "../model/trip/Trip";
 import StopLocation from "../model/StopLocation";
 import { Env } from "../env/Environment";
 import Util from "../util/Util";
-import BookingInfo, { BookingField, ProviderOptionsForm } from "../model/trip/BookingInfo";
+import BookingInfo, { AvailableProviderOption, BookingField, ProviderOptionsForm } from "../model/trip/BookingInfo";
 import BookingReview from "../model/trip/BookingReview";
 import { i18n } from "../i18n/TKI18nConstants";
 import { BookingPaymentForm } from "../model/payment/BookingPaymentForm";
@@ -192,6 +192,12 @@ class TripGoApi {
             // For testing without performing booking.
             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
             .then(this.deserializeProviderOptions);
+    }
+
+    public static submitProviderAndFares(provider: AvailableProviderOption): Promise<BookingPaymentForm> {
+        return TripGoApi.apiCallUrl(provider.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(provider))
+            // For testing without performing booking.            
+            .then(this.deserializeBookingResult);
     }
 
     public static deserializeRoutingResults(resultsJson): RoutingResults {

@@ -30,7 +30,7 @@ class TicketOption implements ITicketOption {
     @JsonProperty("value", Number, true)
     public value: number = 0;
     @JsonProperty("max", Number, true)
-    public max: number = 1;
+    public max?: number = undefined;
     @JsonProperty("purchasedTickets", [Any], true)
     public purchasedTickets?: PurchasedTicket[] = undefined;
 }
