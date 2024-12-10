@@ -41,10 +41,8 @@ class BookingField {
 class BookingInfo {
     @JsonProperty("bookingURL", String, true)
     public bookingURL: string = "";
-    @JsonProperty("bookingURLIsDeepLink", Boolean, true)
-    public bookingURLIsDeepLink: boolean = false;
     @JsonProperty("bookingResponseType", String, true)
-    public bookingResponseType: string = "";    // values: OPTIONS, REVIEW
+    public bookingResponseType: string = "";    // values: OPTIONS, REVIEW, DIRECT, EXTERNAL
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("bookingTitle", String, true)

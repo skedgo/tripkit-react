@@ -189,8 +189,6 @@ class TripGoApi {
 
     public static submitBookingOptionToGetProviderOptions(bookingForm: BookingInfo): Promise<ProviderOptionsForm> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm))
-            // For testing without performing booking.
-            // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
             .then(this.deserializeProviderOptions);
     }
 

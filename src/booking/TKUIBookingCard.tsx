@@ -121,7 +121,35 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const selectedProvider: AvailableProviderOption | undefined = selectedProviderIndex !== undefined ? providerOptionsForm?.availableList[selectedProviderIndex!] : undefined;
 
     // TICKETS screens data
-    // const [selectedTicket, setSelectedTicket] = useState<TicketOption | undefined>(undefined);
+    function isSingleFareAndSingleTicket(provider: AvailableProviderOption): boolean {
+        return provider.fares?.length === 1 && provider.fares[0].max === 1;
+    }
+    async function onSubmitTickets(selectedProvider: AvailableProviderOption) {
+        setWaiting(true);
+        try {
+            const bookingResult = await TripGoApi.submitProviderAndFares(selectedProvider!);
+            setWaiting(false);
+            setBookingResult(bookingResult);
+            const { reviews } = bookingResult;
+            if (reviews) {
+                // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                reviews.forEach((review: BookingReview) => {
+                    const timezone = trip!.segments[0].from.timezone;
+                    if (review.origin) {
+                        review.origin.timezone = timezone;
+                    }
+                    if (review.destination) {
+                        review.destination.timezone = timezone;
+                    }
+                })
+                pushScreen("REVIEW");
+            }
+        } catch (error) {
+            UIUtil.errorMsg(error as Error);
+        } finally {
+            setWaiting?.(false);
+        }
+    }
 
     // REVIEW and PAYMENT screens data
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
@@ -134,8 +162,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         setWaiting(true);
         if (process.env.NODE_ENV === 'development') {
             // setMockData();
-            setMockData2();
-            return;
+            // setMockData2();
+            // return;
         }
         TripGoApi.requestBookingOptions(bookingInfosUrl)
             .then(bookingInfos => {
@@ -178,7 +206,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
             .map(infoJson => TripGoApi.deserializeBookingInfo(infoJson))[0]);
         setWaiting(false);
         setScreensStack(["BOOKING"]);
-        const providerOptionsForm = TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1.json"));
+        // const providerOptionsForm = TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1.json"));
+        const providerOptionsForm = TripGoApi.deserializeProviderOptions(require("../mock/data/provider_mobility_options/quick_1_single_available.json"));
         setProviderOptionsForm(providerOptionsForm);
         setScreensStack(["PROVIDER_OPTIONS", "BOOKING"]);
         // setScreensStack(["PAYMENT", "REVIEW", "BOOKING", "TRIPS", "QUERY"]);            
@@ -224,16 +253,31 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         value={bookingForm}
                         onChange={setBookingForm}
                         trip={trip!}
-                        onSubmit={() => {
+                        onSubmit={async () => {
                             setWaiting(true);
                             if (bookingForm.bookingResponseType === "OPTIONS") {
-                                TripGoApi.submitBookingOptionToGetProviderOptions(bookingForm!).then(providerOptions => {
+                                try {
+                                    const providerOptions = await TripGoApi.submitBookingOptionToGetProviderOptions(bookingForm!);
                                     setWaiting(false);
                                     setProviderOptionsForm(providerOptions);
-                                    pushScreen("PROVIDER_OPTIONS");
-                                });
-                            } else {
-                                TripGoApi.submitBookingOption(bookingForm!).then(bookingResult => {
+                                    // Only a single available option and no unavailable ones => Straight to ticket selection
+                                    if (providerOptions.availableList.length === 1 && providerOptions.unavailableList.length === 0 &&
+                                        // Except that single provider option has single fare and single ticket, in which case we prefer
+                                        // to show the provider option and skip ticket selection.
+                                        !(isSingleFareAndSingleTicket(providerOptions.availableList[0]))) {
+                                        setSelectedProviderIndex(0);
+                                        pushScreen("TICKETS");
+                                    } else {
+                                        pushScreen("PROVIDER_OPTIONS");
+                                    }
+                                } catch (error) {
+                                    UIUtil.errorMsg(error as Error);
+                                } finally {
+                                    setWaiting?.(false);
+                                }
+                            } else if (bookingForm.bookingResponseType === "REVIEW") {
+                                try {
+                                    const bookingResult = await TripGoApi.submitBookingOption(bookingForm!);
                                     setWaiting(false);
                                     setBookingResult(bookingResult);
                                     const { reviews } = bookingResult;
@@ -249,17 +293,22 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                                             }
                                         })
                                         pushScreen("REVIEW");
-                                    } else {
-                                        // bookingResult will be something like:
-                                        // {"refreshURLForSourceObject":"https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b963c582-bcb1-416b-aaad-ea3d03a01a8d/update?bsb=1&psb=1","action":{"done":true}}
-                                        // ***** TODO: ***** go to "DETAILS" screen.
-                                        // onRequestClose?.(true, { ...bookingResult, userId: user!.id });
                                     }
-                                })
-                                    .catch(UIUtil.errorMsg)
-                                    .finally(() => setWaiting(false));
+                                } catch (error) {
+                                    UIUtil.errorMsg(error as Error);
+                                } finally {
+                                    setWaiting?.(false);
+                                }
+                            } else if (bookingForm.bookingResponseType === "DIRECT") {
+                                try {
+                                    await TripGoApi.submitBookingOption(bookingForm!)
+                                    await onRequestTripRefresh();
+                                } catch (error) {
+                                    UIUtil.errorMsg(error as Error);     // TODO: is that ok?                                    
+                                } finally {
+                                    setWaiting?.(false);
+                                }
                             }
-
                         }}
                     />}
                 {topScreen() === "PROVIDER_OPTIONS" &&
@@ -267,7 +316,11 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         form={providerOptionsForm!}
                         onProviderSelected={(value: AvailableProviderOption) => {
                             setSelectedProviderIndex(providerOptionsForm!.availableList.indexOf(value));
-                            pushScreen("TICKETS");
+                            if (isSingleFareAndSingleTicket(value)) {
+                                onSubmitTickets(value);
+                            } else {
+                                pushScreen("TICKETS");
+                            }
                         }}
                     />}
                 {topScreen() === "TICKETS" &&
@@ -278,53 +331,24 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
                             setProviderOptionsForm(providerOptionsFormUpdate);
                         }}
-                        onSubmit={() => {
-                            setWaiting(true);
-                            TripGoApi.submitProviderAndFares(selectedProvider!).then(bookingResult => {
-                                setWaiting(false);
-                                setBookingResult(bookingResult);
-                                const { reviews } = bookingResult;
-                                if (reviews) {
-                                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
-                                    reviews.forEach((review: BookingReview) => {
-                                        const timezone = trip!.segments[0].from.timezone;
-                                        if (review.origin) {
-                                            review.origin.timezone = timezone;
-                                        }
-                                        if (review.destination) {
-                                            review.destination.timezone = timezone;
-                                        }
-                                    })
-                                    pushScreen("REVIEW");
-                                } else {
-                                    // bookingResult will be something like:
-                                    // {"refreshURLForSourceObject":"https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b963c582-bcb1-416b-aaad-ea3d03a01a8d/update?bsb=1&psb=1","action":{"done":true}}
-                                    // ***** TODO: ***** go to "DETAILS" screen.
-                                    // onRequestClose?.(true, { ...bookingResult, userId: user!.id });
-                                }
-                            })
-                                .catch(UIUtil.errorMsg)
-                                .finally(() => setWaiting(false));
-                        }}
+                        onSubmit={() => onSubmitTickets(selectedProvider!)}
                     />}
                 {topScreen() === "REVIEW" &&
                     <TKUIBookingReview
                         reviews={bookingResult!.reviews!}
                         paymentOptions={bookingResult!.paymentOptions!}
-                        onContinue={() => {
+                        onContinue={async () => {
                             if (bookingResult!.paymentOptions?.[0]?.paymentMode === "FREE") {
                                 const payOption = bookingResult!.paymentOptions?.[0];
                                 setWaiting(true);
-                                TripGoApi.apiCallUrl(payOption.url, payOption.method)
-                                    .then(result => {
-                                        setWaiting(false);
-                                        // Check that result comes with either updateURL or refreshURLForSourceObject, so we can
-                                        // then get booking id.
-                                        // ***** TODO: ***** go to "DETAILS" screen.
-                                        // onRequestClose?.(true, result);
-                                    })
-                                    .catch(UIUtil.errorMsg)
-                                    .finally(() => setWaiting(false));
+                                try {
+                                    await TripGoApi.apiCallUrl(payOption.url, payOption.method)
+                                    await onRequestTripRefresh();
+                                } catch (error) {
+                                    UIUtil.errorMsg(error as Error);
+                                } finally {
+                                    setWaiting?.(false);
+                                }
                                 return;
                             }
                             pushScreen("PAYMENT");
@@ -346,7 +370,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             try {
                                 await onRequestTripRefresh();
                             } catch (error) {
-                                UIUtil.errorMsg(error as Error);     // TODO: is that ok?
+                                UIUtil.errorMsg(error as Error);     // TODO: is that ok?                            
+                            } finally {
                                 setWaiting?.(false);
                             }
                         },

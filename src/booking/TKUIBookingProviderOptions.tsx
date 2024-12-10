@@ -37,37 +37,43 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
                 Available
             </div>
             <div className={classes.available}>
-                {form.availableList.map((option, i) => (
-                    <div className={classes.option} key={i} onClick={() => { onProviderSelected(option) }}>
-                        <div className={classes.optionTitle}>
-                            {option.title}
+                {form.availableList.map((option, i) => {
+                    const price = FormatUtil.toMoney(option.minPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true })
+                        + (option.minPrice !== option.maxPrice ?
+                            " - " + FormatUtil.toMoney(option.maxPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true }) : "");
+                    return (
+                        <div className={classes.option} key={i} onClick={() => { onProviderSelected(option); }}>
+                            <div className={classes.optionTitle}>
+                                {option.title}
+                            </div>
+                            <div className={classes.priceRange}>
+                                {price}
+                            </div>
                         </div>
-                        <div className={classes.priceRange}>
-                            {FormatUtil.toMoney(option.minPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true })
-                                + " - " +
-                                FormatUtil.toMoney(option.maxPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true })}
-                        </div>
+                    );
+                })}
+            </div>
+            {form.unavailableList.length > 0 &&
+                <>
+                    <div className={classes.separator} />
+                    <div className={classes.title}>
+                        Not Available
                     </div>
-                ))}
-            </div>
-            <div className={classes.separator} />
-            <div className={classes.title}>
-                Not Available
-            </div>
-            <div className={classes.unavailable}>
-                {form.unavailableList.map((option, i) => (
-                    <div className={classes.unavailableOption} key={i}>
-                        <div className={classes.uOptionTitle}>
-                            {option.title}
-                        </div>
-                        {option.warningMessage &&
-                            <div className={classes.warningMessage}>
-                                <AlertIcon />
-                                {option.warningMessage}
-                            </div>}
+                    <div className={classes.unavailable}>
+                        {form.unavailableList.map((option, i) => (
+                            <div className={classes.unavailableOption} key={i}>
+                                <div className={classes.uOptionTitle}>
+                                    {option.title}
+                                </div>
+                                {option.warningMessage &&
+                                    <div className={classes.warningMessage}>
+                                        <AlertIcon />
+                                        {option.warningMessage}
+                                    </div>}
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </>}
         </div>
     );
 }

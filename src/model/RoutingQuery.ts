@@ -57,6 +57,7 @@ class RoutingQuery {
             ...(Environment.isBeta() || Environment.isStaging()) && {
                 bsb: true
             },
+            groupDRT: false, // Default to false for now, then switch to true.
             ...options.routingQueryParams   // Profile params, have priority over the others
         });
     }
