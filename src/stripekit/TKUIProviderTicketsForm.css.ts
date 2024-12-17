@@ -17,11 +17,7 @@ export const tKUIProviderTicketsFormDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.spaceBetween,
-        padding: '20px',
-        '& button': {
-            ...genStyles.grow,
-            marginLeft: '20%'
-        }
+        padding: '20px'
     },
     fareSummary: {
         ...genStyles.flex,
@@ -29,6 +25,19 @@ export const tKUIProviderTicketsFormDefaultStyle = (theme: TKUITheme) => ({
         '&>*': {
             marginRight: '10px',
             whiteSpace: 'nowrap'
+        }
+    },
+    buttons: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.grow,
+        ...genStyles.justifyEnd,
+        marginLeft: '20%',
+        '& button:only-child': {
+            ...genStyles.grow
+        },
+        '& button:not(:only-child)': {
+            marginLeft: '30px'
         }
     }
 });

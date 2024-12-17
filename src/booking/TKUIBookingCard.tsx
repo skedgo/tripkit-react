@@ -27,7 +27,7 @@ import Util from '../util/Util';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
-    onRequestTripRefresh: () => Promise<any>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
+    onRequestTripRefresh: () => Promise<Trip | undefined>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
     onSuccess?: (bookingTripUpdateURL: string) => void; // ***TODO:*** Remove?
     onShowTrip?: (trip: Trip) => void;
 }
@@ -302,10 +302,9 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             } else if (bookingForm.bookingResponseType === "DIRECT") {
                                 try {
                                     await TripGoApi.submitBookingOption(bookingForm!)
-                                    await onRequestTripRefresh();
+                                    await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
-                                    UIUtil.errorMsg(error as Error);     // TODO: is that ok?                                    
-                                } finally {
+                                    UIUtil.errorMsg(error as Error);
                                     setWaiting?.(false);
                                 }
                             }
@@ -343,10 +342,9 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                                 setWaiting(true);
                                 try {
                                     await TripGoApi.apiCallUrl(payOption.url, payOption.method)
-                                    await onRequestTripRefresh();
+                                    await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
                                     UIUtil.errorMsg(error as Error);
-                                } finally {
                                     setWaiting?.(false);
                                 }
                                 return;
@@ -368,10 +366,9 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         onSubmit: async ({ }) => {
                             setWaiting?.(true);
                             try {
-                                await onRequestTripRefresh();
+                                await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                             } catch (error) {
-                                UIUtil.errorMsg(error as Error);     // TODO: is that ok?                            
-                            } finally {
+                                UIUtil.errorMsg(error as Error);
                                 setWaiting?.(false);
                             }
                         },

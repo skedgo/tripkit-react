@@ -5,7 +5,20 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
         ...genStyles.column,
-        padding: '16px'
+        padding: '16px',
+        height: '100%'
+    },
+    body: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        ...genStyles.grow,
+        height: '1px',
+        overflowY: 'auto'
+    },
+    footer: {
+        marginTop: '20px',
+        display: 'flex',
+        ...genStyles.justifyEnd
     },
     title: {
         ...theme.textColorGray,

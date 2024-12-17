@@ -11,7 +11,7 @@ import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
 
 export function bookingActionToHandler(action: BookingAction, helpers: {
-    requestRefresh?: () => Promise<void>,
+    requestRefresh?: () => Promise<any>,
     onRequestAnother?: () => void,
     onShowRelatedTrip?: () => void,
     setWaitingFor?: (action?: BookingAction) => void;

@@ -8,13 +8,15 @@ import { TKUICardClientProps } from "../card/TKUICard";
 import { AvailableProviderOption } from "../model/trip/BookingInfo";
 import TicketOption from "../model/trip/TicketOption";
 import TKUITicketSelect from "./TKUITicketSelect";
-import TKUIButton from "../buttons/TKUIButton";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import FormatUtil from "../util/FormatUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     provider: AvailableProviderOption;
     onChange: (update: TicketOption[]) => void;
     onSubmit: () => void;
+    onClose?: () => void;
+    cancelText?: string;
 }
 
 export type TKUIProviderTicketsFormClientProps = IClientProps;
@@ -32,7 +34,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIProviderTicketsForm"
 };
 const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { provider, onChange, onSubmit, classes, t } = props;
+    const { provider, onChange, onSubmit, onClose, cancelText, classes, t } = props;
     const numOfTickets = provider.fares!.reduce((acc, ticket) => acc + ticket.value, 0);
     const totalPrice = provider.fares!.reduce((acc, ticket) => acc + ticket.price * ticket.value, 0);
     return (
@@ -55,11 +57,19 @@ const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps)
                         {FormatUtil.toMoney(totalPrice, { nInCents: true, forceDecimals: true, zeroAsFree: false })}
                     </div>
                 </div>
-                <TKUIButton
-                    text={t("Continue")}
-                    onClick={onSubmit}
-                    disabled={!provider.fares!.some(ticket => ticket.value > 0)}
-                />
+                <div className={classes.buttons}>
+                    {onClose &&
+                        <TKUIButton
+                            text={cancelText ?? t("Cancel")}
+                            type={TKUIButtonType.SECONDARY}
+                            onClick={() => onClose()}
+                        />}
+                    <TKUIButton
+                        text={t("Continue")}
+                        onClick={onSubmit}
+                        disabled={!provider.fares!.some(ticket => ticket.value > 0)}
+                    />
+                </div>
             </div>
         </div>
     );

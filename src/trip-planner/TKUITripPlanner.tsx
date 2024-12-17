@@ -395,6 +395,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             const handleRequestTripRefresh = async () => {
                 const update = await onRequestTripRefresh(tripS);
                 update && setTripS(update);
+                return update;
             };
             return (
                 <TKPropsOverride
