@@ -33,6 +33,7 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
     },
     option: {
         paddingBottom: '20px',
+        cursor: 'pointer',
         '&:not(:last-child)': {
             ...theme.divider,
             marginBottom: '20px'
