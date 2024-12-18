@@ -301,7 +301,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                                 }
                             } else if (bookingForm.bookingResponseType === "DIRECT") {
                                 try {
-                                    await TripGoApi.submitBookingOption(bookingForm!)
+                                    const { updateURL } = await TripGoApi.submitBookingOptionAndFinish(bookingForm!)
+                                    updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
                                     await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
                                     UIUtil.errorMsg(error as Error);
@@ -341,7 +342,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                                 const payOption = bookingResult!.paymentOptions?.[0];
                                 setWaiting(true);
                                 try {
-                                    await TripGoApi.apiCallUrl(payOption.url, payOption.method)
+                                    const { updateURL } = await TripGoApi.apiCallUrl(payOption.url, payOption.method);
+                                    updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
                                     await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
                                     UIUtil.errorMsg(error as Error);
@@ -363,9 +365,10 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         bookingPaymentForm: bookingResult!,
                         setWaiting,
                         // Rename to onPaymentDone?
-                        onSubmit: async ({ }) => {
+                        onSubmit: async ({ updateURL }) => {
                             setWaiting?.(true);
                             try {
+                                updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
                                 await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                             } catch (error) {
                                 UIUtil.errorMsg(error as Error);

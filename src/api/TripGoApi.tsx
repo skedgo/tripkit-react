@@ -187,6 +187,10 @@ class TripGoApi {
             .then(this.deserializeBookingResult);
     }
 
+    public static submitBookingOptionAndFinish(bookingForm: BookingInfo): Promise<{ updateURL: string }> {
+        return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm));
+    }
+
     public static submitBookingOptionToGetProviderOptions(bookingForm: BookingInfo): Promise<ProviderOptionsForm> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm))
             .then(this.deserializeProviderOptions);
