@@ -392,8 +392,8 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
     };
 
     private onClick(clickLatLng: LatLng) {
-        const { from, to, mapClickBehaviour, disableMapClick } = this.props;
-        if (typeof disableMapClick === 'function' ? disableMapClick?.(this.getZoom()) : disableMapClick) {
+        const { from, to, mapClickBehaviour, disableMapClick, readonly } = this.props;
+        if (readonly || (typeof disableMapClick === 'function' ? disableMapClick?.(this.getZoom()) : disableMapClick)) {
             return;
         }
         // Do nothing if the location is already the from or to.
