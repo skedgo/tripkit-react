@@ -392,7 +392,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
         const BookingCardWithTripState = () => {
             const [tripS, setTripS] = useState<Trip>(trip);
-            const handleRequestTripRefresh = async () => {
+            const handleRequestTripRefresh = async (refreshURLForSourceObject?: string) => {
+                // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
+                if (refreshURLForSourceObject) {
+                    tripS.updateURL = refreshURLForSourceObject;
+                }
                 const update = await onRequestTripRefresh(tripS);
                 update && setTripS(update);
                 return update;

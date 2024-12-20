@@ -11,7 +11,7 @@ import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
 
 export function bookingActionToHandler(action: BookingAction, helpers: {
-    requestRefresh?: () => Promise<any>,
+    requestRefresh?: (refreshURLForSourceObject?: string) => Promise<any>,
     onRequestAnother?: () => void,
     onShowRelatedTrip?: () => void,
     setWaitingFor?: (action?: BookingAction) => void;
@@ -40,12 +40,7 @@ export function bookingActionToHandler(action: BookingAction, helpers: {
                     TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
                         // NetworkUtil.delayPromise(10)({})     // For testing
                         .then(bookingForm => {
-                            // Workaround for (selected) trip with empty ("") updateUrl.
-                            // if (trip && !trip.updateURL
-                            //     && bookingForm?.refreshURLForSourceObject) {    // Not sure if it always came a booking form.
-                            //     trip.updateURL = bookingForm.refreshURLForSourceObject;
-                            // }
-                            return requestRefresh?.();
+                            return requestRefresh?.(bookingForm.refreshURLForSourceObject ?? bookingForm.updateURL);
                         })
                         .catch(UIUtil.errorMsg)
                         .finally(() => setWaitingFor?.(undefined));

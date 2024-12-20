@@ -27,7 +27,7 @@ import Util from '../util/Util';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
-    onRequestTripRefresh: () => Promise<Trip | undefined>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
+    onRequestTripRefresh: (refreshURLForSourceObject?: string) => Promise<Trip | undefined>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
     onSuccess?: (bookingTripUpdateURL: string) => void; // ***TODO:*** Remove?
     onShowTrip?: (trip: Trip) => void;
 }
@@ -302,8 +302,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             } else if (bookingForm.bookingResponseType === "DIRECT") {
                                 try {
                                     const { updateURL } = await TripGoApi.submitBookingOptionAndFinish(bookingForm!)
-                                    updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
-                                    await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
+                                    await onRequestTripRefresh(updateURL);   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
                                     UIUtil.errorMsg(error as Error);
                                     setWaiting?.(false);
@@ -343,8 +342,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                                 setWaiting(true);
                                 try {
                                     const { updateURL } = await TripGoApi.apiCallUrl(payOption.url, payOption.method);
-                                    updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
-                                    await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
+                                    await onRequestTripRefresh(updateURL);   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                                 } catch (error) {
                                     UIUtil.errorMsg(error as Error);
                                     setWaiting?.(false);
@@ -368,8 +366,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         onSubmit: async ({ updateURL }) => {
                             setWaiting?.(true);
                             try {
-                                updateURL && (trip.updateURL = updateURL); // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
-                                await onRequestTripRefresh();   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
+                                await onRequestTripRefresh(updateURL);   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
                             } catch (error) {
                                 UIUtil.errorMsg(error as Error);
                                 setWaiting?.(false);
@@ -399,7 +396,11 @@ const Consumer: React.FunctionComponent<{ children: (props: Pick<IClientProps, "
         <>
             {children({
                 trip: selectedTrip!,
-                onRequestTripRefresh: async () => {
+                onRequestTripRefresh: async (refreshURLForSourceObject?: string) => {
+                    // Workaround in case the last booking hit returns an updateURL, which may be different from the one in the trip.
+                    if (refreshURLForSourceObject) {
+                        selectedTrip!.updateURL = refreshURLForSourceObject;
+                    }
                     return refreshSelectedTrip();
                 }
             })}
