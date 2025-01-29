@@ -43,6 +43,7 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter
     },
     optionTitle: {
+        ...genStyles.flex,
         ...genStyles.fontM,
         fontWeight: 'bold'
     },

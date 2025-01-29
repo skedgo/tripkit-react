@@ -13,6 +13,7 @@ import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     form: ProviderOptionsForm;
     onProviderSelected: (provider: AvailableProviderOption) => void;
+    renderProviderAction?: (providerCode: string) => React.ReactNode;
     onClose?: () => void;
     cancelText?: string;
 }
@@ -33,7 +34,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { form, onProviderSelected, onClose, cancelText, classes, t } = props;
+    const { form, onProviderSelected, renderProviderAction, onClose, cancelText, classes, t } = props;
     return (
         <div className={classes.main}>
             <div className={classes.body}>
@@ -49,6 +50,7 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
                             <div className={classes.option} key={i} onClick={() => { onProviderSelected(option); }}>
                                 <div className={classes.optionTitle}>
                                     {option.title}
+                                    {option.modeInfo.identifier && renderProviderAction?.(option.modeInfo.identifier)}
                                 </div>
                                 <div className={classes.priceRange}>
                                     {price}
@@ -68,6 +70,7 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
                                 <div className={classes.unavailableOption} key={i}>
                                     <div className={classes.uOptionTitle}>
                                         {option.title}
+                                        {option.modeInfo.identifier && renderProviderAction?.(option.modeInfo.identifier)}
                                     </div>
                                     {option.warningMessage &&
                                         <div className={classes.warningMessage}>
