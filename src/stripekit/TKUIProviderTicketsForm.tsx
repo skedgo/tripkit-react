@@ -68,6 +68,7 @@ const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps)
                         text={t("Continue")}
                         onClick={onSubmit}
                         disabled={!provider.fares!.some(ticket => ticket.value > 0)}
+                        name="continue-tickets-btn"
                     />
                 </div>
             </div>
