@@ -843,7 +843,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             // triggering compute trips.
             if (this.state.region && prevState.region !== this.state.region) {
                 // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
-                const finishSignInP = this.props.finishInitLoadingPromise ?? this.props.options.finishSignInStatusP
+                const finishSignInP = this.props.options.finishSignInStatusP ?? this.props.finishInitLoadingPromise
                 finishSignInP?.then(status => {
                     status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
                 });
@@ -895,7 +895,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
                 // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
-                const finishSignInP = this.props.finishInitLoadingPromise ?? this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut);
+                const finishSignInP = this.props.options.finishSignInStatusP ?? this.props.finishInitLoadingPromise ?? Promise.resolve(SignInStatus.signedOut);
                 return finishSignInP
                     .then(status =>
                         (status === SignInStatus.signedIn && this.props.options.exclusiveModes ?
