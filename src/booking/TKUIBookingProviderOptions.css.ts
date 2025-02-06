@@ -39,6 +39,13 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
             marginBottom: '20px'
         },
         ...genStyles.flex,
+        ...genStyles.column,
+        '& $warningMessage path': {
+            fill: theme.colorWarning
+        }
+    },
+    optionBody: {
+        ...genStyles.flex,
         ...genStyles.spaceBetween,
         ...genStyles.alignCenter
     },
@@ -64,25 +71,25 @@ export const tKUIBookingProviderOptionsDefaultStyle = (theme: TKUITheme) => ({
             marginBottom: '20px'
         },
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        '& $warningMessage path': {
+            fill: theme.colorError
+        }
     },
     uOptionTitle: {
         ...theme.textColorDisabled,
-        marginBottom: '12px',
         ...genStyles.fontM,
         fontWeight: 'bold'
     },
     warningMessage: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
+        marginTop: '12px',
         '& svg': {
             width: '20px',
             height: '20px',
             marginRight: '10px',
             ...genStyles.noShrink
-        },
-        '& path': {
-            fill: theme.colorError
         }
     },
     separator: {

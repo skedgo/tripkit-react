@@ -73,6 +73,8 @@ class AvailableProviderOption {
     public title: string = "";
     @JsonProperty("bookingTitle", String, true)
     public bookingTitle: string = "";
+    @JsonProperty("warningMessage", String, true)
+    public warningMessage: string = "";
 }
 @JsonObject
 class UnavailableProviderOption {

@@ -48,13 +48,20 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
                                 " - " + FormatUtil.toMoney(option.maxPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true }) : "");
                         return (
                             <div className={classes.option} key={i} onClick={() => { onProviderSelected(option); }} id={`provider-option-${option.modeInfo.identifier}`}>
-                                <div className={classes.optionTitle}>
-                                    {option.title}
-                                    {option.modeInfo.identifier && renderProviderAction?.(option.modeInfo.identifier)}
+                                <div className={classes.optionBody}>
+                                    <div className={classes.optionTitle}>
+                                        {option.title}
+                                        {option.modeInfo.identifier && renderProviderAction?.(option.modeInfo.identifier)}
+                                    </div>
+                                    <div className={classes.priceRange}>
+                                        {price}
+                                    </div>
                                 </div>
-                                <div className={classes.priceRange}>
-                                    {price}
-                                </div>
+                                {option.warningMessage &&
+                                    <div className={classes.warningMessage}>
+                                        <AlertIcon />
+                                        {option.warningMessage}
+                                    </div>}
                             </div>
                         );
                     })}
