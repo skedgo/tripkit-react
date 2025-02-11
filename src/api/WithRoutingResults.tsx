@@ -933,6 +933,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     enabledModes.splice(enabledModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
                 });
             }
+            const impliedModes: string[] = [];
+            enabledModes.forEach((mode: string) => {
+                impliedModes.push(...RegionsData.instance.getModeIdentifier(mode)?.implies ?? []);
+            });
+            enabledModes.push(...impliedModes.filter((mode: string) => !enabledModes.includes(mode)));
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();
             if (multiModalSet.length > 1) {

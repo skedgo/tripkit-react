@@ -9,6 +9,8 @@ class ModeIdentifier {
     private _color: Color | null = null;
     @JsonProperty("icon", String, true)
     private _icon: string | null = null;
+    @JsonProperty("implies", [String], true)
+    public implies?: string[] = undefined;
 
     private _identifier: string = "";
 
