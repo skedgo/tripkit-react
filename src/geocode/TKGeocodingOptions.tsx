@@ -22,6 +22,7 @@ import TKMapViewport from "../map/TKMapViewport";
 import Region from "../model/region/Region";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import { staticFavouriteData } from "../favourite/TKFavouritesProvider";
+import SchoolLocation from "../model/location/SchoolLocation";
 
 export const TKGeocodingOptionsForDoc = (props: Partial<TKGeocodingOptions>) => null;
 TKGeocodingOptionsForDoc.displayName = 'TKGeocodingOptions';
@@ -130,57 +131,78 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         }
 
         // Then recents
-        if (l1.source === TKDefaultGeocoderNames.recent) {
+        if (l1.source === TKDefaultGeocoderNames.recent && l2.source !== TKDefaultGeocoderNames.recent) {
             return -1;
-        } else if (l2.source === TKDefaultGeocoderNames.recent) {
+        } else if (l2.source === TKDefaultGeocoderNames.recent && l1.source !== TKDefaultGeocoderNames.recent) {
             return 1;
         }
 
+        let relevanceL1 = LocationUtil.relevance(query, l1);
+        let relevanceL2 = LocationUtil.relevance(query, l2);
+        if (l1 instanceof SchoolLocation) {
+            relevanceL1 += (1 - relevanceL1) * .5;
+        }
+        if (l2 instanceof SchoolLocation) {
+            relevanceL2 += (1 - relevanceL2) * .5;
+        }
+
         if (l1.source === TKDefaultGeocoderNames.skedgo) {
-            return -1;
+            relevanceL1 += (1 - relevanceL1) * .3;
         } else if (l2.source === TKDefaultGeocoderNames.skedgo) {
-            return 1
+            relevanceL2 += (1 - relevanceL2) * .3;
         }
 
-        const relevanceDiff = LocationUtil.relevance(query, l2) - LocationUtil.relevance(query, l1);
-
-        // Prioritize skedgo geocoder result if
-        // - query has 3 or more characters, and
-        // - query is related to "airport" or "stop", and
-        // - relevance is not less than 0.1 from other source result
-        if (query.length >= 3 &&
-            (LocationUtil.relevanceStr(query, "airport") >= .7 ||
-                LocationUtil.relevanceStr(query, "stop") >= .7)) {
-            if (l1.source === TKDefaultGeocoderNames.skedgo && relevanceDiff <= 0.1) {
-                return -1;
-            } else if (l2.source === TKDefaultGeocoderNames.skedgo && relevanceDiff >= -0.1) {
-                return 1
-            }
-        }
-
-        if (relevanceDiff !== 0) {
-            return relevanceDiff;
-        }
-
-        return 0;
+        const relevanceDiff = relevanceL2 - relevanceL1;
+        return relevanceDiff;
     };
 
     // It's used to remove duplicates from different sources. We assume results returned
     // by each source is free of duplicates (is responsibility of the source to ensure that)
     const analogResults = (r1: Location, r2: Location) => {
-        const relevance = Math.max(LocationUtil.relevanceStr(r1.address || "", r2.address || ""), LocationUtil.relevanceStr(r2.address || "", r1.address || ""));
+        const r1DisplayString = (LocationUtil.getMainText(r1) + (LocationUtil.getSecondaryText(r1) ? ", " + LocationUtil.getSecondaryText(r1) : "")).toLowerCase();
+        const r2DisplayString = (LocationUtil.getMainText(r2) + (LocationUtil.getSecondaryText(r2) ? ", " + LocationUtil.getSecondaryText(r2) : "")).toLowerCase();
+        const r1MainString = LocationUtil.getMainText(r1).toLowerCase();
+        const r2MainString = LocationUtil.getMainText(r2).toLowerCase();
+        const mutualRelevance =
+            (Math.max(
+                LocationUtil.relevanceStr(r1DisplayString, r2DisplayString),
+                LocationUtil.relevanceStr(r2DisplayString, r1DisplayString))
+                +
+                Math.max(LocationUtil.relevanceStr(r1MainString, r2MainString),
+                    LocationUtil.relevanceStr(r2MainString, r1MainString))) / 2;
         const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
         if (r1.source === r2.source) {
             return false;
         }
-        Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);
-        if (r1 instanceof StopLocation && r2 instanceof StopLocation) {
+        if ((r1 instanceof StopLocation && r2 instanceof StopLocation) || (r1 instanceof SchoolLocation && r2 instanceof SchoolLocation)) { // E.g. stop from skedgo geocoder vs stop from favourites.
             return r1.equals(r2);
         }
-        return relevance > .7 && LocationUtil.distanceInMetres(r1, r2) < 100;
+        if (mutualRelevance > .8 && distanceInMetres < 100 ||   // very similar and very close
+            (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .6 && distanceInMetres < 300 || // rather similar and rather close, when one is a school
+            (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .5 && distanceInMetres < 70) {  // a bit less similar but very close, when one is a school
+            console.log("----- Analog -----");
+            console.log(r1DisplayString, r1);
+            console.log(r2DisplayString, r2);
+            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            return true;
+        } else if ((r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && distanceInMetres < 300) {
+            console.log("----- NOT Analog -----");
+            console.log(r1DisplayString, r1);
+            console.log(r2DisplayString, r2);
+            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            console.log("--------");
+        }
+        return false;
     }
 
-    const compareAnalog = (l1: Location, l2: Location, query: string): -1 | 0 | 1 => {
+    function compareAnalog(l1, l2, query): number {
+        // Prioritize school locations over others when analog result found.
+        if (l1 instanceof SchoolLocation && !(l2 instanceof SchoolLocation)) {
+            return -1;
+        }
+        if (!(l1 instanceof SchoolLocation) && l2 instanceof SchoolLocation) {
+            return 1;
+        }
         if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {
             return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") < 0.2 ? 1 : -1
         } else if (l1.source === TKDefaultGeocoderNames.skedgo && l2.source !== TKDefaultGeocoderNames.skedgo) {

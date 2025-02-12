@@ -55,6 +55,20 @@ const defaultRenderIcon = (location: Location) =>
             location instanceof SchoolLocation ?
                 <TKUIIcon iconName="schoolLocation" /> :
                 <IconPin />;
+
+const compareSkedgoResults = (l1: Location, l2: Location, query: string) => {
+    let relevanceL1 = LocationUtil.relevance(query, l1);
+    let relevanceL2 = LocationUtil.relevance(query, l2);
+    if (l1 instanceof SchoolLocation) {
+        relevanceL1 += (1 - relevanceL1) * .5;
+    }
+    if (l2 instanceof SchoolLocation) {
+        relevanceL2 += (1 - relevanceL2) * .5;
+    }
+    const relevanceDiff = relevanceL2 - relevanceL1;
+    // Compare with relevanceDiff just if one of the locations is a SchoolLocation, otherwise preserve the sorting as it comes from the geocoder service.
+    return (l1 instanceof SchoolLocation || l2 instanceof SchoolLocation) ? relevanceDiff : 0;
+};
 class SkedgoGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;
@@ -129,9 +143,8 @@ class SkedgoGeocoder implements IGeocoder {
             for (const locJson of json.choices) {
                 results.push(SkedgoGeocoder.locationFromAutocompleteResult(locJson, query));
             }
-            if (this.options.compare) {
-                results.sort((a, b) => this.options.compare!(a, b, query));
-            }
+            const compare = this.options.compare ?? compareSkedgoResults;
+            results.sort((a, b) => compare(a, b, query));
             this.cache.set(endpoint, results);
             callback(results.slice(0, this.options.resultsLimit));
         }).catch(reason => {
