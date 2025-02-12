@@ -129,8 +129,12 @@ class TKShareHelper {
             if (query.from.source) {
                 searchUrl.searchParams.set("fsrc", query.from.source);
             }
-            if (query.from instanceof SchoolLocation && query.from.modeIdentifiers) {
-                searchUrl.searchParams.set("fschoolmodes", query.from.modeIdentifiers.join(","));
+            if (query.from instanceof SchoolLocation) {
+                if (query.from.id) {
+                    searchUrl.searchParams.set("fresolve", true.toString());
+                } else if (query.from.modeIdentifiers) {    // Workaround until geocode.json returns id for school locations
+                    searchUrl.searchParams.set("fschoolmodes", query.from.modeIdentifiers.join(","));
+                }
             }
         }
         if (query.to) {
@@ -143,8 +147,12 @@ class TKShareHelper {
             if (query.to.source) {
                 searchUrl.searchParams.set("tsrc", query.to.source);
             }
-            if (query.to instanceof SchoolLocation && query.to.modeIdentifiers) {
-                searchUrl.searchParams.set("tschoolmodes", query.to.modeIdentifiers.join(","));
+            if (query.to instanceof SchoolLocation) {
+                if (query.to.id) {
+                    searchUrl.searchParams.set("tresolve", true.toString());
+                } else if (query.to.modeIdentifiers) {  // Workaround until geocode.json returns id for school locations
+                    searchUrl.searchParams.set("tschoolmodes", query.to.modeIdentifiers.join(","));
+                }
             }
         }
         searchUrl.searchParams.set("type", query.timePref === TimePreference.NOW ? "0" : (query.timePref === TimePreference.LEAVE ? "1" : "2"));
@@ -169,12 +177,15 @@ class TKShareHelper {
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
-            const { flat, flng, fname, fid, fsrc, fschoolmodes, tlat, tlng, tname, tid, tsrc, tschoolmodes, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
+            const { flat, flng, fname, fid, fsrc, fresolve, fschoolmodes, tlat, tlng, tname, tid, tsrc, tresolve, tschoolmodes, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
             let from: Location | null = null;
             if (flat || fname || fsrc === TKDefaultGeocoderNames.geolocation) {
                 const fromLatLng = flat ? LatLng.createLatLng(Number(flat), Number(flng)) : new LatLng();
                 from = Location.create(fromLatLng, fname, fid ? fid : "", "", fsrc);
-                if (fschoolmodes) {
+                if (fresolve === "true") {
+                    from.hasDetail = false;
+                }
+                if (fschoolmodes) { // Workaround until geocode.json returns id for school locations
                     from = Util.iAssign(new SchoolLocation(), from);
                     from.class = "SchoolLocation";
                     (from as SchoolLocation).modeIdentifiers = fschoolmodes.split(",");
@@ -184,7 +195,10 @@ class TKShareHelper {
             if (tlat || tlng) {
                 const toLatlng = tlat ? LatLng.createLatLng(Number(tlat), Number(tlng)) : new LatLng();
                 to = Location.create(toLatlng, tname, tid ? tid : "", "", tsrc);
-                if (tschoolmodes) {
+                if (tresolve === "true") {
+                    to.hasDetail = false;
+                }
+                if (tschoolmodes) { // Workaround until geocode.json returns id for school locations
                     to = Util.iAssign(new SchoolLocation(), to);
                     to.class = "SchoolLocation";
                     (to as SchoolLocation).modeIdentifiers = tschoolmodes.split(",");
