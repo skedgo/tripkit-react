@@ -13,6 +13,7 @@ import Util from "../util/Util";
 import TripGoApi from "../api/TripGoApi";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import SchoolLocation from "../model/location/SchoolLocation";
 
 class TKShareHelper {
 
@@ -128,6 +129,9 @@ class TKShareHelper {
             if (query.from.source) {
                 searchUrl.searchParams.set("fsrc", query.from.source);
             }
+            if (query.from instanceof SchoolLocation && query.from.modeIdentifiers) {
+                searchUrl.searchParams.set("fschoolmodes", query.from.modeIdentifiers.join(","));
+            }
         }
         if (query.to) {
             searchUrl.searchParams.set("tlat", query.to.lat.toString());
@@ -138,6 +142,9 @@ class TKShareHelper {
             }
             if (query.to.source) {
                 searchUrl.searchParams.set("tsrc", query.to.source);
+            }
+            if (query.to instanceof SchoolLocation && query.to.modeIdentifiers) {
+                searchUrl.searchParams.set("tschoolmodes", query.to.modeIdentifiers.join(","));
             }
         }
         searchUrl.searchParams.set("type", query.timePref === TimePreference.NOW ? "0" : (query.timePref === TimePreference.LEAVE ? "1" : "2"));
@@ -162,16 +169,26 @@ class TKShareHelper {
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
-            const { flat, flng, fname, fid, fsrc, tlat, tlng, tname, tid, tsrc, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
+            const { flat, flng, fname, fid, fsrc, fschoolmodes, tlat, tlng, tname, tid, tsrc, tschoolmodes, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
             let from: Location | null = null;
             if (flat || fname || fsrc === TKDefaultGeocoderNames.geolocation) {
                 const fromLatLng = flat ? LatLng.createLatLng(Number(flat), Number(flng)) : new LatLng();
                 from = Location.create(fromLatLng, fname, fid ? fid : "", "", fsrc);
+                if (fschoolmodes) {
+                    from = Util.iAssign(new SchoolLocation(), from);
+                    from.class = "SchoolLocation";
+                    (from as SchoolLocation).modeIdentifiers = fschoolmodes.split(",");
+                }
             }
             let to: Location | null = null;
             if (tlat || tlng) {
                 const toLatlng = tlat ? LatLng.createLatLng(Number(tlat), Number(tlng)) : new LatLng();
                 to = Location.create(toLatlng, tname, tid ? tid : "", "", tsrc);
+                if (tschoolmodes) {
+                    to = Util.iAssign(new SchoolLocation(), to);
+                    to.class = "SchoolLocation";
+                    (to as SchoolLocation).modeIdentifiers = tschoolmodes.split(",");
+                }
             }
             routingQuery = RoutingQuery.create(from, to,
                 type === "0" ? TimePreference.NOW : (type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
