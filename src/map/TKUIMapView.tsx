@@ -464,6 +464,12 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         this.fitBounds(MapUtil.createBBoxArray(fitSet));
     }
 
+    public fitMapFromTo() {
+        if (this.props.from || this.props.to) {
+            this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
+        }
+    }
+
     private userLocationSubscription?: any;
 
     private onTrackUserLocation(fit: boolean = false, onError?: (error: Error) => void) {
@@ -892,7 +898,12 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     public getCenter(): LatLng | undefined {
         const center = this.leafletElement?.getCenter();
-        return center && LatLng.createLatLng(center[0], center[1]);
+        console.log(this.leafletElement);
+        console.log(center)
+        if (center) {
+            return LatLng.createLatLng(center.lat, center.lng);
+        }
+        return undefined;
     }
 
     public getBounds(): BBox | undefined {
