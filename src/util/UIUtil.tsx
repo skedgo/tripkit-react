@@ -34,7 +34,7 @@ class UIUtil {
                                         {...button}
                                         onClick={() => {
                                             if (button.onClick) {
-                                                button.onClick();
+                                                (button.onClick as any)();
                                             }
                                             onClose();
                                         }}

@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import Autocomplete from 'react-autocomplete';
+import Autocomplete from '../ext_lib/react-autocomplete';
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";

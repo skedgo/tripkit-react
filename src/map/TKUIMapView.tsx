@@ -736,9 +736,9 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.children}
                     {this.props.childrenThis?.(this)}
                 </RLMap>
-                <ReactResizeDetector handleWidth={true} handleHeight={true}
+                {/* <ReactResizeDetector handleWidth={true} handleHeight={true}
                     onResize={() => this.onResize()}
-                />
+                /> */}
                 {this.props.showCurrLocBtn !== false &&
                     <TKUITooltip
                         overlayContent={this.state.userLocationTooltip}
