@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import Autocomplete from '../ext_lib/react-autocomplete';
+import Autocomplete from '../util_components/TKUIAutocomplete';
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
@@ -175,7 +175,7 @@ class TKUILocationBox extends Component<IProps, IState> {
 
     private resultsArrivedForQuery?: string;
     private geocodingData: MultiGeocoder;
-    private autocompleteRef: React.RefObject<Autocomplete> = React.createRef<Autocomplete>();
+    private autocompleteRef: React.RefObject<any> = React.createRef<any>();
 
     public static defaultProps: Partial<IProps> = {
         resolveCurr: true,
