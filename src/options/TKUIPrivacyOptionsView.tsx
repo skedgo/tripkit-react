@@ -8,9 +8,6 @@ import { tKUIPrivacyOptionsViewDefaultStyle } from "./TKUIPrivacyOptionsView.css
 import { CardPresentation, default as TKUICard } from "../card/TKUICard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
-import { colorWithOpacity } from "../jss/TKUITheme";
-import { withStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
 import Util, { SKEDGO_PRIVACY_POLICY_URL } from "../util/Util";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
@@ -20,6 +17,7 @@ import TripGoApi from "../api/TripGoApi";
 import TKLoading from '../card/TKLoading';
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
 import { OptionsContext } from "./OptionsProvider";
+import TKUICheckbox from "../util_components/TKUICheckbox";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,
@@ -47,15 +45,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIPrivacyOptionsView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { onRequestClose, theme, classes, t } = props;
-    const [StyledCheckbox] = useState<React.ComponentType<any>>(withStyles({
-        root: {
-            color: colorWithOpacity(theme.colorPrimary, .5),
-            '&$checked': {
-                color: theme.colorPrimary
-            }
-        },
-        checked: {},
-    })(Checkbox));
     const [waiting, setWaiting] = useState<boolean>(false);
     const { accountsSupported, logout, status } = useContext(TKAccountContext);
     const { setShowUserProfile } = useContext(OptionsContext);
@@ -99,8 +88,8 @@ const TKUIPrivacyOptionsView: React.FunctionComponent<IProps> = (props: IProps) 
                                 {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anonymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
                             </div>
                         </div>
-                        <StyledCheckbox
-                            checked={props.value.trackTripSelections}
+                        <TKUICheckbox
+                            checked={props.value.trackTripSelections ?? false}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 const checked = event.target.checked;
                                 const update = Util.deepClone(props.value);
@@ -108,6 +97,7 @@ const TKUIPrivacyOptionsView: React.FunctionComponent<IProps> = (props: IProps) 
                                 props.onChange(update);
                             }}
                             inputProps={{ 'aria-label': 'Trip selections' }}
+                            theme={theme}
                         />
                     </div>
                 </TKUISettingSection>

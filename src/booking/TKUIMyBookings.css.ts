@@ -16,10 +16,11 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
             justifyContent: 'space-around'
         },
         '& .MuiTab-root': {
-            textTransform: 'initial'
+            textTransform: 'initial',
+            ...theme.textColorGray
         },
         '& .Mui-selected': {
-            color: theme.colorPrimary
+            color: theme.colorPrimary + '!important'
         },
         '& .MuiTabs-indicator': {
             backgroundColor: theme.colorPrimary + '!important'

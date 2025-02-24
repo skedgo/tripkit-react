@@ -148,3 +148,10 @@ npm publish [<tarball>|<folder>] [--tag <tag>] [--access <public|restricted>] [-
 
 Publishes '.' if no argument supplied
 Sets tag 'latest' if no --tag specified
+
+### Upgrade to React 19
+Will remain at react@18.1.3 until addressing the following issues:
+
+- rc-tooltip@6.4.0 causes the following warning (actually on the rc-resize-observer dependency), which will break when upgrading to v19.
+```Warning: findDOMNode is deprecated and will be removed in the nex```.
+- react-draggable causes a warning that will break in v19, but notice warning on upgrading this lib at the beggining of TKUISlideUp.tsx

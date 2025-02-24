@@ -191,7 +191,7 @@ export interface ITKUIConfigOptional {
     /**
      * @ctype
      */
-    i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
+    i18n: { locale: string, translations: Partial<TKI18nMessages> } | Promise<{ locale: string, translations: TKI18nMessages }>;
     isDarkMode: boolean;
     /**
      * Allows to specify google analytics (GA) config to track user events to GA.

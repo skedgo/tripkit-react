@@ -11,11 +11,10 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKComponentDefaultConfig } from '../config/TKUIConfig';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Util from '../util/Util';
-import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
+import { black, TKUITheme } from '../jss/TKUITheme';
 import TKUIHTMLTicketView from './TKUIHTMLTicketView';
 import { tKUIBookingFormDefaultStyle } from '../booking/TKUIBookingForm.css';
-import Radio from '@material-ui/core/Radio/Radio';
-import { withStyles as muiWithStyles } from '@material-ui/core/styles';
+import TKUIRadio from '../util_components/TKUIRadio';
 
 const ticketSelectJss = (theme: TKUITheme) => {
     const { form, group, icon } = tKUIBookingFormDefaultStyle(theme);
@@ -118,17 +117,6 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
             update[ticketNumber] = Util.iAssign(update[ticketNumber], { value: newValue });
             onChange!(update);
         }
-        const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                marginLeft: '0',
-                width: '50px',
-                color: colorWithOpacity(theme.colorPrimary, .5),
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Radio));
         const [showTicket, setShowTicket] = useState<boolean>(false);
         const purchasedTickets = tickets?.reduce((ptickets, ticket) => ptickets.concat(ticket.purchasedTickets ?? []), [] as PurchasedTicket[]);
         return (
@@ -173,7 +161,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                     }}
                                 />
                                 {useRadio ?
-                                    <StyledRadio
+                                    <TKUIRadio
                                         checked={ticket.value === 1}
                                         onChange={(_e, checked) => {
                                             if (checked) {
@@ -183,6 +171,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                                 onChange!(update);
                                             }
                                         }}
+                                        theme={theme}
                                     /> :
                                     ticket.value === 0 ?
                                         <TKUIButton

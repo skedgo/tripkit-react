@@ -1,13 +1,13 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Tooltip from "rc-tooltip";
-import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
+import { TooltipProps } from "rc-tooltip/lib/Tooltip";
+import { tKUITooltipDefaultStyle } from "./TKUITooltip.css";
 import classNames from "classnames";
-import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
-import {genClassNames} from "../css/GenStyle.css";
-import {TooltipProps} from "rc-tooltip/lib/Tooltip";
+import { ReactComponent as IconRemove } from '../images/ic-cross2.svg';
+import { genClassNames } from "../css/GenStyle.css";
 import 'rc-tooltip/assets/bootstrap_white.css';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -37,13 +37,13 @@ export interface IStyle {
     iconClear: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUITooltipProps = IProps;
 export type TKUITooltipStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITooltip {...props}/>,
+    render: props => <TKUITooltip {...props} />,
     styles: tKUITooltipDefaultStyle,
     classNamePrefix: "TKUITooltip"
 };
@@ -73,14 +73,14 @@ class TKUITooltip extends React.Component<IProps, IState> {
     private visibleForTimeout: any;
 
     public setVisibleFor(duration?: number) {
-        this.setState({temporaryVisible: duration !== undefined && duration > 0});
+        this.setState({ temporaryVisible: duration !== undefined && duration > 0 });
         if (this.visibleForTimeout) {
             clearTimeout(this.visibleForTimeout);
             this.visibleForTimeout = undefined;
         }
         if (duration !== undefined && duration > 0) {
             this.visibleForTimeout = setTimeout(() => {
-                this.setState({temporaryVisible: false});
+                this.setState({ temporaryVisible: false });
             }, duration);
         }
     }
@@ -91,19 +91,19 @@ class TKUITooltip extends React.Component<IProps, IState> {
             <div className={classes.overlayContent} role={this.props.role}>
                 {this.props.overlayContent}
                 {this.props.onRequestClose &&
-                <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
+                    <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
                         aria-hidden={true}>
-                    <IconRemove aria-hidden={true}
-                                className={classes.iconClear}
-                                focusable="false"/>
-                </button>}
+                        <IconRemove aria-hidden={true}
+                            className={classes.iconClear}
+                            focusable="false" />
+                    </button>}
             </div>;
         return (
             <Tooltip
                 {...this.props as TooltipProps}
                 overlay={overlay}
                 // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
-                {...this.isVisible() ? {visible: this.isVisible()} : undefined}
+                {...this.isVisible() ? { visible: this.isVisible() } : undefined}
                 overlayClassName={classNames(classes.main, this.props.className, genClassNames.root)}
                 arrowContent={this.props.arrowContent}
                 destroyTooltipOnHide={this.props.destroyTooltipOnHide}

@@ -2,7 +2,7 @@ import React, { Fragment, ReactNode, useEffect, useMemo, useState } from 'react'
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKUIWithClasses, TKUIWithStyle, overrideClass, withStyles } from '../jss/StyleHelper';
-import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
+import { black, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
 import TripGoApi from '../api/TripGoApi';
@@ -10,8 +10,6 @@ import NetworkUtil from '../util/NetworkUtil';
 import EphemeralResult from '../model/payment/EphemeralResult';
 import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
 import { ReactComponent as IconCard } from "../images/payment/ic-creditcard-big.svg";
-import { withStyles as muiWithStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
 import { TKError } from '../error/TKError';
 import UIUtil from '../util/UIUtil';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
@@ -29,6 +27,7 @@ import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import { BookingField } from '../model/trip/BookingInfo';
 import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
 import DateTimeUtil from '../util/DateTimeUtil';
+import TKUICheckbox from '../util_components/TKUICheckbox';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -514,16 +513,6 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             }
         }, [paymentMethods]);
 
-        const [StyledCheckbox] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                color: colorWithOpacity(theme.colorPrimary, .5),
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Checkbox));
-
         const handleSubmit = async () => {
             if (!newPaymentMethodAndPay && selectedMethod!.paymentOption.paymentMode === "INVOICE" && !selectedMethod!.data!.selectedSubOption) {
                 setErrorMsg("You need to select an organization to invoice to");
@@ -731,9 +720,10 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                         <IconCard className={classes.card} />
                                         <CardElement className={classes.cardElement} />
                                         <div className={classes.futurePayment}>
-                                            <StyledCheckbox
+                                            <TKUICheckbox
                                                 checked={saveForFuture}
                                                 onChange={e => setSaveForFuture(e.target.checked)}
+                                                theme={theme}
                                             />
                                             Save for future payments
                                         </div>

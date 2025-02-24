@@ -2,7 +2,7 @@ import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
 import React, { ReactNode, useState } from 'react';
 import genStyles from '../css/GenStyle.css';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
-import { TKUITheme, black, colorWithOpacity } from '../jss/TKUITheme';
+import { TKUITheme, black } from '../jss/TKUITheme';
 import Util from '../util/Util';
 import { ReactComponent as IconVisa } from "../images/payment/ic-visa.svg";
 import { ReactComponent as IconMaster } from "../images/payment/ic-mastercard.svg";
@@ -10,14 +10,13 @@ import { ReactComponent as IconAmex } from "../images/payment/ic-amex.svg";
 import { ReactComponent as IconCard } from "../images/payment/ic-creditcard.svg";
 import { ReactComponent as IconBalance } from "../images/ic-money-circle-small.svg";
 import { ReactComponent as IconRemove } from "../images/ic-clear-circle.svg";
-import Radio from '@material-ui/core/Radio';
-import { withStyles as muiWithStyles } from '@material-ui/core/styles';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { resetStyles } from '../css/ResetStyle.css';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
 import TKUISelect, { SelectOption } from '../buttons/TKUISelect';
 import PaymentOption from '../model/trip/PaymentOption';
+import TKUIRadio from '../util_components/TKUIRadio';
 
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -101,17 +100,6 @@ function iconFromBrand(brand: string) {
 
 const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
     ({ value, options, onChange, onRemove, classes, theme }) => {
-        const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                marginLeft: '0',
-                width: '50px',
-                color: colorWithOpacity(theme.colorPrimary, .5),
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Radio));
         const [editing, setEditing] = useState<boolean>(false);
         const [selectedSubOptionMap, setSelectedSubOptionMap] = useState<Map<SGPaymentMethod, SelectOption | undefined>>(() => {
             const map = new Map<SGPaymentMethod, SelectOption | undefined>();
@@ -135,7 +123,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     return (
                         <div className={classes.cardNRemove} key={i}>
                             <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)}>
-                                <StyledRadio checked={value === paymentMethod} />
+                                <TKUIRadio checked={value === paymentMethod} theme={theme} />
                                 <div className={classes.icon}>
                                     {iconFromBrand(brand)}
                                 </div>
@@ -158,7 +146,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                 case "WALLET":
                     return (
                         <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
-                            <StyledRadio checked={value === paymentMethod} />
+                            <TKUIRadio checked={value === paymentMethod} theme={theme} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
                             </div>
@@ -173,7 +161,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     const selectOptions = paymentMethod.data!.subOptions!;
                     return (
                         <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
-                            <StyledRadio checked={value === paymentMethod} />
+                            <TKUIRadio checked={value === paymentMethod} theme={theme} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
                             </div>
