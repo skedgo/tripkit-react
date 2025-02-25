@@ -16,7 +16,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
-import ReactResizeDetector from "react-resize-detector";
+import ReactResizeDetector from "../util_components/ReactResizeDetector";
 import { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
 import TKUIMapLocations, { TKUIModeLocationMarker } from "./TKUIMapLocations";
@@ -320,6 +320,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         this.resolveMapboxGlMap = resolve;
     });
 
+    public mainRef = React.createRef<HTMLDivElement>();
 
     constructor(props: Readonly<IProps & IDefaultProps>) {
         super(props);
@@ -563,7 +564,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     <TKLeafletLayer {...this.props.tileLayerProps!} />
             })
         return (
-            <div className={classes.main}>
+            <div className={classes.main} ref={this.mainRef}>
                 <RLMap
                     className={classes.leaflet}
                     // TODO: check I don't need to pass boundsOptions to fitBounds anymore
@@ -736,9 +737,9 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.children}
                     {this.props.childrenThis?.(this)}
                 </RLMap>
-                {/* <ReactResizeDetector handleWidth={true} handleHeight={true}
-                    onResize={() => this.onResize()}
-                /> */}
+                <ReactResizeDetector handleWidth={true} handleHeight={true}
+                    onResize={() => this.onResize()} targetRef={this.mainRef}
+                />
                 {this.props.showCurrLocBtn !== false &&
                     <TKUITooltip
                         overlayContent={this.state.userLocationTooltip}

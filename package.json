@@ -84,7 +84,7 @@
         "react-leaflet-google-layer": "^1.1.6",
         "react-modal": "^3.14.3",
         "react-polyglot": "^0.7.2",
-        "react-resize-detector": "^8.0.4",
+        "react-resize-detector": "^12.0.2",
         "react-responsive": "^9.0.2",
         "react-responsive-carousel": "^3.1.50",
         "react-scroll-sync": "^0.11.0",
