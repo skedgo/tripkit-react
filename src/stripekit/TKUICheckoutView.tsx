@@ -291,7 +291,12 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         // Show error to your customer (for example, payment details incomplete)
                         console.log(result.error.message);
                         setWaiting?.(false);
-                        UIUtil.errorMsg(new TKError("The payment was not successful. Please try again.", undefined, true));
+                        let message = "The payment was not successful. Please try again.";
+                        if (result.error.message) {
+                            message = result.error.message + "\n" + message;
+                        }
+                        const tkError = new TKError(message, undefined, true);
+                        UIUtil.errorMsg(tkError);
                     } else {
                         let paidUrlWithInitiative = paidUrl!;
                         if (method === NetworkUtil.MethodType.GET && selectedInitiative) {

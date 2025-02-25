@@ -54,6 +54,7 @@ export interface IRoutingResultsContext {
     trips?: Trip[];
     waiting: boolean;
     routingError?: TKError;
+    clearTrips: () => void;
     waitingTripUpdate: boolean;
     tripUpdateError?: TKError;
     selectedTrip?: Trip;
@@ -82,6 +83,7 @@ export interface IRoutingResultsContext {
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
     query: RoutingQuery.create(),
+    clearTrips: () => { },
     onQueryChange: (query: RoutingQuery) => { },
     onQueryUpdate: (update: Partial<RoutingQuery>) => { },
     onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise.resolve(undefined),

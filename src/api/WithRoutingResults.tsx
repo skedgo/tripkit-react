@@ -98,6 +98,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onQueryUpdate = this.onQueryUpdate.bind(this);
+            this.clearTrips = this.clearTrips.bind(this);
             this.onTripJsonUrl = this.onTripJsonUrl.bind(this);
             this.onChange = this.onChange.bind(this);
             this.setSelectedSegment = this.setSelectedSegment.bind(this);
@@ -349,6 +350,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     Util.log(error, Env.PRODUCTION);
                     this.setState({ routingError: error, waiting: false });
                 });
+        }
+
+        public clearTrips() {
+            this.setState({
+                trips: undefined,
+                waiting: false,
+                routingError: undefined
+            });
         }
 
         public checkWaiting(waitingState: any) {
@@ -702,69 +711,72 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public render(): React.ReactNode {
             const props = this.props as IWithRoutingResultsProps;
-            return <Consumer
-                {...props}
-                query={this.state.query}
-                onQueryChange={this.onQueryChange}
-                onQueryUpdate={this.onQueryUpdate}
-                onTripJsonUrl={this.onTripJsonUrl}
-                preFrom={this.state.preFrom}
-                preTo={this.state.preTo}
-                onPreChange={(from: boolean, location?: Location) => {
-                    if (from) {
-                        this.setState({ preFrom: location })
-                    } else {
-                        this.setState({ preTo: location })
-                    }
-                }}
-                inputTextFrom={this.state.inputTextFrom}
-                inputTextTo={this.state.inputTextTo}
-                onInputTextChange={(from: boolean, text: string) => {
-                    if (from) {
-                        this.setState({ inputTextFrom: text });
-                    } else {
-                        this.setState({ inputTextTo: text });
-                    }
-                }}
-                region={this.state.region}
-                coverageGeoJson={this.state.coverageGeoJson}
-                getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
-                viewport={this.state.viewport}
-                onViewportChange={this.onViewportChange}
-                computeTripsForQuery={this.state.computeTripsForQuery}
-                onComputeTripsForQuery={this.onComputeTripsForQuery}
-                trips={this.state.trips}
-                waiting={this.state.waiting}
-                routingError={this.state.routingError}
-                waitingTripUpdate={this.state.waitingTripUpdate}
-                tripUpdateError={this.state.tripUpdateError}
-                selectedTrip={this.state.selected}
-                onSelectedTripChange={this.onChange}
-                selectedTripSegment={this.state.selectedSegment}
-                setSelectedTripSegment={this.setSelectedSegment}
-                tripDetailsView={this.state.tripDetailsView}
-                onTripDetailsView={this.onTripDetailsView}
-                sort={this.state.sort}
-                onSortChange={this.onSortChange}
-                onReqRealtimeFor={this.onReqRealtimeFor}
-                refreshSelectedTrip={this.refreshSelectedTrip}
-                onAlternativeChange={this.onAlternativeChange}
-                onSegmentServiceChange={this.onSegmentServiceChange}
-                onSegmentCollectChange={this.onSegmentCollectChange}
-                onSegmentCollectBookingChange={this.onSegmentCollectBookingChange}
-                waitingStateLoad={this.state.waitingStateLoad}
-                stateLoadError={this.state.stateLoadError}
-                onWaitingStateLoad={this.onWaitingStateLoad}
-                setMap={(map: TKUIMapViewClass) => {
-                    this.setState({
-                        mapRef: map
-                    });
-                    this.resolveMapP(map);
-                }}
-                map={this.state.mapRef}
-                mapAsync={this.mapPromise}
-                setViewport={this.setViewport}
-            />;
+            return (
+                <Consumer
+                    {...props}
+                    query={this.state.query}
+                    onQueryChange={this.onQueryChange}
+                    onQueryUpdate={this.onQueryUpdate}
+                    onTripJsonUrl={this.onTripJsonUrl}
+                    preFrom={this.state.preFrom}
+                    preTo={this.state.preTo}
+                    onPreChange={(from: boolean, location?: Location) => {
+                        if (from) {
+                            this.setState({ preFrom: location })
+                        } else {
+                            this.setState({ preTo: location })
+                        }
+                    }}
+                    inputTextFrom={this.state.inputTextFrom}
+                    inputTextTo={this.state.inputTextTo}
+                    onInputTextChange={(from: boolean, text: string) => {
+                        if (from) {
+                            this.setState({ inputTextFrom: text });
+                        } else {
+                            this.setState({ inputTextTo: text });
+                        }
+                    }}
+                    region={this.state.region}
+                    coverageGeoJson={this.state.coverageGeoJson}
+                    getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
+                    viewport={this.state.viewport}
+                    onViewportChange={this.onViewportChange}
+                    computeTripsForQuery={this.state.computeTripsForQuery}
+                    onComputeTripsForQuery={this.onComputeTripsForQuery}
+                    trips={this.state.trips}
+                    waiting={this.state.waiting}
+                    routingError={this.state.routingError}
+                    clearTrips={this.clearTrips}
+                    waitingTripUpdate={this.state.waitingTripUpdate}
+                    tripUpdateError={this.state.tripUpdateError}
+                    selectedTrip={this.state.selected}
+                    onSelectedTripChange={this.onChange}
+                    selectedTripSegment={this.state.selectedSegment}
+                    setSelectedTripSegment={this.setSelectedSegment}
+                    tripDetailsView={this.state.tripDetailsView}
+                    onTripDetailsView={this.onTripDetailsView}
+                    sort={this.state.sort}
+                    onSortChange={this.onSortChange}
+                    onReqRealtimeFor={this.onReqRealtimeFor}
+                    refreshSelectedTrip={this.refreshSelectedTrip}
+                    onAlternativeChange={this.onAlternativeChange}
+                    onSegmentServiceChange={this.onSegmentServiceChange}
+                    onSegmentCollectChange={this.onSegmentCollectChange}
+                    onSegmentCollectBookingChange={this.onSegmentCollectBookingChange}
+                    waitingStateLoad={this.state.waitingStateLoad}
+                    stateLoadError={this.state.stateLoadError}
+                    onWaitingStateLoad={this.onWaitingStateLoad}
+                    setMap={(map: TKUIMapViewClass) => {
+                        this.setState({
+                            mapRef: map
+                        });
+                        this.resolveMapP(map);
+                    }}
+                    map={this.state.mapRef}
+                    mapAsync={this.mapPromise}
+                    setViewport={this.setViewport}
+                />
+            );
         }
 
 
