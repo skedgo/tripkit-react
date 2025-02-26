@@ -141,7 +141,6 @@ class TripGoApi {
                     return undefined;
                 }
                 const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
-                routingResults.setQuery(query);
                 routingResults.setSatappQuery(trip.satappQuery);
                 const tripGroups = routingResults.groups;
                 if (tripGroups.length === 0 || tripGroups[0].trips.length === 0) {

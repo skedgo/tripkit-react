@@ -62,6 +62,10 @@ class RoutingQuery {
         });
     }
 
+    public static locationMetadataString(location: Location): string {
+        return location.address ?? "";
+    }
+
     /**
      * Empty constructor, necessary for Util.clone
      */
@@ -125,10 +129,10 @@ class RoutingQuery {
         // Try to apply the minimal encoding that is safe for the URL. Specially for the address (or user typed strings), that can contain special characters,
         // use encodeURIComponent (more aggressive encoding, intended for URI components). For the rest, use encodeURI (less aggressive encoding, intended for URIs,
         // so, e.g., don't escape commas).
-        // See [encodeURI() vs. encodeURIComponent()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI#encodeuri_vs._encodeuricomponent)
+        // See [encodeURI() vs. encodeURIComponent()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI#encodeuri_vs._encodeuricomponent)        
         return "routing.json" +
-            `?from=(${this.from.lat},${this.from.lng})"${encodeURIComponent(this.from.address ?? "")}"` +
-            `&to=(${this.to.lat},${this.to.lng})"${encodeURIComponent(this.to.address ?? "")}"` +
+            `?from=(${this.from.lat},${this.from.lng})"${encodeURIComponent(RoutingQuery.locationMetadataString(this.from))}"` +
+            `&to=(${this.to.lat},${this.to.lng})"${encodeURIComponent(RoutingQuery.locationMetadataString(this.to))}"` +
             `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}` +
             encodeURI(additionalParams);
     }

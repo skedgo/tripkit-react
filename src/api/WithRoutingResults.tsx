@@ -810,7 +810,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
                     firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromIsoWithTimezone(firstTrip.queryTime) : undefined);
-                routingResults.setQuery(query);
                 if (typeof tripUrl === 'string') {
                     routingResults.setSatappQuery(tripUrl);
                 }
@@ -963,7 +962,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
                     return TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, RoutingResults)
                         .then((routingResults: RoutingResults) => {
-                            routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));
                             return routingResults.groups;
                         })
