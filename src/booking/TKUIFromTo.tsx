@@ -74,35 +74,31 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     }
     return (
-        <div className={classes.group} onClick={onClick} style={onClick && { cursor: 'pointer' }}>
+        <div className={classes.main} onClick={onClick} style={onClick && { cursor: 'pointer' }}>
             <div className={classes.fromToTrack}>
                 <div className={classes.circle} />
                 <div className={classes.line} />
                 <div className={classes.circle} />
-                <div className={classes.value} style={{ height: '1.2em' }} />
-                {endTime !== undefined && <div className={classes.value} style={{ height: '1.2em' }} />}
             </div>
-            <div className={classes.groupRight}>
-                <div className={classes.label}>
-                    {t("Pick-up")}
-                </div>
-                {startTimeText &&
-                    <div className={classes.value}>
-                        {startTimeText}
-                    </div>}
-                <div className={classes.value}>
-                    {from.getDisplayString(true)}
-                </div>
-                <div className={classes.label}>
-                    {t("Drop-off")}
-                </div>
-                {endTimeText &&
-                    <div className={classes.value}>
-                        {endTimeText}
-                    </div>}
-                <div className={classes.value}>
-                    {to.getDisplayString(true)}
-                </div>
+            <div className={classes.pickupLabel}>
+                {t("Pick-up")}
+            </div>
+            {startTimeText &&
+                <div className={classes.pickupTime}>
+                    {startTimeText}
+                </div>}
+            <div className={classes.pickupAddress}>
+                {from.getDisplayString(true)}
+            </div>
+            <div className={classes.dropoffLabel}>
+                {t("Drop-off")}
+            </div>
+            {endTimeText &&
+                <div className={classes.dropoffTime}>
+                    {endTimeText}
+                </div>}
+            <div className={classes.dropoffAddress}>
+                {to.getDisplayString(true)}
             </div>
         </div>
     );
