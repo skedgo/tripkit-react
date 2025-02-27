@@ -44,7 +44,7 @@ interface IProps {
 }
 
 // TODO: do it with a custom converter of json2typescript.
-function deserialize(itemJson: any): Favourite {
+export function deserialize(itemJson: any): Favourite {
     return itemJson.type === "stop" ? Util.deserialize(itemJson, FavouriteStop) :
         itemJson.type === "trip" ? Util.deserialize(itemJson, FavouriteTrip) :
             Util.deserialize(itemJson, FavouriteLocation);  // Home and work favs falls under FavouriteLocation.
