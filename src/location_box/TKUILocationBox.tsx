@@ -280,7 +280,10 @@ class TKUILocationBox extends Component<IProps, IState> {
                 this.geocodingData.resolveLocation(locationValue)
                     .then((resolvedLocation: Location) => {
                         if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
-                            this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true,
+                            // Fix to race condition on TKUILocationBox: highlighting and immediatly selecting may cause the onResultHighlight to be triggered instead of the onChange.
+                            // Use locationValue !== this.state.locationValue instead of locationValue === this.state.highlightedValue
+                            // since there's an instant just after selection where both are true, and we want here to trigger onChange, no onResultHighlight.
+                            this.setValue(resolvedLocation, locationValue !== this.state.locationValue, true,
                                 () => {
                                     this.updateResolvedItem(locationValue, resolvedLocation);
                                 });
