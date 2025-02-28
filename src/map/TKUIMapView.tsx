@@ -144,6 +144,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * with it's corresponding effects on the SDK state.
      */
     rightClickMenu?: MenuOptions[];
+
+    onResize?: () => void;
 }
 interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
     /**
@@ -738,7 +740,10 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.childrenThis?.(this)}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
-                    onResize={() => this.onResize()} targetRef={this.mainRef}
+                    onResize={() => {
+                        this.onResize();
+                        this.props.onResize?.();
+                    }} targetRef={this.mainRef}
                 />
                 {this.props.showCurrLocBtn !== false &&
                     <TKUITooltip
