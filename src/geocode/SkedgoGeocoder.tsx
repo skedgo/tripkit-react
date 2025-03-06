@@ -160,6 +160,8 @@ class SkedgoGeocoder implements IGeocoder {
                     let resolvedLocation;
                     if (locInfo.stop) {
                         resolvedLocation = locInfo.stop;
+                    } else if (locInfo.school) {
+                        resolvedLocation = locInfo.school;
                     } else if (locInfo.carPark) {
                         // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
                         // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
