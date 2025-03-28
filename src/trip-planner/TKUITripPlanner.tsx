@@ -590,7 +590,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.state.showLocationDetailsFor.hasDetail !== false &&
             <TKUILocationDetail
                 location={this.state.showLocationDetailsFor}
-                key={this.state.showLocationDetailsFor.id}  // So changing location causes the component to be re-constructed.
+                key={this.state.showLocationDetailsFor.getKey()}  // So changing location causes the component to be re-constructed.
                 actions={directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
                 cardProps={{
                     presentation: CardPresentation.SLIDE_UP,

@@ -27,7 +27,9 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                     fill: (props: TKUIMapLocationIconProps) => {
                         const location = props.location;
                         let iconPinColor = props.from ? theme.colorPrimary : theme.colorError;
-                        if (location instanceof FacilityLocation ||
+                        if (location instanceof FacilityLocation && location.facilityType === "Bring-The-Paint") {
+                            iconPinColor = black(0);
+                        } else if (location instanceof FacilityLocation ||
                             (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE"))
                             || location instanceof SchoolLocation) {
                             iconPinColor = white(0);

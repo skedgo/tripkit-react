@@ -111,7 +111,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
             }
         }
         return locations.filter(loc => !omit.find(omitLoc => LocationUtil.equal(omitLoc, loc)))
-            .map((loc, i) => <TKUIModeLocationMarker loc={loc} onClick={() => this.props.onClick?.(loc)} isDarkMode={this.props.isDarkMode} key={loc.getKey() ?? i} />);
+            .map((loc, i) => <TKUIModeLocationMarker loc={loc} onClick={() => this.props.onClick?.(loc)} isDarkMode={this.props.isDarkMode} key={loc.getKey()} />);
     }
 
     public shouldComponentUpdate(nextProps: IProps): boolean {
