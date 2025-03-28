@@ -232,6 +232,4 @@ class DateTimeUtil {
 
 }
 
-(window as any).DateTimeUtil = DateTimeUtil;
-
 export default DateTimeUtil;

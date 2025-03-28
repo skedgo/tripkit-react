@@ -36,7 +36,15 @@ class Location extends LatLng {
     @JsonProperty('timeZone', String, true)
     public timeZone: string | undefined = undefined;
     @JsonProperty('region', String, true)
-    public region?: string = undefined;    // required according to docs, but some locations are created client side, so cannot ensure regions is set.
+    public region?: string = undefined;    // required according to docs, but some locations are created client side, so cannot ensure regions is set.    
+    @JsonProperty('street', String, true)
+    public street?: string = undefined;
+    @JsonProperty('city', String, true)
+    public city?: string = undefined;
+    @JsonProperty('state', String, true)
+    public state?: string = undefined;
+    @JsonProperty('zip', String, true)
+    public zip?: string = undefined;
 
     public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
