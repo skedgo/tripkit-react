@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm install --force
 
-      - name: Build project
-        run: npm run build
+      - name: Build project doc
+        run: npm run build:doc
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
