@@ -1,0 +1,37 @@
+name: Build and Deploy Doc to S3
+
+on:
+  push:
+    branches:
+      - doc  # Change if you want to deploy from a different branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18  # Change to your desired Node.js version
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --delete  # Deletes old files in S3 that are not in the new build
+        env:
+          AWS_S3_BUCKET: ${{ secrets.DOC_AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOC_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'  # Change this to your AWS region
+          SOURCE_DIR: 'docs'  # Change if your build folder is different

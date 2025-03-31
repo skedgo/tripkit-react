@@ -104,8 +104,9 @@
         "build:babel:svg": "babel --extensions \".svg\" --out-file-extension .svg.js src --out-dir dist",
         "clean": "rimraf dist",
         "develop": "npm run build:types && npm run build:babel:esm --skip-initial-build --watch --verbose",
-        "start:doc": "styleguidist server",
+        "start:doc": "NODE_OPTIONS=--openssl-legacy-provider styleguidist server",
         "build:doc": "cd docs && mkdocs build && cd .. && styleguidist build",
+        "backup:doc": "aws s3 cp s3://react.developer.tripgo.com ~/tmp/react.developer.tripgo.com_2025_03_31 --recursive --profile me-skedgo",
         "build:mkdocs": "cd docs && mkdocs build"
     },
     "devDependencies": {

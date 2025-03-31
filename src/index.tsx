@@ -143,8 +143,8 @@ export { default as TKUIVehicleAvailability } from "./location/TKUIVehicleAvaila
  * This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
  * IMPORTANT: Uncomment to compile TripGo web-app.
  */
-if (process.env.NODE_ENV === 'development' && document.getElementById("tripgo-sample-root")) {
-    // require("./mock/mock.js");
-    /* eslint-disable import/first */
-    import("./tripgo/index");
-}
+// if (process.env.NODE_ENV === 'development' && document.getElementById("tripgo-sample-root")) {
+//     // require("./mock/mock.js");
+//     /* eslint-disable import/first */
+//     import("./tripgo/index");
+// }
