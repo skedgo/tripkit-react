@@ -1,14 +1,15 @@
 name: Build and Deploy Doc to S3
 
 on:
-  push:
-    branches:
-      - doc  # Change if you want to deploy from a different branch
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:    # Allows manual execution from the GitHub Actions UI
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    # runs-on: ubuntu-latest
+    runs-on: [self-hosted, photon]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,4 +43,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DOC_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'  # Change this to your AWS region
-          SOURCE_DIR: 'docs'  # Change if your build folder is different
+          SOURCE_DIR: 'docs/site'  # Change if your build folder is different
