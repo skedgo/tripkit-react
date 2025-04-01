@@ -36,11 +36,11 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
             backgroundColor: colorWithOpacity(theme.colorPrimary, .8), // To get >= 4.5:1 contrast
             cursor: 'initial'
         },
-        '&:active': {
+        '&:active:not(:disabled)': {
             // Until integrate library to decrease color luminosity.
             // backgroundColor: '#079541'
             backgroundColor: theme.colorPrimary
-        },
+        }
     },
 
     secondary: {
@@ -62,7 +62,7 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
             opacity: '.7',
             cursor: 'initial'
         },
-        '&:active': {
+        '&:active:not(:disabled)': {
             borderColor: black(4, theme.isDark),
             backgroundColor: black(5, theme.isDark)
         },
@@ -78,7 +78,23 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
         ...theme.textSizeBody,
         ...theme.textWeightSemibold,
         ...important(theme.textColorDefault),
-        textAlign: 'center'
+        textAlign: 'center',
+        '&:disabled $primary': {
+            backgroundColor: colorWithOpacity(theme.colorPrimary, .8), // To get >= 4.5:1 contrast
+            cursor: 'initial'
+        },
+        '&:active:not(:disabled) $primary': {
+            backgroundColor: theme.colorPrimary
+        },
+        '&:disabled $secondary': {
+            borderColor: black(4, theme.isDark),
+            opacity: '.4',
+            cursor: 'initial'
+        },
+        '&:active:not(:disabled) $secondary': {
+            borderColor: black(4, theme.isDark),
+            backgroundColor: black(5, theme.isDark)
+        }
     },
 
     link: {

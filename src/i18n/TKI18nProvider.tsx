@@ -1,5 +1,5 @@
 import React from "react";
-import { I18n, translate } from 'react-polyglot';
+import { I18n, translate } from '../ext_lib/react-polyglot/src/index';
 import Environment from "../env/Environment";
 import messages_en from "./i18n_en.json";
 import untranslated from "./untranslated.json";
@@ -39,7 +39,7 @@ const WithTranslate = translate()(
 );
 
 interface IProps {
-    dataPromise?: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>
+    dataPromise?: { locale: string, translations: Partial<TKI18nMessages> } | Promise<{ locale: string, translations: Partial<TKI18nMessages> }>
 }
 
 interface IState {
@@ -52,11 +52,13 @@ class TKI18nProvider extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        // Compose messages by overriding untranslated with messages_en.
-        const messages = Object.assign({}, untranslated, messages_en);
-        const defaultLocale = 'en';
+        const data = (!props.dataPromise || props.dataPromise instanceof Promise) ? undefined : props.dataPromise;
+        // Compose messages by overriding untranslated with messages_en and then with config translations 
+        // (if it's not a promise, address the promise case after component mounted).
+        const configTranslations = data?.translations ?? {};
+        const messages = Object.assign({}, untranslated, messages_en, configTranslations);
         this.state = {
-            locale: defaultLocale,
+            locale: data?.locale ?? 'en',
             messages: messages,
             overridden: false
         }
@@ -69,13 +71,13 @@ class TKI18nProvider extends React.Component<IProps, IState> {
                 locale={this.state.locale}
                 messages={this.state.messages}
                 allowMissing={Environment.isDev()}
-                onMissingKey={Environment.isDev() ?
-                    (key: string, options?: any, locale?: string) =>
-                        // If a used key is missing.
-                        // Notice messages are completed as much as possible by overriding sources. See componentDidMount.
-                        key + " (hey, you missed this key)" :
-                    undefined
-                }
+            // onMissingKey={Environment.isDev() ?
+            //     (key: string, options?: any, locale?: string) =>
+            //         // If a used key is missing.
+            //         // Notice messages are completed as much as possible by overriding sources. See componentDidMount.
+            //         key + " (hey, you missed this key)" :
+            //     undefined
+            // }
             >
                 <WithTranslate>
                     {(props: { t: TranslationFunction }) =>
@@ -91,9 +93,9 @@ class TKI18nProvider extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
-        if (this.props.dataPromise) {
-            Promise.resolve(this.props.dataPromise)
-                .then((data: { locale: string, translations: TKI18nMessages }) => {
+        if (this.props.dataPromise && this.props.dataPromise instanceof Promise) {
+            this.props.dataPromise
+                .then((data: { locale: string, translations: Partial<TKI18nMessages> }) => {
                     // Compose messages by overriding untranslated, with messages_en, and then with data.translations
                     // TODO: maybe it makes sense to compose also language-only resource when language+country is
                     // available (e.g. es when es-AR is available), so missing terms on language+country first fallback

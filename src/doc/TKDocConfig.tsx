@@ -62,7 +62,6 @@ export function getMockQuery(): RoutingQuery {
 export function getMockRoutingResults(): Trip[] {
     const routingResultsJson = require("./data/routingResults.json");
     const routingResults = Util.deserialize(routingResultsJson, RoutingResults);
-    routingResults.setQuery(new RoutingQuery());
     return routingResults.groups;
 }
 

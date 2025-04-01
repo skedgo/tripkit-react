@@ -16,7 +16,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
-import ReactResizeDetector from "react-resize-detector";
+import ReactResizeDetector from "../util_components/ReactResizeDetector";
 import { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
 import TKUIMapLocations, { TKUIModeLocationMarker } from "./TKUIMapLocations";
@@ -27,7 +27,6 @@ import "./TKUIMapViewCss.css";
 import { connect, PropsMapper, TKRenderOverride } from "../config/TKConfigHelper";
 import classNames from "classnames";
 import { TKUIViewportUtilProps, TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
-import TKUIMapLocationIcon, { tKUIMapLocationIconConfig } from "./TKUIMapLocationIcon";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import { ReactComponent as IconCurrentLocation } from "../images/location/ic-curr-loc.svg";
@@ -50,7 +49,7 @@ import { i18n } from "../i18n/TKI18nConstants";
 import TKMapboxGLLayer from "./TKMapboxGLLayer";
 import TKLeafletLayer from "./TKLeafletLayer";
 import { MultiPolygon } from "geojson";
-import MemoMarker from "./MemoMarker";
+import TKUIMapLocationMarker from "./TKUIMapLocationMarker";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -145,6 +144,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * with it's corresponding effects on the SDK state.
      */
     rightClickMenu?: MenuOptions[];
+
+    onResize?: () => void;
 }
 interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
     /**
@@ -294,7 +295,7 @@ interface IState {
     refreshTiles?: boolean;
     modeLocations?: ModeLocation[];
     onModeLocationClick?: (location: ModeLocation) => void;
-    coveragePolygon?: LatLngExpression[][];
+    coveragePolygon?: LatLngExpression[][][];
     layer?: MapLayer
 }
 
@@ -321,14 +322,20 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         this.resolveMapboxGlMap = resolve;
     });
 
+    public mainRef = React.createRef<HTMLDivElement>();
 
     constructor(props: Readonly<IProps & IDefaultProps>) {
         super(props);
-        this.state = {};
+        this.state = {
+            coveragePolygon: props.coverageGeoJson ? MapUtil.toLeafletMultiPolygon(props.coverageGeoJson) : undefined
+        };
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+        if (this.props.reference && !Util.isFunction(this.props.reference)) {
+            (this.props.reference as MutableRefObject<TKUIMapView | null>).current = this;
+        }
     }
 
     public registerLayer(layer: MapLayer) {
@@ -388,8 +395,8 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
     };
 
     private onClick(clickLatLng: LatLng) {
-        const { from, to, mapClickBehaviour, disableMapClick } = this.props;
-        if (typeof disableMapClick === 'function' ? disableMapClick?.(this.getZoom()) : disableMapClick) {
+        const { from, to, mapClickBehaviour, disableMapClick, readonly } = this.props;
+        if (readonly || (typeof disableMapClick === 'function' ? disableMapClick?.(this.getZoom()) : disableMapClick)) {
             return;
         }
         // Do nothing if the location is already the from or to.
@@ -458,6 +465,12 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
             return;
         }
         this.fitBounds(MapUtil.createBBoxArray(fitSet));
+    }
+
+    public fitMapFromTo() {
+        if (this.props.from || this.props.to) {
+            this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
+        }
     }
 
     private userLocationSubscription?: any;
@@ -553,7 +566,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     <TKLeafletLayer {...this.props.tileLayerProps!} />
             })
         return (
-            <div className={classes.main}>
+            <div className={classes.main} ref={this.mainRef}>
                 <RLMap
                     className={classes.leaflet}
                     // TODO: check I don't need to pass boundsOptions to fitBounds anymore
@@ -642,78 +655,28 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         }</TKUIConfigContext.Consumer>}
                     {!this.props.trip && this.props.from && this.props.from.isResolved() &&
                         !(this.props.from.isCurrLoc() && this.state.userLocation) &&
-                        // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
-                        <TKRenderOverride
-                            componentKey={"TKUIMapLocationIcon"}
-                            renderOverride={(renderProps, configRender) => {
-                                const render = configRender ?? tKUIMapLocationIconConfig.render;
-                                return (
-                                    <MemoMarker
-                                        position={this.props.from!}
-                                        renderIcon={render}
-                                        renderIconProps={renderProps}
-                                        reactiveIconProps={{
-                                            location: this.props.from!,
-                                            theme: renderProps.theme
-                                        }}
-                                        iconSize={[26, 39]}
-                                        iconAnchor={[13, 39]}
-                                        iconClass="LeafletMap-pinTo"
-                                        draggable={!this.props.readonly}
-                                        riseOnHover={true}
-                                        ondragend={(event: L.DragEndEvent) => {
-                                            const latLng = event.target.getLatLng();
-                                            this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                        }}
-                                        keyboard={false}
-                                        onadd={event => event.target.openPopup()}
-                                    >
-                                        {this.getLocationPopup(this.props.from!)}
-                                    </MemoMarker>
-                                );
+                        <TKUIMapLocationMarker
+                            location={this.props.from!}
+                            draggable={!this.props.readonly}
+                            ondragend={(event: L.DragEndEvent) => {
+                                const latLng = event.target.getLatLng();
+                                this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
+                            isFrom={true}
                         >
-                            <TKUIMapLocationIcon
-                                from={true}
-                                location={this.props.from!}
-                            />
-                        </TKRenderOverride>
-                    }
+                            {this.getLocationPopup(this.props.from!)}
+                        </TKUIMapLocationMarker>}
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
-                        // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
-                        <TKRenderOverride
-                            componentKey={"TKUIMapLocationIcon"}
-                            renderOverride={(renderProps, configRender) => {
-                                const render = configRender ?? tKUIMapLocationIconConfig.render;
-                                return (
-                                    <MemoMarker
-                                        position={this.props.to!}
-                                        renderIcon={render}
-                                        renderIconProps={renderProps}
-                                        reactiveIconProps={{
-                                            location: this.props.to!,
-                                            theme: renderProps.theme
-                                        }}
-                                        iconSize={[26, 39]}
-                                        iconAnchor={[13, 39]}
-                                        iconClass="LeafletMap-pinTo"
-                                        draggable={!this.props.readonly}
-                                        riseOnHover={true}
-                                        ondragend={(event: L.DragEndEvent) => {
-                                            const latLng = event.target.getLatLng();
-                                            this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                        }}
-                                        keyboard={false}
-                                        onadd={event => event.target.openPopup()}
-                                    >
-                                        {this.getLocationPopup(this.props.to!)}
-                                    </MemoMarker>
-                                );
+                        <TKUIMapLocationMarker
+                            location={this.props.to!}
+                            draggable={!this.props.readonly}
+                            ondragend={(event: L.DragEndEvent) => {
+                                const latLng = event.target.getLatLng();
+                                this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                         >
-                            <TKUIMapLocationIcon location={this.props.to!} />
-                        </TKRenderOverride>
-                    }
+                            {this.getLocationPopup(this.props.to!)}
+                        </TKUIMapLocationMarker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
                             bounds={this.toBBox(this.leafletElement.getBounds())}
@@ -727,7 +690,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         />
                     }
                     {this.state.modeLocations?.map((location, i) =>
-                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={i} />)}
+                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={location.getKey() ?? i} />)}
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => (
                         <MapTripSegment
                             segment={segment}
@@ -777,7 +740,10 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.childrenThis?.(this)}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
-                    onResize={() => this.onResize()}
+                    onResize={() => {
+                        this.onResize();
+                        this.props.onResize?.();
+                    }} targetRef={this.mainRef}
                 />
                 {this.props.showCurrLocBtn !== false &&
                     <TKUITooltip
@@ -938,7 +904,12 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     public getCenter(): LatLng | undefined {
         const center = this.leafletElement?.getCenter();
-        return center && LatLng.createLatLng(center[0], center[1]);
+        console.log(this.leafletElement);
+        console.log(center)
+        if (center) {
+            return LatLng.createLatLng(center.lat, center.lng);
+        }
+        return undefined;
     }
 
     public getBounds(): BBox | undefined {

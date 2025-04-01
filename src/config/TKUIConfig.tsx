@@ -70,9 +70,7 @@ import { TKUIMyBookingProps, TKUIMyBookingStyle } from "../booking/TKUIMyBooking
 import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
 import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
-import { TKUIBookingCardClientProps, TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 import Trip from "../model/trip/Trip";
@@ -88,6 +86,15 @@ import { TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle } from "../booking/TKU
 import { TKUIBookingActionsProps, TKUIBookingActionsStyle } from "../booking/TKUIBookingActions";
 import { TKUIBicycleInfoProps, TKUIBicycleInfoStyle } from "../service/TKUIBicycleInfo";
 import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
+import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
+import { TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle } from "../favourite/TKUIEditFavouriteView";
+import { TKUIBookingCardClientProps, TKUIBookingCardProps, TKUIBookingCardStyle } from "../booking/TKUIBookingCard";
+import { TKUIBookingFormProps, TKUIBookingFormStyle } from "../booking/TKUIBookingForm";
+import { TKUICheckoutViewClientProps, TKUICheckoutViewProps, TKUICheckoutViewStyle } from "../stripekit/TKUICheckoutView";
+import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKUIBookingDetails";
+import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKUIBookingReview";
+import { TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle } from "../booking/TKUIBookingProviderOptions";
+import { TKUIProviderTicketsFormProps, TKUIProviderTicketsFormStyle } from "../stripekit/TKUIProviderTicketsForm";
 
 /**
  * SDK configuration
@@ -184,7 +191,7 @@ export interface ITKUIConfigOptional {
     /**
      * @ctype
      */
-    i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
+    i18n: { locale: string, translations: Partial<TKI18nMessages> } | Promise<{ locale: string, translations: TKI18nMessages }>;
     isDarkMode: boolean;
     /**
      * Allows to specify google analytics (GA) config to track user events to GA.
@@ -212,7 +219,7 @@ export interface ITKUIConfigOptional {
      * @ignore     
      */
     payment: {
-        renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
+        renderPaymentCard: (props: TKUICheckoutViewClientProps) => React.ReactNode; // TODO: rename to renderCheckoutView, or something else.
         stripePublicKey?: string;
     };
     /**
@@ -232,6 +239,7 @@ export interface ITKUIConfigOptional {
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
+    TKUIEditFavouriteView: TKComponentConfig<TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle>;
     TKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
     TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;
@@ -296,18 +304,24 @@ export interface ITKUIConfigOptional {
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
     TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
-    TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
+    TKUIBookingCard: TKComponentConfig<TKUIBookingCardProps, TKUIBookingCardStyle>;
+    TKUIBookingForm: TKComponentConfig<TKUIBookingFormProps, TKUIBookingFormStyle>;
+    TKUIBookingProviderOptions: TKComponentConfig<TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle>;
+    TKUIProviderTicketsForm: TKComponentConfig<TKUIProviderTicketsFormProps, TKUIProviderTicketsFormStyle>;
+    TKUIBookingReview: TKComponentConfig<TKUIBookingReviewProps, TKUIBookingReviewStyle>;
+    TKUICheckoutView: TKComponentConfig<TKUICheckoutViewProps, TKUICheckoutViewStyle>;
+    TKUIBookingDetails: TKComponentConfig<TKUIBookingDetailsProps, TKUIBookingDetailsStyle>;
     TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
     TKUISubscription: TKComponentConfig<TKUISubscriptionProps, TKUISubscriptionStyle>;
     TKUISubscriptionView: TKComponentConfig<TKUISubscriptionViewProps, TKUISubscriptionViewStyle>;
-    TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
     TKUIBookingActions: TKComponentConfig<TKUIBookingActionsProps, TKUIBookingActionsStyle>;
     TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;
     TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
+    TKUIFromTo: TKComponentConfig<TKUIFromToProps, TKUIFromToStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

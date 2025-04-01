@@ -31,6 +31,7 @@ interface ITKUIGenStyleClasses {
     animateFadeIn: any;
     svgFillCurrColor: any;
     svgPathFillCurrColor: any;
+    svgLastPathFillCurrColor: any;
     scrollableY: any;
     relative: any;
     hidden: any;
@@ -145,6 +146,14 @@ const keyframesStyle = {
         '0%': { backgroundColor: 'white' },
         '50%': { backgroundColor: '#00000014' },
         '100%': { backgroundColor: 'white' }
+    },
+    '@keyframes loadingFavourite': {
+        '0%': {
+            backgroundPosition: '100% 50%',
+        },
+        '100%': {
+            backgroundPosition: '0 50%',
+        }
     }
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [
@@ -313,6 +322,15 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         }
     },
 
+    svgLastPathFillCurrColor: {
+        '& path:last-child': {
+            fill: 'currentColor'
+        },
+        '& path:not(:last-child)': {
+            fill: 'rgba(0,0,0,0)'
+        }
+    },
+
     scrollableY: {
         overflowY: 'auto'
     },
@@ -367,9 +385,6 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     root: {
         '& input::-ms-clear': {
             display: 'none'
-        },
-        '& input[type=text]': {
-            padding: '1px'
         },
         // --------------------------------------------------------------------------------------------------------
         // TODO: check if following rules are still necessary / convenient. Preserve them for now to avoid breaks.
@@ -494,7 +509,8 @@ const otherStyles = {
         },
         '.react-confirm-alert-body': {
             boxSizing: 'border-box',
-            width: '100%!important'
+            width: '100%!important',
+            maxWidth: '1000px'
         }
     }
 };

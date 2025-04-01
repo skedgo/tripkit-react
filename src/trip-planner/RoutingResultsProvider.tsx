@@ -16,6 +16,7 @@ import { TripSort } from "../model/trip/TripSort";
 import ModeLocation from "../model/location/ModeLocation";
 import RoutingResults from "../model/trip/RoutingResults";
 import { MultiPolygon } from "geojson";
+import { TKAccountContext } from "../account/TKAccountContext";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -53,6 +54,7 @@ export interface IRoutingResultsContext {
     trips?: Trip[];
     waiting: boolean;
     routingError?: TKError;
+    clearTrips: () => void;
     waitingTripUpdate: boolean;
     tripUpdateError?: TKError;
     selectedTrip?: Trip;
@@ -64,7 +66,7 @@ export interface IRoutingResultsContext {
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
-    refreshSelectedTrip: () => Promise<boolean>;
+    refreshSelectedTrip: () => Promise<Trip | undefined>;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
     onSegmentCollectChange: (segment: Segment, location: ModeLocation) => Promise<Trip | undefined>;
@@ -81,6 +83,7 @@ export interface IRoutingResultsContext {
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
     query: RoutingQuery.create(),
+    clearTrips: () => { },
     onQueryChange: (query: RoutingQuery) => { },
     onQueryUpdate: (update: Partial<RoutingQuery>) => { },
     onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise.resolve(undefined),
@@ -97,7 +100,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     sort: TripSort.OVERALL,
     onSortChange: (sort: TripSort) => { },
     onReqRealtimeFor: (trip?: Trip) => { },
-    refreshSelectedTrip: () => Promise.resolve(false),
+    refreshSelectedTrip: () => Promise.resolve(undefined),
     onAlternativeChange: (group: TripGroup, alt: Trip) => { },
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => { },
     onSegmentCollectChange: (segment: Segment, location: ModeLocation) => Promise.resolve(undefined),
@@ -113,18 +116,16 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     setViewport: (center: LatLng, zoom: number) => { }
 });
 
-class RoutingResultsProvider extends React.Component<IWithRoutingResultsProps, {}> {
-    private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
-        props = { ...props };
-        return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
-    });
+const ContextWithValue = withRoutingResults((props: IRoutingResultsContext & { children: React.ReactNode }) => {
+    const { children, ...contextProps } = props;
+    return <RoutingResultsContext.Provider value={contextProps}>{children}</RoutingResultsContext.Provider>;
+});
 
-    public render(): React.ReactNode {
-        return (
-            <this.ContextWithValue {...this.props} />
-        );
-    }
-
+const RoutingResultsProvider: React.FunctionComponent<IWithRoutingResultsProps> = (props) => {
+    const { finishInitLoadingPromise } = React.useContext(TKAccountContext)
+    return (
+        <ContextWithValue {...props} finishInitLoadingPromise={finishInitLoadingPromise} />
+    );
 }
 
 export default RoutingResultsProvider;

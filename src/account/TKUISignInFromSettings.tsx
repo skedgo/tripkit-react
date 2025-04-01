@@ -5,8 +5,13 @@ import TKUISettingSection from "../options/TKUISettingSection";
 import TKUISettingLink from "../options/TKUISettingLink";
 import { TKI18nContext } from '../i18n/TKI18nProvider';
 
-const TKUISignInFromSettings: React.FunctionComponent<{}> = () => {
+interface IProps {
+    onSignInClick?: () => void;
+}
+
+const TKUISignInFromSettings: React.FunctionComponent<IProps> = (props) => {
     const { status, login, logout } = useContext(TKAccountContext);
+    const { onSignInClick = () => { login() } } = props;
     const { t } = useContext(TKI18nContext);
     return (
         <TKUISettingSection>
@@ -14,7 +19,7 @@ const TKUISignInFromSettings: React.FunctionComponent<{}> = () => {
                 text={status === SignInStatus.signedIn ? t("Sign.out") : t("Sign.in")}
                 onClick={() => {
                     if (status === SignInStatus.signedOut) {
-                        login();
+                        onSignInClick();
                     } else if (status === SignInStatus.signedIn) {
                         logout();
                     }

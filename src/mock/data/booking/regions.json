@@ -1,0 +1,230 @@
+{
+  "modes": {
+    "cy_bic": {
+      "title": "Bicycle",
+      "color": {
+        "red": 0,
+        "green": 180,
+        "blue": 99
+      }
+    },
+    "cy_bic-s": {
+      "title": "Bike-sharing",
+      "color": {
+        "red": 30,
+        "green": 199,
+        "blue": 99
+      }
+    },
+    "in_air": {
+      "title": "Flight",
+      "color": {
+        "red": 0,
+        "green": 180,
+        "blue": 99
+      }
+    },
+    "me_car": {
+      "title": "Car",
+      "color": {
+        "red": 66,
+        "green": 149,
+        "blue": 240
+      }
+    },
+    "me_mic-s": {
+      "title": "Shared micromobility",
+      "color": {
+        "red": 30,
+        "green": 199,
+        "blue": 99
+      }
+    },
+    "me_mot": {
+      "title": "Motorbike",
+      "color": {
+        "red": 46,
+        "green": 196,
+        "blue": 199
+      }
+    },
+    "ps_drt": {
+      "title": "On-demand transit",
+      "color": {
+        "red": 115,
+        "green": 169,
+        "blue": 243
+      }
+    },
+    "ps_tax": {
+      "title": "Taxi",
+      "color": {
+        "red": 221,
+        "green": 202,
+        "blue": 62
+      }
+    },
+    "pt_pub": {
+      "title": "Public transport",
+      "color": {
+        "red": 45,
+        "green": 197,
+        "blue": 104
+      }
+    },
+    "wa_wal": {
+      "title": "Walking",
+      "color": {
+        "red": 30,
+        "green": 199,
+        "blue": 99
+      },
+      "required": true
+    },
+    "wa_whe": {
+      "title": "Wheelchair",
+      "color": {
+        "red": 66,
+        "green": 149,
+        "blue": 240
+      }
+    }
+  },
+  "regions": [
+    {
+      "name": "US_MI_AnnArbor",
+      "modes": [
+        "pt_pub",
+        "cy_bic",
+        "ps_tax",
+        "ps_drt",
+        "me_car",
+        "me_mot",
+        "wa_wal"
+      ],
+      "timezone": "US/Eastern",
+      "cities": [
+        {
+          "lat": 42.28117,
+          "lng": -83.74701,
+          "identifier": "US.MI.Ann-Arbor",
+          "title": "Ann Arbor, MI, USA",
+          "timezone": "US/Eastern",
+          "region": "US_MI_AnnArbor"
+        }
+      ],
+      "polygon": "gkifGrel{NfriAia@nxZrpd@~}x@vXngP{i@zr]lT`tKzM_g\\fzuBmrrExU_Xim`A_q@kvzAfhUbP",
+      "urls": [
+        "https://gemini.skedgo.com/satapp",
+        "https://baryogenesis.skedgo.com/satapp",
+        "https://lepton.skedgo.com/satapp"
+      ]
+    },
+    {
+      "name": "US_MI_Detroit",
+      "modes": [
+        "pt_pub",
+        "cy_bic",
+        "ps_tax",
+        "ps_drt",
+        "me_car",
+        "me_mot",
+        "me_mic-s",
+        "wa_wal"
+      ],
+      "timezone": "US/Eastern",
+      "cities": [
+        {
+          "lat": 42.33693,
+          "lng": -83.0507,
+          "identifier": "US.MI.Detroit",
+          "title": "Detroit, MI, USA",
+          "timezone": "US/Eastern",
+          "region": "US_MI_Detroit"
+        }
+      ],
+      "polygon": "kzw}Fjpc|NtxBdlLmbaBnr@_flAbPcmx@mmjAagd@euqAxtO{_hAx`aAtxS|p`A|kmA|sq@b{n@f}KdqPdiu@v}q@",
+      "urls": [
+        "https://gemini.skedgo.com/satapp",
+        "https://baryogenesis.skedgo.com/satapp",
+        "https://lepton.skedgo.com/satapp"
+      ]
+    },
+    {
+      "name": "US_MI_GrandRapids",
+      "modes": [
+        "pt_pub",
+        "cy_bic",
+        "ps_tax",
+        "ps_drt",
+        "me_car",
+        "me_mot",
+        "wa_wal"
+      ],
+      "timezone": "US/Eastern",
+      "cities": [
+        {
+          "lat": 42.96336,
+          "lng": -85.66809,
+          "identifier": "US.MI.Grand-Rapids",
+          "title": "Grand Rapids, MI, USA",
+          "timezone": "US/Eastern",
+          "region": "US_MI_GrandRapids"
+        }
+      ],
+      "polygon": "_segGdlyjO{CqfaBzcvBrbAzWhhbB{wvBkdB",
+      "urls": [
+        "https://gemini.skedgo.com/satapp",
+        "https://baryogenesis.skedgo.com/satapp",
+        "https://lepton.skedgo.com/satapp"
+      ]
+    },
+    {
+      "name": "US_MI_Jackson",
+      "modes": [
+        "pt_pub",
+        "cy_bic",
+        "cy_bic-s",
+        "ps_tax",
+        "ps_drt",
+        "me_car",
+        "me_mot",
+        "wa_wal"
+      ],
+      "timezone": "America/Detroit",
+      "cities": [
+        {
+          "lat": 42.24568,
+          "lng": -84.40391,
+          "identifier": "US.MI.Jackson",
+          "title": "Jackson",
+          "timezone": "America/Detroit",
+          "region": "US_MI_Jackson"
+        },
+        {
+          "lat": 41.92249,
+          "lng": -84.63189,
+          "identifier": "US.MI.Hillsdale",
+          "title": "Hillsdale",
+          "timezone": "America/Detroit",
+          "region": "US_MI_Jackson"
+        },
+        {
+          "lat": 41.89754,
+          "lng": -84.03741,
+          "identifier": "US.MI.Adrian",
+          "title": "Adrian",
+          "timezone": "America/Detroit",
+          "region": "US_MI_Jackson"
+        }
+      ],
+      "polygon": "_~}`Gx_ndOam^ko@vIwpcC`_r@cInd\\gjuB`vu@kZtcCx|~F_}jB}iA",
+      "urls": [
+        "https://gemini.skedgo.com/satapp",
+        "https://baryogenesis.skedgo.com/satapp",
+        "https://lepton.skedgo.com/satapp"
+      ]
+    }
+  ],
+  "hashCode": 515891116
+}

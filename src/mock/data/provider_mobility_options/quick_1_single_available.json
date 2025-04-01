@@ -1,0 +1,93 @@
+{
+  "availableList": [
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/e21ef1ea-f53d-4f36-848d-f13090d3f8ea/guvfmir4/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 2492,
+      "maxPrice": 5662,
+      "fares": [
+        {
+          "id": "a12ab23b-66f0-4028-9bb9-856dbcfdbbc7",
+          "name": "UberX",
+          "description": "",
+          "price": 2492,
+          "currency": "USD",
+          "value": 1,
+          "max": 1
+        },
+        {
+          "id": "e4334456-0ab7-44c8-b801-cd4753f085b0",
+          "name": "UberXL",
+          "description": "",
+          "price": 2659,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "0c757ef2-d3a5-4f37-b7b2-3b055380e165",
+          "name": "UberX Priority",
+          "description": "",
+          "price": 2770,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "0b8f49d3-5c5f-412a-909f-c9de1db414d4",
+          "name": "Comfort",
+          "description": "",
+          "price": 2798,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "435fcf29-2bb6-4f8a-9210-88ca35f36cf8",
+          "name": "Pet",
+          "description": "",
+          "price": 2917,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "e01d13d8-fe0b-4772-9c5c-a73af4c33898",
+          "name": "Black",
+          "description": "",
+          "price": 4002,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "5e3849f5-3644-44ce-bac6-3166bbc12034",
+          "name": "Black SUV",
+          "description": "",
+          "price": 5662,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_michigan-uber-api",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Uber - API",
+        "remoteIcon": "uber",
+        "color": {
+          "red": 47,
+          "green": 213,
+          "blue": 186
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": true,
+      "title": "Uber - API",
+      "bookingTitle": "Take Uber - API"
+    }
+  ],
+  "unavailableList": []
+}

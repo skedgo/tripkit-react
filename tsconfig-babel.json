@@ -20,7 +20,6 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true
   },
   "include": [

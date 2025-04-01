@@ -1,4 +1,4 @@
-import {TKError} from "./TKError";
+import { TKError } from "./TKError";
 
 // TripGo api errors
 export const ERROR_ROUTING_NOT_SUPPORTED = "1001";

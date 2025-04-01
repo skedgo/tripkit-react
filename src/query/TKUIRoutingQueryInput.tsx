@@ -11,7 +11,6 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker, { ACTION_PICK_FROM_LOCATION, ACTION_PICK_TO_LOCATION, ACTION_SELECT_TIME_PREF, CATEGORY_QUERY_INPUT } from "../analytics/GATracker";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIRoutingQueryInputDefaultStyle } from "./TKUIRoutingQueryInput.css";
@@ -31,6 +30,9 @@ import HasCard, { HasCardKeys } from "../card/HasCard";
 import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
 import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 import genStyles from "../css/GenStyle.css";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import StopLocation from "../model/StopLocation";
+import FavouriteStop from "../model/favourite/FavouriteStop";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -221,7 +223,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         if (update.isComplete(true) &&
             (JSON.stringify(update.from) !== JSON.stringify(prevQuery.from)
                 || JSON.stringify(update.to) !== JSON.stringify(prevQuery.to))) {
-            FavouritesData.recInstance.add(FavouriteTrip.create(update.from!, update.to!));
+            FavouritesData.recInstance.add(update.from instanceof StopLocation ? FavouriteStop.create(update.from!) : FavouriteLocation.create(update.from!));
+            FavouritesData.recInstance.add(update.to instanceof StopLocation ? FavouriteStop.create(update.to!) : FavouriteLocation.create(update.to!));
         }
         if (this.props.onChange) {
             this.props.onChange(update);

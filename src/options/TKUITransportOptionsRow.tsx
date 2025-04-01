@@ -1,18 +1,15 @@
 import * as React from "react";
-import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { tKUITransportOptionsRowStyle } from "./TKUITransportOptionsRow.css";
 import { DisplayConf } from "../model/options/TKTransportOptions";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import TransportUtil from "../trip/TransportUtil";
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-import { withStyles } from '@material-ui/core/styles';
+import ExpansionPanel from '@mui/material/Accordion';
+import ExpansionPanelSummary from '@mui/material/AccordionSummary';
+import ExpansionPanelDetails from '@mui/material/AccordionDetails';
 import { ReactComponent as IconAngleDown } from "../images/ic-angle-down.svg";
-import { black } from "../jss/TKUITheme";
 import ModeInfo from "../model/trip/ModeInfo";
 import { Subtract } from "utility-types";
 import Util from "../util/Util";
@@ -24,6 +21,7 @@ import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import TKUISettingLink from "./TKUISettingLink";
+import TKUICheckbox from "../util_components/TKUICheckbox";
 
 type IStyle = ReturnType<typeof tKUITransportOptionsRowStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -54,7 +52,6 @@ interface IState {
 
 class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
-    private GreenCheckbox;
     private walkSpeedOptions: SelectOption[];
     private cycleSpeedOptions: SelectOption[];
 
@@ -63,15 +60,6 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         this.state = {
             expanded: false
         };
-        this.GreenCheckbox = withStyles({
-            root: {
-                color: black(1, props.theme.isDark),
-                '&$checked': {
-                    color: props.theme.colorPrimary,
-                },
-            },
-            checked: {},
-        })((props: CheckboxProps) => <Checkbox color="default" {...props} />);
 
         const t = this.props.t;
         this.walkSpeedOptions = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
@@ -110,7 +98,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     Minimised
                 </div>
-                <this.GreenCheckbox
+                <TKUICheckbox
                     checked={displayValue === DisplayConf.BRIEF}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -121,6 +109,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     }}
                     value="primary"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
+                    theme={this.props.theme}
                 />
             </div>;
         const preferredTransportOption = mode.isPT() &&
@@ -138,7 +127,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             <div className={classes.prefModeTitle}>
                                 {transMode.alt}
                             </div>
-                            <this.GreenCheckbox
+                            <TKUICheckbox
                                 checked={value.transportOptions.isPreferredTransport(transMode.identifier!)}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     const checked = event.target.checked;
@@ -149,6 +138,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                                 onClick={event => event.stopPropagation()}
                                 onFocus={event => event.stopPropagation()}
                                 inputProps={{ 'aria-label': transMode.alt }}
+                                theme={this.props.theme}
                             />
                         </div>
                     )}
@@ -218,7 +208,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     Concession pricing
                 </div>
-                <this.GreenCheckbox
+                <TKUICheckbox
                     checked={value.transitConcessionPricing}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -227,6 +217,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         this.props.onChange(userProfileUpdate);
                     }}
                     inputProps={{ 'aria-label': "Concession pricing" }}
+                    theme={this.props.theme}
                 />
             </div>;
         const wheelchairOption = mode.isPT() &&
@@ -234,7 +225,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     {t("Wheelchair.information")}
                 </div>
-                <this.GreenCheckbox
+                <TKUICheckbox
                     checked={value.wheelchair}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -243,6 +234,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         this.props.onChange(userProfileUpdate);
                     }}
                     inputProps={{ 'aria-label': t("Wheelchair.information") }}
+                    theme={this.props.theme}
                 />
             </div>;
         let walkSpeedSelect: any = undefined;
@@ -317,7 +309,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     {...(displayValue === DisplayConf.HIDDEN || !hasContent) ? { role: undefined, tabIndex: -1 } : undefined}
                 >
                     <div className={classes.main}>
-                        <this.GreenCheckbox
+                        <TKUICheckbox
                             checked={displayValue !== DisplayConf.HIDDEN}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 const checked = event.target.checked;
@@ -329,6 +321,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             onClick={event => event.stopPropagation()}
                             onFocus={event => event.stopPropagation()}
                             inputProps={{ 'aria-label': mode.title }}
+                            theme={this.props.theme}
                         />
                         <img src={TransportUtil.getTransportIconModeId(mode, false, this.props.theme.isDark)}
                             className={classes.transIcon}

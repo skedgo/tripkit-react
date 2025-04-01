@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import LocationInfoDetails from "./LocationInfoDetails";
 import RealTimeAlert from "../service/RealTimeAlert";
 import StopLocation from "../StopLocation";
@@ -6,6 +6,7 @@ import CarParkInfo from "./CarParkInfo";
 import BikePodInfo from "./BikePodInfo";
 import CarRentalInfo from "./CarRentalInfo";
 import CarPodInfo from "./CarPodInfo";
+import SchoolLocation from "./SchoolLocation";
 
 @JsonObject
 class TKLocationInfo {
@@ -28,6 +29,8 @@ class TKLocationInfo {
     public readonly carPod?: CarPodInfo = undefined;
     @JsonProperty("bikePod", BikePodInfo, true)
     public readonly bikePod?: BikePodInfo = undefined;
+    @JsonProperty("school", SchoolLocation, true)
+    public readonly school?: SchoolLocation = undefined;
 
 }
 

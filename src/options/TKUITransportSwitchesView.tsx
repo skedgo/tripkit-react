@@ -1,23 +1,23 @@
 import * as React from "react";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUITransportSwitchesViewDefaultStyle} from "./TKUITransportSwitchesView.css";
-import {IOptionsContext, OptionsContext} from "./OptionsProvider";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptions";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUITransportSwitchesViewDefaultStyle } from "./TKUITransportSwitchesView.css";
+import { IOptionsContext, OptionsContext } from "./OptionsProvider";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import TKTransportOptions, { DisplayConf } from "../model/options/TKTransportOptions";
 import RegionsData from "../data/RegionsData";
 import TransportUtil from "../trip/TransportUtil";
 import classNames from "classnames";
 import Util from "../util/Util";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import TKUITooltip from "../card/TKUITooltip";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
 import Region from "../model/region/Region";
-import {Subtract} from "utility-types";
+import { Subtract } from "utility-types";
 import DeviceUtil from "../util/DeviceUtil";
 import ModeIdentifier from "../model/region/ModeIdentifier";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
 import TKUICardHeader from "../card/TKUICardHeader";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -40,7 +40,7 @@ interface IConsumedProps {
 }
 
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -60,7 +60,7 @@ export type TKUITransportSwitchesViewProps = IProps;
 export type TKUITransportSwitchesViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITransportSwitchesView {...props}/>,
+    render: props => <TKUITransportSwitchesView {...props} />,
     styles: tKUITransportSwitchesViewDefaultStyle,
     classNamePrefix: "TKUITransportSwitchesView"
 };
@@ -86,86 +86,86 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
         const firstModeId = "first-mode-id";
         return (
             <TKUICard presentation={CardPresentation.NONE}
-                      onRequestClose={this.props.onRequestClose}
-                      mainFocusElemId={firstModeId}
-                      renderHeader={props =>
-                          <TKUICardHeader
-                              {...props}
-                              styles={{
-                                  main: overrideClass({
-                                      padding: '0'
-                                  }),
-                                  btnClear: overrideClass({
-                                      position: 'absolute',
-                                      right: '12px',
-                                      top: '10px'
-                                  })
-                              }}
-                          />}
-                      styles={{
-                          ...this.props.inline && {
-                              main: {
-                                  margin: '0 -5px'
-                              }
-                          }
-                      }}
-                      ariaLabel={"Transport Switches"}
-                      shouldFocusAfterRender={this.props.inline ? false : undefined}
+                onRequestClose={this.props.onRequestClose}
+                mainFocusElemId={firstModeId}
+                renderHeader={props =>
+                    <TKUICardHeader
+                        {...props}
+                        styles={{
+                            main: overrideClass({
+                                padding: '0'
+                            }),
+                            btnClear: overrideClass({
+                                position: 'absolute',
+                                right: '12px',
+                                top: '10px'
+                            })
+                        }}
+                    />}
+                styles={{
+                    ...this.props.inline && {
+                        main: {
+                            margin: '0 -5px'
+                        }
+                    }
+                }}
+                ariaLabel={"Transport Switches"}
+                shouldFocusAfterRender={this.props.inline ? false : undefined}
             >
                 <div className={classes.main}>
                     <div className={classes.modeSelector}>
                         {modes.map((mode: string, index: number) => {
-                                const modeOption = transOptions.getTransportOption(mode);
-                                const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                                const tooltip =
-                                    <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
-                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
-                                        <div className={classes.tooltipRight}>
-                                            <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
-                                            <div className={modeOption === DisplayConf.HIDDEN ?
-                                                classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
-                                                {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
-                                            </div>
+                            const modeOption = transOptions.getTransportOption(mode);
+                            const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
+                            const tooltip =
+                                <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
+                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)} />
+                                    <div className={classes.tooltipRight}>
+                                        <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
+                                        <div className={modeOption === DisplayConf.HIDDEN ?
+                                            classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
+                                            {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
                                         </div>
-                                    </div>;
-                                const transBtn =
-                                    <button
-                                        className={classNames(classes.modeIcon,
-                                            modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                        onClick={() => this.onChange(mode)}
-                                        {...DeviceUtil.isTouch() && {key: index}}
-                                        {...index === 0 && {id: firstModeId}}
-                                        aria-pressed={modeOption !== DisplayConf.HIDDEN}
-                                    >
-                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}
-                                             aria-label={modeIdentifier.title}/>
-                                    </button>;
-                                return ( DeviceUtil.isTouch() ?
-                                        transBtn :
-                                        <TKUITooltip placement="top"
-                                                     overlay={tooltip}
-                                                     className={classes.tooltip}
-                                                     mouseEnterDelay={.5}
-                                                     arrowContent={null}
-                                                     key={index}
-                                        >
-                                            {transBtn}
-                                        </TKUITooltip>
-                                );
-                            }
+                                    </div>
+                                </div>;
+                            const transBtn =
+                                <button
+                                    className={classNames(classes.modeIcon,
+                                        modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
+                                    onClick={() => this.onChange(mode)}
+                                    {...DeviceUtil.isTouch() && { key: index }}
+                                    {...index === 0 && { id: firstModeId }}
+                                    aria-pressed={modeOption !== DisplayConf.HIDDEN}
+                                >
+                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}
+                                        aria-label={modeIdentifier.title} />
+                                </button>;
+                            return (DeviceUtil.isTouch() ?
+                                transBtn :
+                                <TKUITooltip placement="top"
+                                    overlay={tooltip}
+                                    className={classes.tooltip}
+                                    mouseEnterDelay={.5}
+                                    arrowContent={null}
+                                    key={index}
+                                >
+                                    {transBtn}
+                                </TKUITooltip>
+                            );
+                        }
                         )}
                     </div>
                     {this.props.onMoreOptions &&
-                    <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
-                                text={t("More.options")}
-                                styles={{
-                                    main: overrideClass({
-                                        marginLeft: '10px',
-                                        ...genStyles.fontS
-                                    })
-                                }}
-                                onClick={this.props.onMoreOptions}
-                    />}
+                        <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
+                            text={t("More.options")}
+                            styles={{
+                                main: overrideClass({
+                                    marginLeft: '10px',
+                                    ...genStyles.fontS
+                                })
+                            }}
+                            onClick={this.props.onMoreOptions}
+                        />}
                 </div>
             </TKUICard>
         )
@@ -173,7 +173,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
 
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
     return (
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>
@@ -182,7 +182,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                         props.children!({
                             value: optionsContext.userProfile.transportOptions,
                             onChange: (value: TKTransportOptions) => {
-                                const newValue = Util.iAssign(optionsContext.userProfile, {transportOptions: value});
+                                const newValue = Util.iAssign(optionsContext.userProfile, { transportOptions: value });
                                 optionsContext.onUserProfileChange(newValue);
                             },
                             region: routingContext.region
@@ -194,10 +194,10 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
+                children!({ ...inputProps, ...consumedProps })}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUITransportSwitchesView, config, Mapper);

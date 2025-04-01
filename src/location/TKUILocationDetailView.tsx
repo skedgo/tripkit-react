@@ -28,8 +28,8 @@ import DeviceUtil from "../util/DeviceUtil";
 import CarPodLocation from "../model/location/CarPodLocation";
 import TKUIVehicleAvailability from "./TKUIVehicleAvailability";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import Tabs from "@material-ui/core/Tabs/Tabs";
-import Tab from "@material-ui/core/Tab/Tab";
+import Tabs from "@mui/material/Tabs/Tabs";
+import Tab from "@mui/material/Tab/Tab";
 import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
 import StopLocation from "../model/StopLocation";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
@@ -40,9 +40,9 @@ import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKShareHelper from "../share/TKShareHelper";
-import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
 import LocationUtil from "../util/LocationUtil";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -104,8 +104,9 @@ const TKUILocationDetailView: React.FunctionComponent<IProps> = (props: IProps) 
         ] : [])
             .concat([
                 <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2} />,
-                <TKUIFavouriteAction key={3}
-                    favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
+                <TKUIFavouriteAction
+                    key={3}
+                    favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteLocation.create(location)}
                     vertical={true} />,
                 <TKUIShareAction
                     title={t("Share")}

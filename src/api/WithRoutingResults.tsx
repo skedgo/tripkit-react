@@ -38,6 +38,7 @@ export interface IWithRoutingResultsProps {
     computeModeSetsBuilder?: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
+    finishInitLoadingPromise?: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
 }
 
 interface IWithRoutingResultsState {
@@ -97,6 +98,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onQueryUpdate = this.onQueryUpdate.bind(this);
+            this.clearTrips = this.clearTrips.bind(this);
             this.onTripJsonUrl = this.onTripJsonUrl.bind(this);
             this.onChange = this.onChange.bind(this);
             this.setSelectedSegment = this.setSelectedSegment.bind(this);
@@ -350,6 +352,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
         }
 
+        public clearTrips() {
+            this.setState({
+                trips: undefined,
+                waiting: false,
+                routingError: undefined
+            });
+        }
+
         public checkWaiting(waitingState: any) {
             if (!this.sameApiQueries(this.state.query, this.props.options, waitingState.query, waitingState.options)) {
                 return;
@@ -361,35 +371,25 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public alreadyAnEquivalent(newTrip: Trip, trips: Trip[]): boolean {
-            return !!trips.find((trip: Trip) => this.equivalentTrips(trip, newTrip));
+            return !!trips.find((trip: Trip) => TripGoApi.equivalentTrips(trip, newTrip));
         }
 
-        public equivalentTrips(tripA: Trip, tripB: Trip): boolean {
-            return tripA.departSeconds === tripB.departSeconds &&
-                tripA.arriveSeconds === tripB.arriveSeconds &&
-                tripA.weightedScore === tripB.weightedScore &&
-                tripA.caloriesCost === tripB.caloriesCost &&
-                tripA.carbonCost === tripB.carbonCost &&
-                tripA.hassleCost === tripB.hassleCost &&
-                tripA.segments.length === tripB.segments.length;
-        }
-
-        public refreshSelectedTrip(): Promise<boolean> {
+        public refreshSelectedTrip(): Promise<Trip | undefined> {
             return this.state.selected ?
-                this.refreshTrip(this.state.selected) : Promise.resolve(false);
+                this.refreshTrip(this.state.selected) : Promise.resolve(undefined);
         }
 
-        public refreshTrip(trip: Trip): Promise<boolean> {
+        public refreshTrip(trip: Trip): Promise<Trip | undefined> {
             const updateURL = trip.updateURL;
             if (!updateURL) {
-                return Promise.resolve(false);
+                return Promise.resolve(undefined);
             }
             return TripGoApi.updateRT(trip, this.state.query)
                 .then((tripUpdate: Trip | undefined) => {
                     // updateURL !== selected.updateURL will happen if selected trip group changed selected
                     // alternative, so shouldn't update.
                     if (!tripUpdate || updateURL !== trip.updateURL) {
-                        return false;
+                        return undefined;
                     }
                     const selectedTGroup = trip as TripGroup;
                     selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
@@ -401,7 +401,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         // Force update anyway
                         this.setState({});
                     }
-                    return true;
+                    return tripUpdate;
                 });
         }
 
@@ -680,13 +680,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     const updatedTrip = result.groups[0];
                     // Compare by id (instead of equiality between trips) since segment.trip is Trip, while prevState.trips and prevState.selected are TripGroups.
                     this.setState(prevState => {
-                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment.trip.id)) {
+                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment?.trip.id)) {
                             return null;
                         }
                         const stateUpdate = {
-                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
-                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
-                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
+                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment?.trip.id ? updatedTrip : trip), prevState.sort),
+                            selected: prevState.selected?.id === segment?.trip.id ? updatedTrip : prevState.selected,
+                            selectedSegment: prevState.selected && prevState.selected.id === segment?.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
                         }
                         return stateUpdate;
                     });
@@ -711,69 +711,72 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public render(): React.ReactNode {
             const props = this.props as IWithRoutingResultsProps;
-            return <Consumer
-                {...props}
-                query={this.state.query}
-                onQueryChange={this.onQueryChange}
-                onQueryUpdate={this.onQueryUpdate}
-                onTripJsonUrl={this.onTripJsonUrl}
-                preFrom={this.state.preFrom}
-                preTo={this.state.preTo}
-                onPreChange={(from: boolean, location?: Location) => {
-                    if (from) {
-                        this.setState({ preFrom: location })
-                    } else {
-                        this.setState({ preTo: location })
-                    }
-                }}
-                inputTextFrom={this.state.inputTextFrom}
-                inputTextTo={this.state.inputTextTo}
-                onInputTextChange={(from: boolean, text: string) => {
-                    if (from) {
-                        this.setState({ inputTextFrom: text });
-                    } else {
-                        this.setState({ inputTextTo: text });
-                    }
-                }}
-                region={this.state.region}
-                coverageGeoJson={this.state.coverageGeoJson}
-                getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
-                viewport={this.state.viewport}
-                onViewportChange={this.onViewportChange}
-                computeTripsForQuery={this.state.computeTripsForQuery}
-                onComputeTripsForQuery={this.onComputeTripsForQuery}
-                trips={this.state.trips}
-                waiting={this.state.waiting}
-                routingError={this.state.routingError}
-                waitingTripUpdate={this.state.waitingTripUpdate}
-                tripUpdateError={this.state.tripUpdateError}
-                selectedTrip={this.state.selected}
-                onSelectedTripChange={this.onChange}
-                selectedTripSegment={this.state.selectedSegment}
-                setSelectedTripSegment={this.setSelectedSegment}
-                tripDetailsView={this.state.tripDetailsView}
-                onTripDetailsView={this.onTripDetailsView}
-                sort={this.state.sort}
-                onSortChange={this.onSortChange}
-                onReqRealtimeFor={this.onReqRealtimeFor}
-                refreshSelectedTrip={this.refreshSelectedTrip}
-                onAlternativeChange={this.onAlternativeChange}
-                onSegmentServiceChange={this.onSegmentServiceChange}
-                onSegmentCollectChange={this.onSegmentCollectChange}
-                onSegmentCollectBookingChange={this.onSegmentCollectBookingChange}
-                waitingStateLoad={this.state.waitingStateLoad}
-                stateLoadError={this.state.stateLoadError}
-                onWaitingStateLoad={this.onWaitingStateLoad}
-                setMap={(map: TKUIMapViewClass) => {
-                    this.setState({
-                        mapRef: map
-                    });
-                    this.resolveMapP(map);
-                }}
-                map={this.state.mapRef}
-                mapAsync={this.mapPromise}
-                setViewport={this.setViewport}
-            />;
+            return (
+                <Consumer
+                    {...props}
+                    query={this.state.query}
+                    onQueryChange={this.onQueryChange}
+                    onQueryUpdate={this.onQueryUpdate}
+                    onTripJsonUrl={this.onTripJsonUrl}
+                    preFrom={this.state.preFrom}
+                    preTo={this.state.preTo}
+                    onPreChange={(from: boolean, location?: Location) => {
+                        if (from) {
+                            this.setState({ preFrom: location })
+                        } else {
+                            this.setState({ preTo: location })
+                        }
+                    }}
+                    inputTextFrom={this.state.inputTextFrom}
+                    inputTextTo={this.state.inputTextTo}
+                    onInputTextChange={(from: boolean, text: string) => {
+                        if (from) {
+                            this.setState({ inputTextFrom: text });
+                        } else {
+                            this.setState({ inputTextTo: text });
+                        }
+                    }}
+                    region={this.state.region}
+                    coverageGeoJson={this.state.coverageGeoJson}
+                    getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
+                    viewport={this.state.viewport}
+                    onViewportChange={this.onViewportChange}
+                    computeTripsForQuery={this.state.computeTripsForQuery}
+                    onComputeTripsForQuery={this.onComputeTripsForQuery}
+                    trips={this.state.trips}
+                    waiting={this.state.waiting}
+                    routingError={this.state.routingError}
+                    clearTrips={this.clearTrips}
+                    waitingTripUpdate={this.state.waitingTripUpdate}
+                    tripUpdateError={this.state.tripUpdateError}
+                    selectedTrip={this.state.selected}
+                    onSelectedTripChange={this.onChange}
+                    selectedTripSegment={this.state.selectedSegment}
+                    setSelectedTripSegment={this.setSelectedSegment}
+                    tripDetailsView={this.state.tripDetailsView}
+                    onTripDetailsView={this.onTripDetailsView}
+                    sort={this.state.sort}
+                    onSortChange={this.onSortChange}
+                    onReqRealtimeFor={this.onReqRealtimeFor}
+                    refreshSelectedTrip={this.refreshSelectedTrip}
+                    onAlternativeChange={this.onAlternativeChange}
+                    onSegmentServiceChange={this.onSegmentServiceChange}
+                    onSegmentCollectChange={this.onSegmentCollectChange}
+                    onSegmentCollectBookingChange={this.onSegmentCollectBookingChange}
+                    waitingStateLoad={this.state.waitingStateLoad}
+                    stateLoadError={this.state.stateLoadError}
+                    onWaitingStateLoad={this.onWaitingStateLoad}
+                    setMap={(map: TKUIMapViewClass) => {
+                        this.setState({
+                            mapRef: map
+                        });
+                        this.resolveMapP(map);
+                    }}
+                    map={this.state.mapRef}
+                    mapAsync={this.mapPromise}
+                    setViewport={this.setViewport}
+                />
+            );
         }
 
 
@@ -807,7 +810,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
                     firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromIsoWithTimezone(firstTrip.queryTime) : undefined);
-                routingResults.setQuery(query);
                 if (typeof tripUrl === 'string') {
                     routingResults.setSatappQuery(tripUrl);
                 }
@@ -851,10 +853,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             // Pre-fetch modes on region change (see also trigger it on demand getQueryUrlsWaitRegions) to save time when
             // triggering compute trips.
             if (this.state.region && prevState.region !== this.state.region) {
-                this.props.options.finishSignInStatusP &&
-                    this.props.options.finishSignInStatusP.then(status => {
-                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
-                    });
+                // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
+                const finishSignInP = this.props.options.finishSignInStatusP ?? this.props.finishInitLoadingPromise
+                finishSignInP?.then(status => {
+                    status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
+                });
                 RegionsData.currentRegion = this.state.region;
             }
         }
@@ -902,7 +905,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
-                return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
+                // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
+                const finishSignInP = this.props.options.finishSignInStatusP ?? this.props.finishInitLoadingPromise ?? Promise.resolve(SignInStatus.signedOut);
+                return finishSignInP
                     .then(status =>
                         (status === SignInStatus.signedIn && this.props.options.exclusiveModes ?
                             RegionsData.instance.getRegionP(query.from!)
@@ -939,6 +944,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     enabledModes.splice(enabledModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
                 });
             }
+            const impliedModes: string[] = [];
+            enabledModes.forEach((mode: string) => {
+                impliedModes.push(...RegionsData.instance.getModeIdentifier(mode)?.implies ?? []);
+            });
+            enabledModes.push(...impliedModes.filter((mode: string) => !enabledModes.includes(mode)));
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();
             if (multiModalSet.length > 1) {
@@ -952,7 +962,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
                     return TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, RoutingResults)
                         .then((routingResults: RoutingResults) => {
-                            routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));
                             return routingResults.groups;
                         })

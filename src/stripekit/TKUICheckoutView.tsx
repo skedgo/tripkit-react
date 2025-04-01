@@ -1,8 +1,8 @@
 import React, { Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
-import { TKUIWithClasses, overrideClass, withStyles } from '../jss/StyleHelper';
-import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
+import { TKUIWithClasses, TKUIWithStyle, overrideClass, withStyles } from '../jss/StyleHelper';
+import { black, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
 import TripGoApi from '../api/TripGoApi';
@@ -10,8 +10,6 @@ import NetworkUtil from '../util/NetworkUtil';
 import EphemeralResult from '../model/payment/EphemeralResult';
 import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
 import { ReactComponent as IconCard } from "../images/payment/ic-creditcard-big.svg";
-import { withStyles as muiWithStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
 import { TKError } from '../error/TKError';
 import UIUtil from '../util/UIUtil';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
@@ -20,8 +18,16 @@ import { StripeElements } from '@stripe/stripe-js/types/stripe-js/elements-group
 import TKUISettingSection from '../options/TKUISettingSection';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
-import { SelectOption } from '../buttons/TKUISelect';
+import TKUISelect, { SelectOption } from '../buttons/TKUISelect';
 import { i18n } from '../i18n/TKI18nConstants';
+import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
+import { connect, mapperFromFunction } from '../config/TKConfigHelper';
+import { TKUIConfig } from '../config/TKUIConfig';
+import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
+import { BookingField } from '../model/trip/BookingInfo';
+import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
+import DateTimeUtil from '../util/DateTimeUtil';
+import TKUICheckbox from '../util_components/TKUICheckbox';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -50,12 +56,12 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         '&>*:not(:first-child)': {
             marginLeft: '20px'
         },
-        paddingBottom: '15px'
+        padding: '15px 0'
     },
     card: {
         ...genStyles.noShrink,
-        height: '150px',
-        margin: '15px 0 30px',
+        height: '110px',
+        marginBottom: '10px',
         '& path': {
             fill: theme.colorPrimary,
             opacity: '.8'
@@ -89,7 +95,7 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.spaceBetween
     },
     label: {
-        ...theme.textWeightSemibold
+
     },
     value: {
 
@@ -107,38 +113,76 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         ...genStyles.alignEnd
     },
+    initiativeValue: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        ...genStyles.alignEnd,
+        '& > *': {
+            width: '300px'
+        }
+    },
     section: {
         border: '1px solid ' + black(4, theme.isDark),
         ...genStyles.borderRadius(8)
     },
-    review: {
-        marginTop: '30px'
+    sectionTitle: {
+        textTransform: 'capitalize',
+        ...theme.textWeightSemibold
     },
     selectPaymentMethod: {
-        ...theme.textWeightBold,
         ...genStyles.flex,
-        marginLeft: '19px'
+        ...genStyles.column,
+        ...genStyles.grow,
+        marginLeft: '-18px'
     },
+    review: {
+        // marginTop: '30px'
+    },
+    // selectPaymentMethod: {
+    //     ...theme.textWeightBold,
+    //     ...genStyles.flex,
+    //     marginLeft: '19px'
+    // },
     error: {
         margin: '12px 15px 0',
         color: 'red',
         textAlign: 'center'
+    },
+    sponsorDescription: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter
     }
 });
 
-type IStyle = ReturnType<typeof tKUICheckoutFormPropsDefaultStyle>
-
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
-    publicKey: string;
-    paymentOptions: PaymentOption[];
-    ephemeralKeyObj: EphemeralResult;
-    onClose: (success?: boolean, data?: { updateURL?: string }) => void;
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    bookingPaymentForm: BookingPaymentForm;
+    onSubmit: (data: { updateURL?: string }) => void;
+    onClose?: () => void;
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
+    defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
 }
 
-function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, data?: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+type IStyle = ReturnType<typeof tKUICheckoutFormPropsDefaultStyle>
+
+export type TKUICheckoutViewProps = IProps;
+export type TKUICheckoutViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUICheckoutView {...props} />,
+    styles: tKUICheckoutFormPropsDefaultStyle,
+    classNamePrefix: "TKUICheckoutView"
+};
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+export type TKUICheckoutViewClientProps = IClientProps;
+
+function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
     setWaiting?.(true);
     request.then(data => {
         if (data.warning) {
@@ -153,19 +197,20 @@ function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, d
         }
         return data;
     })
-        .then(data => onClose(true, data))
+        .then(data => onSubmit(data))
         .catch(UIUtil.errorMsg)
         .finally(() => setWaiting?.(false));
 }
 
 const TKUICheckoutView: React.FunctionComponent<IProps> =
-    ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
+    ({ bookingPaymentForm, setWaiting, onSubmit, onClose, ...remainingProps }) => {
+        const { publishableApiKey: publicKey, paymentOptions, ephemeralKey: ephemeralKeyObj } = bookingPaymentForm
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
         const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
 
         // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
-        const internalPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
+        const internalPaymentOption = paymentOptions!.find(option => option.paymentMode === "INTERNAL");
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
             if (internalPaymentOption) {
@@ -190,14 +235,25 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             {
                 clientSecret: paymentIntentSecret
             } : undefined;
-        const onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void =
-            async ({ paymentMethod, elements, saveForFuture }) => {
+        const onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean, selectedInitiative?: string }) => void =
+            async ({ paymentMethod, elements, saveForFuture, selectedInitiative }) => {
                 const paymentOption = paymentMethod.paymentOption;
                 let stripePaymentMethod = paymentMethod.data?.stripePaymentMethod;
+                const method = paymentOption.method;
+                let paymentOptionUrl = paymentOption.url;
+                if (method === NetworkUtil.MethodType.GET && selectedInitiative) {
+                    const paymentOptionUrlObj = new URL(paymentOption.url);
+                    paymentOptionUrlObj.searchParams.set("initiativeID", selectedInitiative);
+                    paymentOptionUrl = paymentOptionUrlObj.toString();
+                }
+                paymentOption.url
+                    + (method === NetworkUtil.MethodType.GET && selectedInitiative) ? `?initiativeID=${selectedInitiative}` : "";
+                const body: any = method === NetworkUtil.MethodType.POST && selectedInitiative ?
+                    { initiativeID: selectedInitiative } : undefined;
                 if (paymentOption.paymentMode === "WALLET") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INVOICE") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value }), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body: { ...body, organizationID: paymentMethod.data!.selectedSubOption!.value } }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;
                     if (!stripe || !stripePaymentMethod && !elements) {
@@ -235,8 +291,20 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         // Show error to your customer (for example, payment details incomplete)
                         console.log(result.error.message);
                         setWaiting?.(false);
+                        let message = "The payment was not successful. Please try again.";
+                        if (result.error.message) {
+                            message = result.error.message + "\n" + message;
+                        }
+                        const tkError = new TKError(message, undefined, true);
+                        UIUtil.errorMsg(tkError);
                     } else {
-                        handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onClose, setWaiting);
+                        let paidUrlWithInitiative = paidUrl!;
+                        if (method === NetworkUtil.MethodType.GET && selectedInitiative) {
+                            const paidUrlObj = new URL(paidUrlWithInitiative);
+                            paidUrlObj.searchParams.set("initiativeID", selectedInitiative);
+                            paidUrlWithInitiative = paidUrlObj.toString();
+                        }
+                        handlePayResponse(TripGoApi.fetchAPI(paidUrlWithInitiative, { method, body }), onSubmit, setWaiting);
                     }
                 } else {    // paymentOption.paymentMode === "EXTERNAL"
                     const stripe = await stripePromise;
@@ -269,14 +337,15 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 .then(NetworkUtil.jsonCallback);
                         }
                     }
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id }), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl!, { method, body: { ...body, paymentMethod: stripePaymentMethod.id } }), onSubmit, setWaiting);
                 }
             }
         return (
             <Elements stripe={stripePromise} options={options}>
                 <TKUICheckoutForm
                     ephemeralKeyObj={ephemeralKeyObj}
-                    paymentOptions={paymentOptions}
+                    paymentOptions={paymentOptions!}
+                    initiativeField={bookingPaymentForm.initiative}
                     onConfirmPayment={onConfirmPayment}
                     onClose={onClose}
                     setWaiting={setWaiting}
@@ -286,24 +355,87 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
         );
     }
 
+const selectOptionJss = (theme: TKUITheme) => ({
+    option: (props) => ({
+        ...genStyles.flex,
+        padding: '8px',
+        ...genStyles.borderRadius(6),
+        '&$selected': {
+            backgroundColor: '#ebebeb'
+        },
+        '&$focused': {
+            backgroundColor: black(4)
+        },
+        '& path, polygon': {
+            fill: 'gray'
+        }
+    }),
+    optionLeft: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    subtitle: {
+        ...theme.textSizeCaption,
+        ...theme.textColorGray
+    },
+    selected: {},
+    focused: {}
+});
+
+export const InitiativeSelectOption = withStyles(props => {
+    const { isFocused, isSelected, classes, data, innerProps } = props as any;
+    const subtitleParts: string[] = [];
+    if (data.option?.lastUsed) {
+        subtitleParts.push("Last used " + DateTimeUtil.momentFromStringTZ(data.option.lastUsed, DateTimeUtil.defaultTZ).format(DateTimeUtil.dateFormat()));
+    }
+    if (data.walletName) {
+        subtitleParts.push("From " + data.walletName + " wallet");
+    }
+    if (data.organization) {
+        subtitleParts.push("From " + data.organization.name);
+    }
+    if (data.option?.atUserProfile) {
+        subtitleParts.push("At user profile");
+    }
+    return (
+        <div className={classNames(classes.option,
+            isSelected && classes.selected, !isSelected && isFocused && classes.focused)} {...innerProps}>
+            <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1, justifyContent: 'space-between' }}>
+                <div className={classes.optionLeft}>
+                    <div>
+                        {data.label}
+                    </div>
+                    <div className={classes.subtitle}>
+                        {subtitleParts.join(" ⋅ ")}
+                    </div>
+                </div>
+                {data.option?.lastUsed && <IconRecent style={{ marginLeft: '10px' }} />}
+            </div>
+        </div>
+    );
+}, selectOptionJss);
+
 interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
     paymentOptions: PaymentOption[];
-    onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
+    initiativeField?: BookingField;
+    onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean, selectedInitiative?: string }) => void;
     setWaiting?: (waiting: boolean) => void;
-    onClose: (success?: boolean) => void;
+    onClose?: () => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
+    defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
-    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, t, classes, theme, injectedStyles }) => {
+    ({ ephemeralKeyObj, paymentOptions, initiativeField, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, defaultPaymentMethodFc, t, classes, theme, injectedStyles }) => {
         const ephemeralKey = ephemeralKeyObj.secret;
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
         const [newPaymentMethodAndPay, setNewPaymentMethodAndPay] = useState<boolean>(false);
         const [stripePaymentMethods, setStripePaymentMethods] = useState<PaymentMethod[] | undefined>(undefined);
         const [saveForFuture, setSaveForFuture] = useState<boolean>(true);
+        // const [newCard, setNewCard] = useState<boolean>(true);
         const cardPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
         // organizationOptions = organizationOptions ?? [{ label: "Hospital A1", value: "48bb5fdd-448b-4706-8f36-b018ed1ca45d" }, { label: "Hospital A2", value: "f40cfc7a-d0e6-41dc-a73e-823214a35558" }];
         organizationOptions = organizationOptions ?? [];
@@ -316,7 +448,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 } else {
                     const paymentMethod: SGPaymentMethod = { paymentOption: option };
                     if (option.paymentMode === "INVOICE") {
-                        paymentMethod.data = { subOptions: organizationOptions, selectedSubOption: defaultOrganizationOption };
+                        paymentMethod.data = { subOptions: organizationOptions, subOptionsPlaceholder: "Select department", selectedSubOption: defaultOrganizationOption };
                     }
                     pms.push(paymentMethod);
                 }
@@ -324,19 +456,32 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             }, [] as SGPaymentMethod[]),
             [stripePaymentMethods]);
         const [selectedMethod, setSelectedMethod] = useState<SGPaymentMethod | undefined>(undefined);
+        const paymentMode = newPaymentMethodAndPay ? "INTERNAL" : selectedMethod?.paymentOption.paymentMode;
+        useEffect(() => {
+            if (paymentMode === "INVOICE") {
+                if ((selectedMethod?.data?.selectedSubOption as any)?.organization?.initiatives.length === 1) {
+                    setSelectedInitiative((selectedMethod?.data?.selectedSubOption as any)?.organization?.initiatives?.[0].id);
+                } else {    // To contemplate the case where the organization changed, so need to reset the value.
+                    setSelectedInitiative(undefined);
+                }
+            } else {
+                setSelectedInitiative(newPaymentMethodAndPay ? cardPaymentOption?.preFilledInitiative : selectedMethod?.paymentOption.preFilledInitiative);
+            }
+        }, [paymentMode, selectedMethod?.data?.selectedSubOption]); // The default initiative selection should be updated on any update of these data.        
+        const [dummyState, setDummyState] = useState<number>(0);
+        const forceRerender = () => { setDummyState(prev => prev + 1) };
         const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
 
         useEffect(() => {
             if (newPaymentMethodAndPay || (selectedMethod && selectedMethod.paymentOption.paymentMode !== "INVOICE")) {
                 setErrorMsg(undefined);
             }
-
         }, [selectedMethod, newPaymentMethodAndPay])
 
         useEffect(() => {
             // Initially select first payment option by default.
             if (paymentMethods && paymentMethods.length > 0 && !selectedMethod) {
-                setSelectedMethod(paymentMethods[0]);
+                setSelectedMethod(defaultPaymentMethodFc?.(paymentMethods) ?? paymentMethods[0]);
             }
             // This will happen if removed the selected payment method.
             if (paymentMethods && selectedMethod && !paymentMethods.includes(selectedMethod)) {
@@ -373,16 +518,6 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             }
         }, [paymentMethods]);
 
-        const [StyledCheckbox] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                color: colorWithOpacity(theme.colorPrimary, .5),
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Checkbox));
-
         const handleSubmit = async () => {
             if (!newPaymentMethodAndPay && selectedMethod!.paymentOption.paymentMode === "INVOICE" && !selectedMethod!.data!.selectedSubOption) {
                 setErrorMsg("You need to select an organization to invoice to");
@@ -391,9 +526,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 setErrorMsg(undefined);
             }
             if (newPaymentMethodAndPay) {
-                onConfirmPayment({ paymentMethod: { paymentOption: cardPaymentOption! }, elements: elements ?? undefined, saveForFuture });
+                onConfirmPayment({ paymentMethod: { paymentOption: cardPaymentOption! }, elements: elements ?? undefined, saveForFuture, selectedInitiative });
             } else {
-                onConfirmPayment({ paymentMethod: selectedMethod! });
+                onConfirmPayment({ paymentMethod: selectedMethod!, selectedInitiative });
             }
         };
 
@@ -425,9 +560,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //                 if (cardId) {
         //                     refreshData()
         //                         .then(result => {
-        //                             setPaymentMethods(result.data);
+        //                             setStripePaymentMethods(result.data);
         //                             console.log(result.data)
-        //                             result.data && result.data.length > 0 && setSelectedPM(result.data.find(pm => pm.id === cardId))
+        //                             // result.data && result.data.length > 0 && setSelectedPM(result.data.find(pm => pm.id === cardId))
         //                         });
         //                 }
         //             }}
@@ -435,14 +570,31 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //     );
         // }
 
-        const sectionStyles = { sectionBody: overrideClass(injectedStyles.section) };
+        const sectionStyles = { sectionBody: overrideClass(injectedStyles.section), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
+        const imageSectionStyles = { sectionBody: overrideClass(injectedStyles.section), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
 
         let review: ReactNode = null;
         if (selectedMethod || newPaymentMethodAndPay) {
             const paymentOption = newPaymentMethodAndPay ? cardPaymentOption! : selectedMethod!.paymentOption;
+            let sponsorImgAlt;
+            if (paymentOption.paymentMode === "WALLET") {
+                const sponsorImgAltSentences: string[] = [];
+                if (paymentOption.sponsorTitle) {
+                    sponsorImgAltSentences.push(paymentOption.sponsorTitle);
+                }
+                if (paymentOption.sponsorDescription) {
+                    sponsorImgAltSentences.push(paymentOption.sponsorDescription);
+                }
+                sponsorImgAlt = sponsorImgAltSentences.length === 0 ? undefined : sponsorImgAltSentences.join("\n");
+            }
             review =
                 <div className={classes.review}>
-                    <TKUISettingSection styles={sectionStyles}>
+                    <TKUISettingSection styles={sectionStyles} title={paymentOption.paymentMode === "WALLET" ? "Balance" : undefined}>
+                        {paymentOption.paymentMode === "WALLET" &&
+                            <div className={classes.group}>
+                                <div className={classes.label}>{"Current Balance"}</div>
+                                <div className={classes.value}>{FormatUtil.toMoney(paymentOption.currentBalance!, { currency: paymentOption.currency, nInCents: true })}</div>
+                            </div>}
                         {paymentOption.discountedPrice &&
                             <div className={classes.group}>
                                 <div className={classes.label}>{"Discount"}</div>
@@ -466,77 +618,172 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                 <div className={classes.value}>{FormatUtil.toMoney(paymentOption.newBalance!, { currency: paymentOption.currency, nInCents: true })}</div>
                             </div>}
                     </TKUISettingSection>
+                    {paymentOption.paymentMode === "WALLET" && paymentOption.sponsorImageURL &&
+                        <TKUISettingSection styles={sectionStyles} title='Sponsored by'>
+                            <img src={paymentOption.sponsorImageURL} alt={sponsorImgAlt} style={{ borderBottom: 'none' }} />
+                            {paymentOption.sponsorDescription &&
+                                <div className={classes.sponsorDescription}>
+                                    {paymentOption.sponsorDescription}
+                                </div>}
+                        </TKUISettingSection>}
                 </div>
         }
+
+        const initiativeOptions = useMemo(() => {
+            if (selectedMethod && initiativeField) {
+                let result: any[] = [];
+                if (selectedMethod.paymentOption.paymentMode === "INVOICE" && (selectedMethod.data?.selectedSubOption as any)?.organization) {
+                    result = [
+                        { label: "None", value: "none" },
+                        ...(selectedMethod.data?.selectedSubOption as any)?.organization
+                            .initiatives.map((initiative) => ({ label: initiative.title, value: initiative.id, organization: (selectedMethod.data?.selectedSubOption as any)?.organization }))
+                    ];
+                    result = [...result, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option })).filter(option => !result.find(r => r.value === option.value))];
+                }
+                if (selectedMethod.paymentOption.paymentMode === "WALLET") {
+                    // Add walletName for that initiative option that corresponds to the prefilled initiative, and so, we know it's the wallet initiative.
+                    result = [{ label: "None", value: "none" },
+                    ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option, walletName: selectedMethod.paymentOption.preFilledInitiative === option.id ? selectedMethod.paymentOption.walletName : undefined }))];
+                }
+                if (selectedMethod.paymentOption.paymentMode === "INTERNAL") {
+                    result = [{ label: "None", value: "none" }, ...initiativeField.options!.map(option => ({ label: option.title, value: option.id, option }))];
+                }
+                result.sort((a, b) => {
+                    if (a.value === "none") {
+                        return -1;
+                    }
+                    if (b.value === "none") {
+                        return 1;
+                    }
+                    if (a.walletName) {
+                        return -1;
+                    }
+                    if (b.walletName) {
+                        return 1;
+                    }
+                    if (a.organization && b.organization) {
+                        return a.organization.name.localeCompare(b.organization.name);
+                    }
+                    if (a.organization) {
+                        return -1;
+                    }
+                    if (b.organization) {
+                        return 1;
+                    }
+                    if (a.option.lastUsed && b.option.lastUsed) {
+                        return b.option.lastUsed.localeCompare(a.option.lastUsed);
+                    }
+                    if (a.option.lastUsed) {
+                        return -1;
+                    }
+                    if (b.option.lastUsed) {
+                        return 1;
+                    }
+                    if (a.option.atUserProfile) {
+                        return -1;
+                    }
+                    if (b.option.atUserProfile) {
+                        return 1;
+                    }
+                });
+                return result;
+            }
+            return undefined;
+        }, [selectedMethod, dummyState]);
+        const [selectedInitiative, setSelectedInitiative] = useState<string | undefined>(undefined);
 
         return (
             <Fragment>
                 <div className={classes.main}>
                     <div className={classes.body}>
-                        <IconCard className={classes.card} />
-                        {paymentMethods && paymentMethods.length > 0 &&
-                            <>
-                                <div className={classes.selectPaymentMethod}>
-                                    Select payment method
-                                </div>
-                                <div className={classes.tabs}>
-                                    <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                        <TKUIButton
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            text={"Existing"}
-                                            onClick={() => {
-                                                setNewPaymentMethodAndPay(false);
-                                            }}
-                                        />
+                        <TKUISettingSection styles={sectionStyles} title={paymentMethods && paymentMethods.length > 0 ? 'Select payment method' : undefined}>
+                            <div className={classes.selectPaymentMethod}>
+                                {paymentMethods && paymentMethods.length > 0 &&
+                                    <div className={classes.tabs}>
+                                        <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                            <TKUIButton
+                                                type={TKUIButtonType.PRIMARY_LINK}
+                                                text={"Existing"}
+                                                onClick={() => {
+                                                    setNewPaymentMethodAndPay(false);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className={classes.tabSeparator} />
+                                        <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                            <TKUIButton
+                                                type={TKUIButtonType.PRIMARY_LINK}
+                                                text={"New card"}
+                                                onClick={() => {
+                                                    setNewPaymentMethodAndPay(true);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>}
+                                {newPaymentMethodAndPay ?
+                                    <div className={classes.newPayment}>
+                                        <IconCard className={classes.card} />
+                                        <CardElement className={classes.cardElement} />
+                                        <div className={classes.futurePayment}>
+                                            <TKUICheckbox
+                                                checked={saveForFuture}
+                                                onChange={e => setSaveForFuture(e.target.checked)}
+                                                theme={theme}
+                                            />
+                                            Save for future payments
+                                        </div>
                                     </div>
-                                    <div className={classes.tabSeparator} />
-                                    <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                        <TKUIButton
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            text={"New card"}
-                                            onClick={() => {
-                                                setNewPaymentMethodAndPay(true);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </>}
-                        {newPaymentMethodAndPay ?
-                            <div className={classes.newPayment}>
-                                <CardElement className={classes.cardElement} />
-                                <div className={classes.futurePayment}>
-                                    <StyledCheckbox
-                                        checked={saveForFuture}
-                                        onChange={e => setSaveForFuture(e.target.checked)}
-                                    />
-                                    Save for future payments
-                                </div>
+                                    :
+                                    <div>
+                                        {paymentMethods && selectedMethod &&
+                                            <TKUIPaymentMethodSelect
+                                                value={selectedMethod}
+                                                options={paymentMethods}
+                                                onChange={(value) => {
+                                                    setSelectedMethod(value);
+                                                    forceRerender();
+                                                }}
+                                                onRemove={onRemovePM}
+                                            />}
+                                    </div>}
+                                {errorMsg &&
+                                    <div className={classes.error}>{errorMsg}</div>}
                             </div>
-                            :
-                            <div>
-                                {paymentMethods && selectedMethod &&
-                                    <TKUIPaymentMethodSelect
-                                        value={selectedMethod}
-                                        options={paymentMethods}
-                                        onChange={setSelectedMethod}
-                                        onRemove={onRemovePM}
-                                    />}
-                            </div>}
-                        {errorMsg &&
-                            <div className={classes.error}>{errorMsg}</div>}
+                        </TKUISettingSection>
+                        {initiativeOptions &&
+                            <TKUISettingSection styles={sectionStyles} title={"Select initiative"}>
+                                <div className={classes.group} style={{ ...genStyles.justifyStart }}>
+                                    <div className={classes.label}>Initiative</div>
+                                    <div className={classNames(classes.value, classes.initiativeValue)} style={{ marginLeft: '30px' }}>
+                                        <TKUISelect
+                                            options={initiativeOptions}
+                                            value={initiativeOptions.find(option => option.value === (selectedInitiative ?? "none"))}
+                                            onChange={(option) => {
+                                                setSelectedInitiative(option?.value === "none" ? undefined : option?.value);
+                                            }}
+                                            placeholder="Select initiative"
+                                            components={{
+                                                Option: InitiativeSelectOption
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </TKUISettingSection>}
                         {review}
                     </div>
                     <div className={classes.buttonsPanel}>
-                        <TKUIButton
-                            text={t("Back")}
-                            type={TKUIButtonType.SECONDARY}
-                            onClick={() => onClose()}
-                        />
+                        {onClose &&
+                            <TKUIButton
+                                text={t("Back")}
+                                type={TKUIButtonType.SECONDARY}
+                                onClick={() => onClose()}
+                            />}
                         <TKUIButton
                             text={"Purchase"}
                             type={TKUIButtonType.PRIMARY}
                             disabled={!newPaymentMethodAndPay && !selectedMethod}
                             onClick={handleSubmit}
+                            name={"confirm-payment-btn"}
                         />
                     </div>
                 </div>
@@ -545,4 +792,5 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         )
     }
 
-export default withStyles(TKUICheckoutView, tKUICheckoutFormPropsDefaultStyle);
+export default connect((config: TKUIConfig) => config.TKUICheckoutView, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

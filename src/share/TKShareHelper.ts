@@ -13,6 +13,7 @@ import Util from "../util/Util";
 import TripGoApi from "../api/TripGoApi";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import SchoolLocation from "../model/location/SchoolLocation";
 
 class TKShareHelper {
 
@@ -115,50 +116,75 @@ class TKShareHelper {
             + "/" + encodeURIComponent(service.serviceTripID) + "/" + service.startTime;
     }
 
-    public static getShareQuery(query: RoutingQuery, plannerUrl?: string): string {
-        let goURL;
-        if (plannerUrl) {
-            // Add trailing '/', if missing
-            goURL = plannerUrl + (plannerUrl.endsWith("/") ? "" : "/");
-            // Add '#' if useHash
-            goURL += this.useHash ? "#/" : "";
-        } else {
-            goURL = this.getBaseUrl(true);
-        }
-        goURL += "go";
+    public static getShareQuery(query: RoutingQuery, options: { plannerUrl?: string, stateInHash?: boolean, otherParams?: Record<string, string> } = {}): string {
+        const { plannerUrl, stateInHash = this.useHash, otherParams } = options;
+        const searchUrl = new URL("https://tripgo.com");
         if (query.from) {
-            goURL += (goURL.includes("?") ? "&" : "?");
-            goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +
-                "&fname=" + query.from.address +
-                (query.from.id ? "&fid=" + (query.from.id) : "") +
-                (query.from.source ? "&fsrc=" + (query.from.source) : "");
+            searchUrl.searchParams.set("flat", query.from.lat.toString());
+            searchUrl.searchParams.set("flng", query.from.lng.toString());
+            searchUrl.searchParams.set("fname", query.from.address ?? "");
+            if (query.from.id) {
+                searchUrl.searchParams.set("fid", query.from.id);
+            }
+            if (query.from.source) {
+                searchUrl.searchParams.set("fsrc", query.from.source);
+            }
+            if (query.from instanceof SchoolLocation && query.from.id) {
+                searchUrl.searchParams.set("fresolve", true.toString());
+            }
         }
         if (query.to) {
-            goURL += (goURL.includes("?") ? "&" : "?");
-            goURL += "tlat=" + query.to.lat + "&tlng=" + query.to.lng +
-                "&tname=" + query.to.address +
-                (query.to.id ? "&tid=" + (query.to.id) : "") +
-                (query.to.source ? "&tsrc=" + (query.to.source) : "");
+            searchUrl.searchParams.set("tlat", query.to.lat.toString());
+            searchUrl.searchParams.set("tlng", query.to.lng.toString());
+            searchUrl.searchParams.set("tname", query.to.address ?? "");
+            if (query.to.id) {
+                searchUrl.searchParams.set("tid", query.to.id);
+            }
+            if (query.to.source) {
+                searchUrl.searchParams.set("tsrc", query.to.source);
+            }
+            if (query.to instanceof SchoolLocation && query.to.id) {
+                searchUrl.searchParams.set("tresolve", true.toString());
+            }
         }
-        goURL += "&type=" + (query.timePref === TimePreference.NOW ? "0" :
-            (query.timePref === TimePreference.LEAVE ? "1" : "2")) + "&time=" + Math.floor(query.time.valueOf() / 1000);
-        return goURL;
+        searchUrl.searchParams.set("type", query.timePref === TimePreference.NOW ? "0" : (query.timePref === TimePreference.LEAVE ? "1" : "2"));
+        searchUrl.searchParams.set("time", Math.floor(query.time.valueOf() / 1000).toString());
+        if (otherParams) {
+            for (const key in otherParams) {
+                searchUrl.searchParams.set(key, otherParams[key]);
+            }
+        }
+
+        const resultURL = new URL(plannerUrl ?? this.getBaseUrl(true));
+        if (stateInHash) {
+            resultURL.hash = "/go" + searchUrl.search;
+        } else {
+            resultURL.pathname = "/go";
+            resultURL.search = searchUrl.search;
+        }
+        return resultURL.toString();
     }
 
     public static parseSharedQueryFromUrlSearch(searchStr: string): RoutingQuery | undefined {
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
-            const { flat, flng, fname, fid, fsrc, tlat, tlng, tname, tid, tsrc, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
+            const { flat, flng, fname, fid, fsrc, fresolve, tlat, tlng, tname, tid, tsrc, tresolve, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
             let from: Location | null = null;
             if (flat || fname || fsrc === TKDefaultGeocoderNames.geolocation) {
                 const fromLatLng = flat ? LatLng.createLatLng(Number(flat), Number(flng)) : new LatLng();
                 from = Location.create(fromLatLng, fname, fid ? fid : "", "", fsrc);
+                if (fresolve === "true") {
+                    from.hasDetail = false;
+                }
             }
             let to: Location | null = null;
             if (tlat || tlng) {
                 const toLatlng = tlat ? LatLng.createLatLng(Number(tlat), Number(tlng)) : new LatLng();
                 to = Location.create(toLatlng, tname, tid ? tid : "", "", tsrc);
+                if (tresolve === "true") {
+                    to.hasDetail = false;
+                }
             }
             routingQuery = RoutingQuery.create(from, to,
                 type === "0" ? TimePreference.NOW : (type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),

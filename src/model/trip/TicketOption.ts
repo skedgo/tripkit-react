@@ -12,7 +12,7 @@ export interface ITicketOption {
 export interface PurchasedTicket {
     id: string;
     ticketURL: string;
-    status: string;    
+    status: string;
 }
 
 @JsonObject
@@ -29,6 +29,8 @@ class TicketOption implements ITicketOption {
     public currency: string = "";
     @JsonProperty("value", Number, true)
     public value: number = 0;
+    @JsonProperty("max", Number, true)
+    public max?: number = undefined;
     @JsonProperty("purchasedTickets", [Any], true)
     public purchasedTickets?: PurchasedTicket[] = undefined;
 }

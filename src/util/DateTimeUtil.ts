@@ -11,8 +11,11 @@ class DateTimeUtil {
         return i18n.locale === "ja" ? "HH:mm" : `h:mm${spaced ? " " : ""}A`;
     };
 
-    public static dateFormat = () => {
-        return i18n.locale === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
+    public static dateFormat = (props: { doubleDigit?: boolean } = {}) => {
+        const { doubleDigit = true } = props;
+        const dayFormat = doubleDigit ? "DD" : "D";
+        const monthFormat = doubleDigit ? "MM" : "M";
+        return i18n.locale === 'en-US' ? `${monthFormat}/${dayFormat}/YYYY` : `${dayFormat}/${monthFormat}/YYYY`;
     };
 
     public static dateTimeFormat = () => DateTimeUtil.dateFormat() + ", " + DateTimeUtil.timeFormat();
@@ -228,7 +231,5 @@ class DateTimeUtil {
     }
 
 }
-
-(window as any).DateTimeUtil = DateTimeUtil;
 
 export default DateTimeUtil;

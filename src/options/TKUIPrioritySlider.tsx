@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Slider, SliderProps, withStyles } from '@material-ui/core';
+import React from "react";
+import { Slider, SliderProps } from '@mui/material';
 import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
 import { black, TKUITheme, white } from "../jss/TKUITheme";
 
@@ -15,20 +15,14 @@ export type TKUIPrioritySliderProps = {
 
 const SLIDER_HEIGHT = 42;
 
-class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
-
-    private WithStyle: any;
-
-    constructor(props: TKUIPrioritySliderProps) {
-        super(props);
-        const { color, isDarkMode } = props;
-        this.WithStyle = withStyles<any, any, SliderProps>({
-            root: {
-                color: 'inherit',
-                height: `${SLIDER_HEIGHT}px`,
-                padding: '0'
-            },
-            rail: {
+const SliderStyled = ({ thumbIconUrl, tkcolor, ...props }: SliderProps & { thumbIconUrl?: string, tkcolor: string }) =>
+    <Slider
+        {...props}
+        sx={{
+            color: 'inherit',
+            height: `${SLIDER_HEIGHT}px`,
+            padding: '0',
+            '& .MuiSlider-rail': {
                 top: '0',
                 height: '100%',
                 background: 'none',
@@ -36,18 +30,20 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
                 marginLeft: `${-SLIDER_HEIGHT / 2}px`,
                 boxSizing: 'content-box'
             },
-            track: ({ value }) => ({
+            '& .MuiSlider-track': {
                 height: '100%',
-                background: value === 0 ? 'none' : color,
+                background: props.value === 0 ? 'none' : tkcolor,
                 ...genStyles.borderRadius(SLIDER_HEIGHT / 2),
                 paddingLeft: `${SLIDER_HEIGHT}px`,
                 boxSizing: 'content-box',
-                marginLeft: '-21px'
-            }),
-            thumb: ({ value }) => ({
+                marginLeft: '-21px',
+                border: 'none'
+            },
+            '& .MuiSlider-thumb': {
+                top: 0,
                 height: '100%',
                 width: SLIDER_HEIGHT,
-                border: `5px solid ${value === 0 ? white() : color}`,
+                border: `5px solid ${props.value === 0 ? white() : tkcolor}`,
                 backgroundColor: '#f5f6f6',
                 boxShadow: 'none',
                 marginTop: 0,
@@ -60,14 +56,67 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
                         boxShadow: 'none',
                     },
                 },
-                ...this.props.thumbIconUrl && {
-                    backgroundImage: `url("${this.props.thumbIconUrl}")`,
+                ...thumbIconUrl && {
+                    backgroundImage: `url("${thumbIconUrl}")`,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     backgroundSize: '22px'
                 }
-            })
-        })(Slider);
+            }
+        }}
+    />;
+
+class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
+
+    constructor(props: TKUIPrioritySliderProps) {
+        super(props);
+        const { color, isDarkMode } = props;
+        // this.WithStyle = withStyles<any, any, SliderProps>({
+        //     root: {
+        //         color: 'inherit',
+        //         height: `${SLIDER_HEIGHT}px`,
+        //         padding: '0'
+        //     },
+        //     rail: {
+        //         top: '0',
+        //         height: '100%',
+        //         background: 'none',
+        //         padding: `0 ${SLIDER_HEIGHT / 2}px`,
+        //         marginLeft: `${-SLIDER_HEIGHT / 2}px`,
+        //         boxSizing: 'content-box'
+        //     },
+        //     track: ({ value }) => ({
+        //         height: '100%',
+        //         background: value === 0 ? 'none' : color,
+        //         ...genStyles.borderRadius(SLIDER_HEIGHT / 2),
+        //         paddingLeft: `${SLIDER_HEIGHT}px`,
+        //         boxSizing: 'content-box',
+        //         marginLeft: '-21px'
+        //     }),
+        //     thumb: ({ value }) => ({
+        //         height: '100%',
+        //         width: SLIDER_HEIGHT,
+        //         border: `5px solid ${value === 0 ? white() : color}`,
+        //         backgroundColor: '#f5f6f6',
+        //         boxShadow: 'none',
+        //         marginTop: 0,
+        //         marginLeft: 0,
+        //         transform: 'translate(-50%, 0)',
+        //         '&:focus,&:hover,&$active': {
+        //             boxShadow: 'none',
+        //             // Reset on touch devices, it doesn't add specificity
+        //             '@media (hover: none)': {
+        //                 boxShadow: 'none',
+        //             },
+        //         },
+        //         ...this.props.thumbIconUrl && {
+        //             backgroundImage: `url("${this.props.thumbIconUrl}")`,
+        //             backgroundRepeat: 'no-repeat',
+        //             backgroundPosition: 'center',
+        //             backgroundSize: '22px'
+        //         }
+        //     })
+        // })(Slider);
     }
 
     public render(): React.ReactNode {
@@ -79,14 +128,16 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
                 borderRadius: `${SLIDER_HEIGHT / 2}px`,
                 padding: `0 ${SLIDER_HEIGHT / 2}px`
             }}>
-                <this.WithStyle
+                <SliderStyled
                     value={value}
-                    onChange={(e, value) => onChange(value)}
+                    onChange={(e, value) => onChange(value as any)}
                     classes={{ thumb: TK_FOCUS_TARGET_CLASS }}
                     min={0}
                     max={2}
                     step={1}
                     aria-label={ariaLabel}
+                    thumbIconUrl={thumbIcon}
+                    tkcolor={this.props.color}
                 />
             </div>
         );

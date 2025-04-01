@@ -1,18 +1,25 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import Favourite from "./Favourite";
 import Location from "../Location";
-import {LocationConverter} from "../location/LocationConverter";
-import FavouriteStop from "./FavouriteStop";
+import { LocationConverter } from "../location/LocationConverter";
+import { i18n } from "../../i18n/TKI18nConstants";
+import LocationUtil from "../../util/LocationUtil";
 
 @JsonObject
 class FavouriteLocation extends Favourite {
 
+    public static getDefaultName(location: Location): string {
+        return LocationUtil.getMainText(location, i18n.t);
+    }
+
     @JsonProperty('location', LocationConverter)
     public location: Location = new Location();
 
-    public static create(location: Location): FavouriteLocation {
+    public static create(location: Location, { type = "location", name = LocationUtil.getMainText(location, i18n.t) }: { type?: "location" | "home" | "work", name?: string } = {}): FavouriteLocation {
         const instance = new FavouriteLocation();
         instance.location = location;
+        instance.name = name;
+        instance.type = type;
         return instance;
     }
 

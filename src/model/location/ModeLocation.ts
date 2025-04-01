@@ -13,7 +13,7 @@ class ModeLocation extends Location {
     public source: string | undefined = TKDefaultGeocoderNames.skedgo;
 
     public getKey(): string {
-        return this.id;
+        return this.id || super.getKey();
     }
 
 }

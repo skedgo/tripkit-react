@@ -19,11 +19,8 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil from "../util/DeviceUtil";
 import Segment, { TripAvailability } from "../model/trip/Segment";
-import { moveToNext } from "../mxm/TKUIMxMView";
-import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
-import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { TKAccountContext } from "../account/TKAccountContext";
 import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
-import { colorWithOpacity } from "../jss/TKUITheme";
 
 export enum TKTripCostType {
     price, calories, carbon, score
@@ -122,6 +119,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * See {@link TKUIRoutingResultsView#tripMetricsToShow}
      */
     tripMetricsToShow?: TKTripCostType[];
+
+    renderAction?: (trip: Trip) => JSX.Element;
 }
 
 type IStyle = ReturnType<typeof tKUITripRowDefaultStyle>;
@@ -188,7 +187,7 @@ function tripMetricString(metric: TKTripCostType, trip: Trip, t: TranslationFunc
 }
 
 const TKUITripRow: React.FunctionComponent<IProps> = props => {
-    const { value: trip, tripMetricsToShow = [TKTripCostType.price, TKTripCostType.calories, TKTripCostType.carbon], classes, t } = props;
+    const { value: trip, tripMetricsToShow = [TKTripCostType.price, TKTripCostType.calories, TKTripCostType.carbon], renderAction, classes, t } = props;
     const mainRef = useRef<HTMLDivElement>(null);
     props.reference?.(mainRef);
     const hideTimes = trip.hideExactTimes;
@@ -218,12 +217,6 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
     }
     const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
     const collapsed = !props.expanded;
-    const tkconfig = useContext(TKUIConfigContext);
-    // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
-    // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
-    // by default.
-    const bookingSegment = trip.segments.find(segment =>
-        (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking);
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
         .filter(metricS => metricS !== undefined)
@@ -258,34 +251,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
             role={"button"}
             aria-pressed={props.expanded}
             aria-label={props.expanded ? "Less alternatives" : "More alternatives"} />;
-    const book = bookingSegment && props.onSegmentSelected &&
-        <TKUIButton
-            text={bookingSegment?.booking?.title ?? t("Book")}
-            type={TKUIButtonType.PRIMARY_LINK}
-            onClick={(e: any) => {
-                props.onSegmentSelected?.(bookingSegment);
-                if (bookingSegment.isPT() && status === SignInStatus.signedIn) {
-                    // Workaround to go to booking MxM card, with #18051 this won't be necessary anymore.
-                    setTimeout(() => {
-                        moveToNext?.();
-                        moveToNext?.();
-                    });
-                }
-                e.stopPropagation();
-            }}
-            role={"button"}
-            aria-label={t("Book")}
-            disabled={trip.availability === TripAvailability.MISSED_PREBOOKING_WINDOW}
-            styles={theme => ({
-                link: defaultStyles => ({
-                    ...defaultStyles,
-                    '&:disabled': {
-                        color: colorWithOpacity(theme.colorPrimary, .4),
-                        cursor: 'initial'
-                    }
-                })
-            })}
-        />;
+    const action = renderAction?.(trip);
     return (
         <div className={classes.main}
             onClick={props.onClick}
@@ -350,7 +316,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
                     </div>
                 );
             })}
-            {(info || more || book) &&
+            {(info || more || action) &&
                 <div className={classes.footer}
                     key={"footer"}
                     aria-label={metricsS.replace(/ · /gi, ". ")}
@@ -358,7 +324,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
                     {info}
                     <div className={classes.footerButtons}>
                         {more}
-                        {book}
+                        {action}
                     </div>
                 </div>
             }

@@ -29,6 +29,12 @@ class MapUtil {
         return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
     }
 
+    public static createBBoxGeoJson(geojson: any): BBox {
+        const turfbbox = bbox(geojson);
+        const [minX, minY, maxX, maxY] = turfbbox;
+        return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
+    }
+
     public static inBBox(latLng: LatLng, bounds: BBox): boolean {
         const turfPoint = point([latLng.lng, latLng.lat]);
         const turfpolygon = bboxPolygon(bbox(lineString([[bounds.minLng, bounds.minLat], [bounds.maxLng, bounds.maxLat]])));
@@ -207,10 +213,11 @@ class MapUtil {
         });
     }
 
-    public static toLeafletMultiPolygon(geoJson: MultiPolygon): LatLngExpression[][] {
-        return geoJson.coordinates[0]
-            .map((positions: Position[]) => positions
-                .map((position: Position) => [position[1], position[0]]));
+    public static toLeafletMultiPolygon(geoJson: MultiPolygon): LatLngExpression[][][] {
+        return geoJson.coordinates
+            .map((polygons: Position[][]) => polygons
+                .map((positions: Position[]) => positions
+                    .map((position: Position) => [position[1], position[0]])));
     }
 
 }

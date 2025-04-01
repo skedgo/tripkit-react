@@ -1,7 +1,7 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
-import { deprecate } from "util";
 import Color from "./Color";
 import TicketOption from "./TicketOption";
+import ModeInfo from "./ModeInfo";
 
 @JsonObject
 class BookingFieldOption {
@@ -9,6 +9,10 @@ class BookingFieldOption {
     public id: string = "";
     @JsonProperty("title", String, true)
     public title: string = "";
+    @JsonProperty("lastUsed", String, true)
+    public lastUsed?: string = undefined;
+    @JsonProperty("atUserProfile", Boolean, true)
+    public atUserProfile?: boolean = undefined;
 }
 
 @JsonObject
@@ -37,6 +41,8 @@ class BookingField {
 class BookingInfo {
     @JsonProperty("bookingURL", String, true)
     public bookingURL: string = "";
+    @JsonProperty("bookingResponseType", String, true)
+    public bookingResponseType: string = "";    // values: OPTIONS, REVIEW, DIRECT, EXTERNAL
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("bookingTitle", String, true)
@@ -47,6 +53,48 @@ class BookingInfo {
     public tickets: TicketOption[] | undefined = undefined;
 }
 
+@JsonObject
+class AvailableProviderOption {
+    @JsonProperty("bookingURL", String, true)
+    public bookingURL: string = "";
+    @JsonProperty("bookingResponseType", String, true)
+    public bookingResponseType: string = ""; // values: REVIEW
+    @JsonProperty("minPrice", Number, true)
+    public minPrice: number = 0;
+    @JsonProperty("maxPrice", Number, true)
+    public maxPrice: number = 0;
+    @JsonProperty("fares", [TicketOption], true)
+    public fares: TicketOption[] | undefined = undefined;
+    @JsonProperty("modeInfo", ModeInfo, true)
+    public modeInfo: ModeInfo = new ModeInfo();
+    @JsonProperty("singleFareOnly", Boolean, true)
+    public singleFareOnly: boolean = false;
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("bookingTitle", String, true)
+    public bookingTitle: string = "";
+    @JsonProperty("warningMessage", String, true)
+    public warningMessage: string = "";
+}
+@JsonObject
+class UnavailableProviderOption {
+    @JsonProperty("warningMessage", String, true)
+    public warningMessage: string = "";
+    @JsonProperty("modeInfo", ModeInfo, true)
+    public modeInfo: ModeInfo = new ModeInfo();
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("bookingTitle", String, true)
+    public bookingTitle: string = "";
+}
+
+@JsonObject
+class ProviderOptionsForm {
+    @JsonProperty("availableList", [AvailableProviderOption], true)
+    public availableList: AvailableProviderOption[] = [];
+    @JsonProperty("unavailableList", [UnavailableProviderOption], true)
+    public unavailableList: UnavailableProviderOption[] = [];
+}
 @JsonObject
 export class ConfirmationPrompt {
     @JsonProperty("message", String, true)
@@ -164,4 +212,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus }
+export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus, ProviderOptionsForm, AvailableProviderOption, UnavailableProviderOption };

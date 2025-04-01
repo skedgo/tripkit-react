@@ -1,4 +1,4 @@
-import {Any, JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import { Any, JsonObject, JsonProperty, JsonConverter, JsonCustomConvert } from "json2typescript";
 import Location from "../Location";
 import ModeInfo from "./ModeInfo";
 import ServiceShape from "./ServiceShape";
@@ -6,6 +6,7 @@ import Street from "./Street";
 import StopLocation from "../StopLocation";
 import MapUtil from "../../util/MapUtil";
 import DataSourceAttribution from "../location/DataSourceAttribution";
+import { LocationConverter } from "../location/LocationConverter";
 
 export enum Visibility {
     HIDDEN,
@@ -48,9 +49,9 @@ class SegmentTemplate {
 
     @JsonProperty("hashCode", Number, true)
     private _hashCode: number = 0;
-    @JsonProperty("from", Location, true)
+    @JsonProperty("from", LocationConverter, true)
     private _from: Location = new Location();
-    @JsonProperty("to", Location, true)
+    @JsonProperty("to", LocationConverter, true)
     private _to: Location = new Location();
     @JsonProperty("modeInfo", ModeInfo, true) // required according to specs, but sometimes is missing
     public modeInfo?: ModeInfo = new ModeInfo();
@@ -321,7 +322,7 @@ class SegmentTemplate {
     }
 
     private getAngleDegrees(): number {
-        const latDiff =  this.to.lat - this.from.lat;
+        const latDiff = this.to.lat - this.from.lat;
         const lngDiff = this.to.lng - this.from.lng;
         return MapUtil.toDegrees(Math.atan2(latDiff, lngDiff));
     }

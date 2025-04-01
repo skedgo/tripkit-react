@@ -11,6 +11,8 @@ export interface TKUICardHeaderClientProps {
     title?: React.ReactNode;
     subtitle?: React.ReactNode;
     onRequestClose?: () => void;
+    renderLeft?: React.ReactNode;
+    renderRight?: React.ReactNode;
     closeAriaLabel?: string;
     noPaddingTop?: boolean;
 }
@@ -34,17 +36,24 @@ const TKUICardHeader: React.FunctionComponent<IProps> = (props: IProps) => {
     return (
         <div className={classes.main}>
             <div className={classes.headerTop}>
+                {props.renderLeft && <div className={classes.leftContainer}>{props.renderLeft}</div>}
                 {title &&
                     <div className={classes.title} id={"tkui-card-title"}>
                         {title}
                     </div>}
-                {onRequestClose &&
-                    <button onClick={onRequestClose} className={classes.btnClear}
-                        aria-label={closeAriaLabel || "Close"}>
-                        <IconRemove aria-hidden={true}
-                            className={classes.iconClear}
-                            focusable="false" />
-                    </button>}
+                {(props.renderRight || onRequestClose) &&
+                    <div className={classes.rightContainer}>
+                        {props.renderRight}
+                        {onRequestClose &&
+                            <button
+                                onClick={onRequestClose}
+                                className={classes.btnClear}
+                                aria-label={closeAriaLabel ?? "Close"}>
+                                <IconRemove aria-hidden={true}
+                                    className={classes.iconClear}
+                                    focusable="false" />
+                            </button>}
+                    </div>}
             </div>
             {subtitle &&
                 <div className={classes.subtitle}>

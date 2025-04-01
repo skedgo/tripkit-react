@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import Autocomplete from 'react-autocomplete';
+import Autocomplete from '../util_components/TKUIAutocomplete';
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
@@ -124,6 +124,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     disabled?: boolean;
+
+    name?: string;
 }
 
 interface IConsumedProps {
@@ -173,7 +175,7 @@ class TKUILocationBox extends Component<IProps, IState> {
 
     private resultsArrivedForQuery?: string;
     private geocodingData: MultiGeocoder;
-    private autocompleteRef: React.RefObject<Autocomplete> = React.createRef<Autocomplete>();
+    private autocompleteRef: React.RefObject<any> = React.createRef<any>();
 
     public static defaultProps: Partial<IProps> = {
         resolveCurr: true,
@@ -206,6 +208,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.isDDOpen = this.isDDOpen.bind(this);
         this.getHighlightedItem = this.getHighlightedItem.bind(this);
         this.updateResolvedItem = this.updateResolvedItem.bind(this);
+        this.refreshDisplayingResults = this.refreshDisplayingResults.bind(this);
     }
 
     public focus() {
@@ -277,7 +280,10 @@ class TKUILocationBox extends Component<IProps, IState> {
                 this.geocodingData.resolveLocation(locationValue)
                     .then((resolvedLocation: Location) => {
                         if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
-                            this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true,
+                            // Fix to race condition on TKUILocationBox: highlighting and immediatly selecting may cause the onResultHighlight to be triggered instead of the onChange.
+                            // Use locationValue !== this.state.locationValue instead of locationValue === this.state.highlightedValue
+                            // since there's an instant just after selection where both are true, and we want here to trigger onChange, no onResultHighlight.
+                            this.setValue(resolvedLocation, locationValue !== this.state.locationValue, true,
                                 () => {
                                     this.updateResolvedItem(locationValue, resolvedLocation);
                                 });
@@ -398,7 +404,12 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.getLimitBounds().then(limitBounds =>
             this.geocodingData.geocode(inputText, true, limitBounds, this.props.focus ? this.props.focus : null,
                 this.handleAutocompleteResults));
+    }
 
+    public refreshDisplayingResults() {
+        if (this.state.focus) {
+            this.refreshResults(this.state.inputText);
+        }
     }
 
     // noinspection JSUnusedLocalSymbols
@@ -412,7 +423,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             if (results.hasOwnProperty(i)) {
                 const item = {
                     label: LocationUtil.getMainText(results[i], this.props.t),
-                    location: results[i]
+                    location: results[i],
+                    query: query
                 };
                 items.push(item);
             }
@@ -662,7 +674,8 @@ class TKUILocationBox extends Component<IProps, IState> {
                     "aria-owns": this.isDDOpen() ? popupId : undefined,
                     "aria-haspopup": this.isDDOpen(),
                     tabIndex: 0,
-                    "aria-live": "polite"
+                    "aria-live": "polite",
+                    name: this.props.name
                 }}
                 autoHighlight={false}
                 ref={this.autocompleteRef}

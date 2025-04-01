@@ -1,0 +1,378 @@
+{
+  "availableList": [
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/04614f16-380a-43a0-b667-3d4b39bb0e69/3X8JtQ9P/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 1964,
+      "maxPrice": 1964,
+      "fares": [
+        {
+          "id": "Regular",
+          "name": "Volunteers Detroit",
+          "description": "Regular ticket",
+          "price": 1964,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_mi-detroit-spedsta",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Detroit - Volunteers",
+        "color": {
+          "red": 115,
+          "green": 169,
+          "blue": 243
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": true,
+      "title": "Volunteers - Detroit",
+      "bookingTitle": "Take Volunteers - Detroit"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/f4fc2679-8a3e-42ee-9cdf-ddb4943a9ba9/EWG02IYf/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 2295,
+      "maxPrice": 4874,
+      "fares": [
+        {
+          "id": "a12ab23b-66f0-4028-9bb9-856dbcfdbbc7",
+          "name": "UberX",
+          "description": "",
+          "price": 2295,
+          "currency": "USD",
+          "value": 1,
+          "max": 1
+        },
+        {
+          "id": "e4334456-0ab7-44c8-b801-cd4753f085b0",
+          "name": "UberXL",
+          "description": "",
+          "price": 2412,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "0c757ef2-d3a5-4f37-b7b2-3b055380e165",
+          "name": "UberX Priority",
+          "description": "",
+          "price": 2504,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "0b8f49d3-5c5f-412a-909f-c9de1db414d4",
+          "name": "Comfort",
+          "description": "",
+          "price": 2545,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "435fcf29-2bb6-4f8a-9210-88ca35f36cf8",
+          "name": "Pet",
+          "description": "",
+          "price": 2680,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "e01d13d8-fe0b-4772-9c5c-a73af4c33898",
+          "name": "Black",
+          "description": "",
+          "price": 3457,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        },
+        {
+          "id": "5e3849f5-3644-44ce-bac6-3166bbc12034",
+          "name": "Black SUV",
+          "description": "",
+          "price": 4874,
+          "currency": "USD",
+          "value": 0,
+          "max": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_michigan-uber-api",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Uber - API",
+        "remoteIcon": "uber",
+        "color": {
+          "red": 47,
+          "green": 213,
+          "blue": 186
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": true,
+      "title": "Uber - API",
+      "bookingTitle": "Take Uber - API"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/921de2df-055d-4c86-be33-4eb3787aec5c/Jcfk0yLl/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 2435,
+      "maxPrice": 2435,
+      "fares": [
+        {
+          "id": "uber-detroit",
+          "name": "Regular Uber",
+          "description": "Regular Uber",
+          "price": 2435,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_michigan-uber",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Uber",
+        "remoteIcon": "uber",
+        "color": {
+          "red": 47,
+          "green": 213,
+          "blue": 186
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "Uber",
+      "bookingTitle": "Take Uber"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/c1cc0b6f-7fde-4661-b545-cac1949a35b9/a74LTN9u/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 2844,
+      "maxPrice": 3401,
+      "fares": [
+        {
+          "id": "curb-to-curb",
+          "name": "Curb to curb Fare",
+          "description": "Curb to curb LBU Taxi ticket",
+          "price": 2844,
+          "currency": "USD",
+          "value": 1
+        },
+        {
+          "id": "wheelchair",
+          "name": "Wheelchair Fare",
+          "description": "Wheelchair LBU Taxi ticket",
+          "price": 3401,
+          "currency": "USD"
+        },
+        {
+          "id": "door-to-door",
+          "name": "Door to Door Fare",
+          "description": "Door to door LBU Taxi ticket",
+          "price": 3401,
+          "currency": "USD"
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_mi-lbu-taxi",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "LBU Taxi",
+        "color": {
+          "red": 51,
+          "green": 255,
+          "blue": 102
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "LBU Taxi",
+      "bookingTitle": "Take LBU Taxi"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/6e5a256e-49f5-414c-a7bf-d201a6adad64/ocKDso9i/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 3678,
+      "maxPrice": 3678,
+      "fares": [
+        {
+          "id": "Regular Michigan",
+          "name": "Regular",
+          "description": "Regular Michigan ticket",
+          "price": 3678,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_washtenaw-stadium-taxi",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Stadium Taxi",
+        "color": {
+          "red": 51,
+          "green": 255,
+          "blue": 102
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "Stadium Taxi",
+      "bookingTitle": "Take Stadium Taxi"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/9e0a8533-1f56-463f-a3d9-75fa99d993a4/58frdheS/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 7441,
+      "maxPrice": 7441,
+      "fares": [
+        {
+          "id": "regular",
+          "name": "Ambulatory",
+          "description": "Regular ticket, for single ride trips",
+          "price": 7441,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_mi-care-on-wheels",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Care On Wheels",
+        "color": {
+          "red": 199,
+          "green": 62,
+          "blue": 54
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "Care On Wheels Transportation",
+      "bookingTitle": "Take Care On Wheels Transportation"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/433cc8b0-2efe-4ae5-afe7-5c9cdf294950/HwzcvETm/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 7441,
+      "maxPrice": 7441,
+      "fares": [
+        {
+          "id": "regular",
+          "name": "Regular Ride Care Transit",
+          "description": "Regular Ride Care Transit ticket.",
+          "price": 7441,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_mi-ride-care",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Ride Care Transit",
+        "color": {
+          "red": 51,
+          "green": 255,
+          "blue": 102
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "Ride Care Transit LLC",
+      "bookingTitle": "Take Ride Care Transit LLC"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/83e6f79d-69d5-4ef2-8e19-f0c099006dca/g29j1axt/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 10250,
+      "maxPrice": 10500,
+      "fares": [
+        {
+          "id": "lifeline-discounted-ticket",
+          "name": "Lifeline Discounted ticket (Veterans, Seniors, Students, Disability)",
+          "description": "Lifeline discounted ticket (Veterans, Seniors, Students, Disability)",
+          "price": 10250,
+          "currency": "USD",
+          "value": 1
+        },
+        {
+          "id": "lifeline-ticket",
+          "name": "Lifeline ticket",
+          "description": "Lifeline ticket",
+          "price": 10500,
+          "currency": "USD"
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_washtenaw-the-wave",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "The WAVE.",
+        "color": {
+          "red": 51,
+          "green": 255,
+          "blue": 102
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": false,
+      "title": "The WAVE",
+      "bookingTitle": "Take The WAVE"
+    },
+    {
+      "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/e740aa52-b395-4cdd-b346-f559e8cc083e/pnQ6wpR8/quick/1?bsb=1&psb=1",
+      "bookingResponseType": "REVIEW",
+      "minPrice": 53378,
+      "maxPrice": 55503,
+      "fares": [
+        {
+          "id": "Ambulatory&StandardWheelchair1Leg-zone8",
+          "name": "Ambulatory & Standard Wheelchair",
+          "description": "Ambulatory & Standard Wheelchair ticket",
+          "price": 53378,
+          "currency": "USD",
+          "value": 1
+        },
+        {
+          "id": "BariatricWheelchair1Leg-zone8",
+          "name": "Bariatric Wheelchair",
+          "description": "Bariatric Wheelchair ticket",
+          "price": 55503,
+          "currency": "USD"
+        }
+      ],
+      "billingEnabled": true,
+      "modeInfo": {
+        "identifier": "ps_drt_mi-ride-your-way-rg",
+        "localIcon": "shuttlebus",
+        "alt": "Shuttle",
+        "description": "Ride your Way RG",
+        "color": {
+          "red": 51,
+          "green": 113,
+          "blue": 196
+        },
+        "remoteIconIsTemplate": false
+      },
+      "singleFareOnly": true,
+      "title": "Ride Your Way - RG",
+      "bookingTitle": "Take Ride Your Way - RG"
+    }
+  ],
+  "unavailableList": []
+}

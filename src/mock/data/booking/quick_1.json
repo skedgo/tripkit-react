@@ -1,0 +1,73 @@
+{
+  "paymentOptions": [
+    {
+      "method": "GET",
+      "paymentMode": "INTERNAL",
+      "url": "https://bootes.skedgo.com/lab/feonix/satapp/data/user/booking/1f196600-6e3d-4c0d-a8e1-968cda3ac30e/pay?psb=true",
+      "currency": "USD",
+      "fullPrice": 62373,
+      "description": "Credit Card"
+    }
+  ],
+  "publishableApiKey": "pk_test_pcFz1IPSJed68tco8okyFcaw",
+  "ephemeralKey": {
+    "associated_objects": [
+      {
+        "id": "cus_QkNgqU0X8ZSI6e",
+        "type": "customer"
+      }
+    ],
+    "created": 1724878639,
+    "expires": 1724882239,
+    "id": "ephkey_1PssvbJMSksjXt3eCJAGvRwO",
+    "livemode": false,
+    "object": "ephemeral_key",
+    "secret": "ek_test_YWNjdF8xNVNxdTZKTVNrc2pYdDNlLGtoem9YUnRPZ2RYRDVmeEhGcU5ZM2p4QnBwVGtEbGc_001Cy8zVha"
+  },
+  "review": [
+    {
+      "currency": "USD",
+      "mode": "ps_drt_mi-ride-your-way",
+      "modeInfo": {
+        "identifier": "ps_drt_mi-ride-your-way",
+        "localIcon": "shuttlebus",
+        "alt": "Ride Your Way",
+        "description": "Ride Your Way",
+        "color": {
+          "red": 51,
+          "green": 113,
+          "blue": 196
+        },
+        "remoteIconIsTemplate": false
+      },
+      "provider": {
+        "title": "Ride Your Way",
+        "subtitle": "616-855-6800"
+      },
+      "tickets": [
+        {
+          "id": "Ambulatory&StandardWheelchair1Leg-zone8",
+          "name": "Ambulatory & Standard Wheelchair",
+          "description": "Ambulatory & Standard Wheelchair ticket",
+          "price": 62373,
+          "currency": "USD",
+          "value": 1
+        }
+      ],
+      "origin": {
+        "lat": 42.26511,
+        "lng": -83.38623,
+        "address": "5996 Biddle St, Romulus, MI 48174, USA"
+      },
+      "destination": {
+        "lat": 42.54099,
+        "lng": -82.9942,
+        "address": "33505 Red Run St, Sterling Heights, MI 48312, USA"
+      },
+      "depart": "2024-08-30T19:56:25Z",
+      "arrive": "2024-08-30T20:42:02Z",
+      "price": 62373
+    }
+  ],
+  "reviewActionTitle": "Continue to Checkout"
+}

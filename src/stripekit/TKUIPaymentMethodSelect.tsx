@@ -2,7 +2,7 @@ import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
 import React, { ReactNode, useState } from 'react';
 import genStyles from '../css/GenStyle.css';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
-import { TKUITheme, black, colorWithOpacity } from '../jss/TKUITheme';
+import { TKUITheme, black } from '../jss/TKUITheme';
 import Util from '../util/Util';
 import { ReactComponent as IconVisa } from "../images/payment/ic-visa.svg";
 import { ReactComponent as IconMaster } from "../images/payment/ic-mastercard.svg";
@@ -10,14 +10,13 @@ import { ReactComponent as IconAmex } from "../images/payment/ic-amex.svg";
 import { ReactComponent as IconCard } from "../images/payment/ic-creditcard.svg";
 import { ReactComponent as IconBalance } from "../images/ic-money-circle-small.svg";
 import { ReactComponent as IconRemove } from "../images/ic-clear-circle.svg";
-import Radio from '@material-ui/core/Radio';
-import { withStyles as muiWithStyles } from '@material-ui/core/styles';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { resetStyles } from '../css/ResetStyle.css';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
 import TKUISelect, { SelectOption } from '../buttons/TKUISelect';
 import PaymentOption from '../model/trip/PaymentOption';
+import TKUIRadio from '../util_components/TKUIRadio';
 
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -34,12 +33,14 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.grow,
         cursor: 'pointer',
         '& span': {
-            ...theme.textWeightBold,
             marginLeft: '5px'
         },
         '&:hover': {
             background: '#80808033'
         }
+    },
+    selected: {
+        ...theme.textWeightBold
     },
     btnContainer: {
         ...genStyles.alignSelfStart,
@@ -78,7 +79,7 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 
-export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], selectedSubOption?: SelectOption } };
+export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], subOptionsPlaceholder?: string, selectedSubOption?: SelectOption } };
 // selectedSubOption will be changed by mutating the object, so the clients of this component won't be aware of an update on this. That shouldn't be a problem since just need
 // to check the value on "Purchase" click (and, e.g. show a "required" error if no option was selected).
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
@@ -99,17 +100,6 @@ function iconFromBrand(brand: string) {
 
 const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
     ({ value, options, onChange, onRemove, classes, theme }) => {
-        const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                marginLeft: '0',
-                width: '50px',
-                color: colorWithOpacity(theme.colorPrimary, .5),
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Radio));
         const [editing, setEditing] = useState<boolean>(false);
         const [selectedSubOptionMap, setSelectedSubOptionMap] = useState<Map<SGPaymentMethod, SelectOption | undefined>>(() => {
             const map = new Map<SGPaymentMethod, SelectOption | undefined>();
@@ -121,6 +111,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             return map;
         });
         function renderPaymentMethod(paymentMethod: SGPaymentMethod, i: number): ReactNode {
+            const paymentMethodClass = classNames(classes.card, value === paymentMethod && classes.selected);
             switch (paymentMethod.paymentOption.paymentMode) {
                 case "INTERNAL":
                     const stripePaymentMethod = paymentMethod.data!.stripePaymentMethod!;
@@ -131,8 +122,8 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     const { brand, last4 } = card;
                     return (
                         <div className={classes.cardNRemove} key={i}>
-                            <div className={classes.card} onClick={() => onChange(paymentMethod)}>
-                                <StyledRadio checked={value === paymentMethod} />
+                            <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)}>
+                                <TKUIRadio checked={value === paymentMethod} theme={theme} />
                                 <div className={classes.icon}>
                                     {iconFromBrand(brand)}
                                 </div>
@@ -154,28 +145,28 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     );
                 case "WALLET":
                     return (
-                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
-                            <StyledRadio checked={value === paymentMethod} />
+                        <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
+                            <TKUIRadio checked={value === paymentMethod} theme={theme} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
                             </div>
                             <div>{paymentMethod.paymentOption.description}</div>
                             {paymentMethod.paymentOption.currentBalance &&
-                                <div style={{ marginLeft: '6px', color: black(1) }}>
-                                    {FormatUtil.toMoney(paymentMethod.paymentOption.currentBalance, { nInCents: true, currency: paymentMethod.paymentOption.currency })}
+                                <div style={{ marginLeft: '6px', color: black(1), fontStyle: 'italic' }}>
+                                    {`(${paymentMethod.paymentOption.walletName ? paymentMethod.paymentOption.walletName + " ⋅ " : ""}${FormatUtil.toMoney(paymentMethod.paymentOption.currentBalance, { nInCents: true, currency: paymentMethod.paymentOption.currency })})`}
                                 </div>}
                         </div>
                     );
                 case "INVOICE":
                     const selectOptions = paymentMethod.data!.subOptions!;
                     return (
-                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
-                            <StyledRadio checked={value === paymentMethod} />
+                        <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
+                            <TKUIRadio checked={value === paymentMethod} theme={theme} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
                             </div>
                             <div>{paymentMethod.paymentOption.description} to</div>
-                            <div style={{ marginLeft: '6px', color: black(1) }}>
+                            <div style={{ marginLeft: '30px', color: black(1) }}>
                                 <TKUISelect
                                     options={selectOptions}
                                     value={selectedSubOptionMap.get(paymentMethod)}
@@ -186,6 +177,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                                         setSelectedSubOptionMap(update);
                                         onChange(paymentMethod);
                                     }}
+                                    placeholder={paymentMethod.data!.subOptionsPlaceholder}
                                     isDisabled={paymentMethod !== value}
                                 // styles={{
                                 //     main: overrideClass(this.props.injectedStyles.walkSpeedSelect),

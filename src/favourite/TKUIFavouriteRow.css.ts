@@ -1,39 +1,79 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "./TKUIFavouriteRow";
-import genStyles from "../css/GenStyle.css";
-import {black, TKUITheme} from "../jss/TKUITheme";
-import {resetStyles} from "../css/ResetStyle.css";
+import genStyles, { keyFramesStyles } from "../css/GenStyle.css";
+import { black, colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
+import { resetStyles } from "../css/ResetStyle.css";
 
-export const tKUIFavouriteRowDefaultStyle: TKUIStyles<TKUIFavouriteRowStyle, TKUIFavouriteRowProps> =
-    (theme: TKUITheme) => ({
-        main: {
-            ...genStyles.flex,
-            ...genStyles.alignCenter,
-            padding: '10px 15px',
-            ...theme.divider,
-            cursor: (props: TKUIFavouriteRowProps) => props.onClick && 'pointer',
-            '&:hover': {
-                background: black(5, theme.isDark)
-            }
-        },
-        iconPanel: {
-            width: '32px',
-            height: '32px',
-            ...genStyles.flex,
-            ...genStyles.center,
-            ...genStyles.alignCenter,
-            ...genStyles.svgFillCurrColor,
-            color: black(1, theme.isDark)
-        },
-        text: {
-            marginLeft: '10px',
-            ...genStyles.grow
-        },
-        removeBtn: {
-            ...resetStyles.button,
-            '& svg': {
-                height: '20px',
-                width: '20px'
+export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
+    main: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        padding: '10px 15px',
+        ...theme.divider,
+        background: white(0, theme.isDark),
+        '&:hover': {
+            background: black(5, theme.isDark)
+        }
+    },
+    pointer: {
+        cursor: 'pointer'
+    },
+    iconPanel: {
+        width: '40px',
+        height: '40px',
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter
+    },
+    iconBackground: {
+        ...genStyles.noShrink,
+        background: colorWithOpacity(theme.colorPrimary, .15),
+        borderRadius: '50%',
+        '& svg path': {
+            fill: theme.colorPrimary
+        }
+    },
+    text: {
+        marginLeft: '10px',
+        ...genStyles.grow
+    },
+    removeBtn: {
+        ...resetStyles.button,
+        cursor: 'pointer',
+        '& svg': {
+            height: '20px',
+            width: '20px'
+        }
+    },
+    editBtn: {
+        ...resetStyles.button,
+        cursor: 'pointer',
+        '& svg': {
+            height: '20px',
+            width: '20px',
+            '& path': {
+                fill: theme.colorPrimary
             }
         }
-    });
+    },
+    dragHandle: {
+        ...resetStyles.button,
+        ...genStyles.flex,
+        ...genStyles.alignSelfStretch,
+        ...genStyles.alignCenter,
+        padding: '0 10px',
+        marginLeft: '-15px',
+        cursor: 'pointer'
+    },
+    confirmRemove: {
+        background: theme.colorError,
+        color: white()
+    },
+    loadingFav: {
+        color: 'transparent',
+        background: `linear-gradient(100deg, ${colorWithOpacity(theme.colorPrimary, .10)} 30%, ${colorWithOpacity(theme.colorPrimary, .20)} 50%, ${colorWithOpacity(theme.colorPrimary, .10)} 70%)`,
+        backgroundSize: '400%',
+        animation: keyFramesStyles.keyframes.loadingFavourite + ' 1.2s ease-in-out infinite',
+        height: '100%',
+        width: '100%',
+        ...genStyles.borderRadius(50, '%')
+    }
+});

@@ -1,7 +1,6 @@
-import {JsonObject, JsonProperty, Any} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import SegmentTemplate from "./SegmentTemplate";
 import TripGroup from "./TripGroup";
-import RoutingQuery from "../RoutingQuery";
 import Trip from "./Trip";
 import RealTimeAlert from "../service/RealTimeAlert";
 import Location from "../Location";
@@ -30,10 +29,6 @@ class RoutingResults {
     @JsonProperty('query', ResultsQuery, true)
     public resultsQuery?: ResultsQuery = undefined;
 
-    /**
-     * @Deprecated. Replace by the previous one coming with the results.
-     */
-    private query: RoutingQuery = new RoutingQuery();
     private satappQuery: string = "";
 
     get region(): string {
@@ -87,11 +82,11 @@ class RoutingResults {
                                 stop.arrival = segment.endTimeSeconds + stop.relativeArrival;
                             }
                         }));
-                    if (segment.isFirst() && !this.query.isEmpty() && this.query.from!.address) { // Check that this.query is defined to avoid crashing when injecting trips tests.
-                        segment.from.address = this.query.from!.address;
+                    if (segment.isFirst() && this.resultsQuery?.from!.address) { // Check that this.query is defined to avoid crashing when injecting trips tests.
+                        segment.from.address = this.resultsQuery.from!.address;
                     }
-                    if (segment.isLast() && !this.query.isEmpty() && this.query.to!.address) {
-                        segment.to.address = this.query.to!.address;
+                    if (segment.isLast() && this.resultsQuery?.to!.address) {
+                        segment.to.address = this.resultsQuery.to!.address;
                     }
                     const segmentAlerts: RealTimeAlert[] = [];
                     for (const alertHash of segment.alertHashCodes) {
@@ -107,10 +102,6 @@ class RoutingResults {
             }
             group.setSelected(0);
         }
-    }
-
-    public setQuery(query: RoutingQuery) {
-        this.query = query;
     }
 
     public setSatappQuery(satappQuery: string) {

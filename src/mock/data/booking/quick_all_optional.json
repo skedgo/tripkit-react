@@ -1,0 +1,219 @@
+[
+  {
+    "bookingURLIsDeepLink": false,
+    "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/99be2072-abb0-4b16-b54d-c8681deb1b29/KTb7tk8x/quick/1?bsb=1&psb=1",
+    "input": [
+      {
+        "id": "mobilityOptions",
+        "type": "MULTIPLE_CHOICE",
+        "options": [
+          {
+            "id": "braces",
+            "title": "Braces"
+          },
+          {
+            "id": "canePhysicalAid",
+            "title": "Cane - Physical Aid"
+          },
+          {
+            "id": "caneVisualAid",
+            "title": "Cane - Visual Aid"
+          },
+          {
+            "id": "boosterSeat",
+            "title": "Child Seat - Booster"
+          },
+          {
+            "id": "childSeat",
+            "title": "Child Seat - Infant"
+          },
+          {
+            "id": "doorToDoor",
+            "title": "Door To Door"
+          },
+          {
+            "id": "hearingAid",
+            "title": "Hearing Aid"
+          },
+          {
+            "id": "liftNeeded",
+            "title": "Lift Needed"
+          },
+          {
+            "id": "oxygen",
+            "title": "Oxygen"
+          },
+          {
+            "id": "personalCareAssistant",
+            "title": "Personal Care Assistant"
+          },
+          {
+            "id": "prosthesis",
+            "title": "Prosthesis"
+          },
+          {
+            "id": "scooter",
+            "title": "Scooter"
+          },
+          {
+            "id": "scooterLarge",
+            "title": "Scooter - Large"
+          },
+          {
+            "id": "segway",
+            "title": "Segway"
+          },
+          {
+            "id": "serviceAnimal",
+            "title": "Service Animal"
+          },
+          {
+            "id": "stroller",
+            "title": "Stroller"
+          },
+          {
+            "id": "walker",
+            "title": "Walker"
+          },
+          {
+            "id": "wheelchair",
+            "title": "Wheelchair"
+          },
+          {
+            "id": "wheelchairElectric",
+            "title": "Wheelchair - Electric"
+          },
+          {
+            "id": "wheelchairFoldable",
+            "title": "Wheelchair - Foldable"
+          },
+          {
+            "id": "wheelchairLarge",
+            "title": "Wheelchair - Large"
+          },
+          {
+            "id": "other",
+            "title": "Other (Please Enter in Notes)"
+          }
+        ],
+        "title": "Mobility options",
+        "values": [],
+        "required": false
+      },
+      {
+        "id": "purpose",
+        "type": "SINGLE_CHOICE",
+        "options": [
+          {
+            "id": "work",
+            "title": "Work"
+          },
+          {
+            "id": "home",
+            "title": "Home"
+          },
+          {
+            "id": "dialysis",
+            "title": "Dialysis"
+          },
+          {
+            "id": "medical",
+            "title": "Medical - General"
+          },
+          {
+            "id": "religious",
+            "title": "Religious"
+          },
+          {
+            "id": "recreational",
+            "title": "Recreational"
+          },
+          {
+            "id": "social",
+            "title": "Social"
+          },
+          {
+            "id": "family",
+            "title": "Family"
+          },
+          {
+            "id": "legal",
+            "title": "Legal/Court"
+          },
+          {
+            "id": "school",
+            "title": "School"
+          },
+          {
+            "id": "shopping",
+            "title": "Shopping (non grocery)"
+          },
+          {
+            "id": "grocery",
+            "title": "Grocery"
+          },
+          {
+            "id": "petAnimal",
+            "title": "Pet/Animal Related"
+          }
+        ],
+        "title": "Purpose",
+        "value": "",
+        "required": false
+      },
+      {
+        "id": "returnTrip",
+        "type": "RETURN_TRIP",
+        "title": "Return trip",
+        "value": "",
+        "required": false
+      },
+      {
+        "id": "notes",
+        "type": "LONG_TEXT",
+        "title": "Add note",
+        "value": "",
+        "required": false
+      }
+    ],
+    "fares": [
+      {
+        "id": "Ambulatory&StandardWheelchair1Leg-zone8",
+        "name": "Ambulatory & Standard Wheelchair",
+        "description": "Ambulatory & Standard Wheelchair ticket",
+        "price": 52044,
+        "currency": "USD",
+        "value": 1
+      },
+      {
+        "id": "BariatricWheelchair1Leg-zone8",
+        "name": "Bariatric Wheelchair",
+        "description": "Bariatric Wheelchair ticket",
+        "price": 53725,
+        "currency": "USD"
+      }
+    ],
+    "billingEnabled": true,
+    "index": 1,
+    "count": 1,
+    "tickets": [
+      {
+        "id": "Ambulatory&StandardWheelchair1Leg-zone8",
+        "name": "Ambulatory & Standard Wheelchair",
+        "description": "Ambulatory & Standard Wheelchair ticket",
+        "price": 52044,
+        "currency": "USD",
+        "value": 1
+      },
+      {
+        "id": "BariatricWheelchair1Leg-zone8",
+        "name": "Bariatric Wheelchair",
+        "description": "Bariatric Wheelchair ticket",
+        "price": 53725,
+        "currency": "USD"
+      }
+    ],
+    "title": "On-demand transit",
+    "bookingTitle": "Take Ride Your Way"
+  }
+]

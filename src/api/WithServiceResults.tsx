@@ -205,22 +205,15 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 this.setState({ segment },
                     () => {
                         if (segment) {
-                            RegionsData.instance.getRegionP(segment.from)
-                                .then((fromRegion?: Region) =>
-                                    fromRegion && StopsData.instance.getStopFromCode(fromRegion.name, segment.stopCode!)
-                                        .then((startStop: StopLocation) => {
-                                            this.setState({ startStop: startStop },
-                                                () => {
-                                                    let initialTime = DateTimeUtil.momentFromTimeTZ(
-                                                        (segment.trip.queryTimeSeconds ? segment.trip.queryTimeSeconds : segment.startTimeSeconds) * 1000).add(-30, 'm');
-                                                    if (initialTime.isBefore(DateTimeUtil.getNow())) {
-                                                        initialTime = DateTimeUtil.getNow();
-                                                    }
-                                                    this.onInitTimeChange(initialTime);
-                                                });
-                                        }
-                                        )
-                                )
+                            this.setState({ startStop: segment.from as StopLocation },
+                                () => {
+                                    let initialTime = DateTimeUtil.momentFromTimeTZ(
+                                        (segment.trip.queryTimeSeconds ? segment.trip.queryTimeSeconds : segment.startTimeSeconds) * 1000).add(-30, 'm');
+                                    if (initialTime.isBefore(DateTimeUtil.getNow())) {
+                                        initialTime = DateTimeUtil.getNow();
+                                    }
+                                    this.onInitTimeChange(initialTime);
+                                });
 
                         }
                     })

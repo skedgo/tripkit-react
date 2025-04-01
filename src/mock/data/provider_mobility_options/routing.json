@@ -1,0 +1,158 @@
+{
+  "groups": [
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-12-12T15:29:15-05:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 0,
+          "carbonCost": 7.3,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-12-12T15:13:05-05:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/081d989d-eb43-46a4-b843-cd015194d616",
+          "id": "081d989d-eb43-46a4-b843-cd015194d616",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/081d989d-eb43-46a4-b843-cd015194d616",
+          "mainSegmentHashCode": -1312045242,
+          "moneyCost": 23.75,
+          "moneyUSDCost": 23.75,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/081d989d-eb43-46a4-b843-cd015194d616",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-12-12T15:13:05-05:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/081d989d-eb43-46a4-b843-cd015194d616",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/081d989d-eb43-46a4-b843-cd015194d616/XAwkVsRv/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -196531358,
+              "endTime": "2024-12-12T15:29:15-05:00",
+              "id": "XAwkVsRv",
+              "segmentTemplateHashCode": -1312045242,
+              "startTime": "2024-12-12T15:13:05-05:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/081d989d-eb43-46a4-b843-cd015194d616",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/081d989d-eb43-46a4-b843-cd015194d616",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/081d989d-eb43-46a4-b843-cd015194d616",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/081d989d-eb43-46a4-b843-cd015194d616?hash=214561169",
+          "weightedScore": 43.3
+        }
+      ]
+    }
+  ],
+  "query": {
+    "depart": "2024-12-12T20:13:05Z",
+    "from": {
+      "address": "6410 Oakman Blvd, Dearborn, MI 48126, USA",
+      "class": "Location",
+      "lat": 42.33723,
+      "lng": -83.16925,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    },
+    "to": {
+      "address": "5729 Rohns St, Detroit, MI 48213, USA",
+      "class": "Location",
+      "lat": 42.38492,
+      "lng": -83.0072,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    }
+  },
+  "region": "US_MI_Detroit",
+  "regions": [
+    "US_MI_Detroit"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "Take shuttle about 12 miles",
+      "durationWithoutTraffic": 1020,
+      "from": {
+        "address": "6410 Oakman Blvd, Dearborn, MI 48126, USA",
+        "class": "Location",
+        "lat": 42.33723,
+        "lng": -83.16936,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "geofences": [
+        {
+          "center": {
+            "lat": 42.38493143127921,
+            "lng": -83.00718040261482
+          },
+          "id": "TRIP_END_XAwkVsRv",
+          "messageBody": "You are about to arrive at 5729 Rohns St, Detroit, MI 48213, USA",
+          "messageTitle": "Arriving at your destination",
+          "messageType": "TRIP_END",
+          "radius": 100,
+          "trigger": "ENTER",
+          "type": "CIRCLE"
+        }
+      ],
+      "hashCode": -1312045242,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 23.75,
+        "costComponents": [
+          {
+            "cost": 23.75,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 18119,
+      "mini": {
+        "description": "5729 Rohns St, Detroit, MI 48213, USA",
+        "instruction": "Take shuttle",
+        "mainValue": "$24"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 243,
+          "green": 169,
+          "red": 115
+        },
+        "identifier": "ps_drt",
+        "localIcon": "shuttlebus"
+      },
+      "notes": "Fare: from $24 (estimate)\n12 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "s~kaGp_szNx@AdJKJ????q@?QEmE?O?UAiBAkA?[??jJOhJMdBEbFG`AClDE`PUnAEhAA`@A??BJi@sC@u@Fw@AA?UBUlBwJLy@Fi@@w@Em@Qk@Yk@Y]o@Y[Gy@Em@IaAU]I??eCmBwAkB}@oAaAeBq@cBg@_Ba@iBa@wBo@cEc@qD{@oG??oBqNsAmJe@eDq@_Fa@gDYwCc@uFmAiOi@_HWuCMkAg@uEc@qC_AcFyAkG_JqZeB_GoQmm@Oe@s@eCaAyC_@}@s@aBcAuBcBgCmCmDo@u@UY}LqOcAwAwA}Bq@gAg@{@eAoBy@iBi@eAg@mAkAcDyAiEmB}G}@oDwBuJiG_YkHk\\yB{KgFmUqGsZwA_HoAkFo@cCeBiF}AwDmAeCMUm@eAgFuJa@w@eG_LmCsEcBqCU[mJuPeCsFcCkGqBkFoBuFw@_CISqBaHc@wAw@uCmAkE}@qCgAyC??sA{C_@w@cB}Cg@y@iAuBq@iAQ[cAgBcEsHKSWc@u@yAy@cBsAcDcF{P??s@mCm@gCyHcZs@gCmEkPcA_EaCgJoBwH]gA_AiCy@kB_BmCkA}A_B_BcBqAm@c@WSgBeAw@a@wAgAaAy@c@c@c@g@oAiBk@eAk@mAUg@Us@Qi@[iAYmA[qBiAkJcAiJa@aDc@}C]{B_@kBu@cDq@_CaB}Fw@uCo@yBcAcDkEoNiA{DcD}KCKqAyESiAOy@c@yBu@}Da@eCIo@Bm@Fa@NYb@SXEZHPHLRHT@\\Cb@Sv@Ob@WTED_@Z??CAv@b@TN`Ah@FDLHLD@BZNRHRNr@b@f@ZjAp@z@f@pAt@tAv@zAz@??^UDCZUPK|KmH"
+        }
+      ],
+      "to": {
+        "address": "5729 Rohns St, Detroit, MI 48213, USA",
+        "class": "Location",
+        "lat": 42.38493,
+        "lng": -83.00718,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 178,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    }
+  ]
+}

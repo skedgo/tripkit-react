@@ -8,7 +8,7 @@ import LatLng from "../model/LatLng";
 import TripGoApi from "../api/TripGoApi";
 import { LocationConverter } from "../model/location/LocationConverter";
 import Util from "../util/Util";
-import { tKUIColors } from "../jss/TKUITheme";
+import { black, tKUIColors } from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import { ReactComponent as IconPin } from '../images/ic-pin-start.svg';
@@ -35,6 +35,11 @@ const defaultRenderIcon = (location: Location) =>
                 height: undefined,
                 ...!isRemoteIcon(location.modeInfo) && {
                     background: tKUIColors.black1
+                },
+                ...location.modeInfo.remoteIconIsTemplate && {
+                    background: 'none',
+                    color: black(0),
+                    padding: 0
                 }
             }}
         /> :
@@ -50,6 +55,20 @@ const defaultRenderIcon = (location: Location) =>
             location instanceof SchoolLocation ?
                 <TKUIIcon iconName="schoolLocation" /> :
                 <IconPin />;
+
+const compareSkedgoResults = (l1: Location, l2: Location, query: string) => {
+    let relevanceL1 = LocationUtil.relevance(query, l1);
+    let relevanceL2 = LocationUtil.relevance(query, l2);
+    if (l1 instanceof SchoolLocation) {
+        relevanceL1 += (1 - relevanceL1) * .5;
+    }
+    if (l2 instanceof SchoolLocation) {
+        relevanceL2 += (1 - relevanceL2) * .5;
+    }
+    const relevanceDiff = relevanceL2 - relevanceL1;
+    // Compare with relevanceDiff just if one of the locations is a SchoolLocation, otherwise preserve the sorting as it comes from the geocoder service.
+    return (l1 instanceof SchoolLocation || l2 instanceof SchoolLocation) ? relevanceDiff : 0;
+};
 class SkedgoGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;
@@ -124,9 +143,8 @@ class SkedgoGeocoder implements IGeocoder {
             for (const locJson of json.choices) {
                 results.push(SkedgoGeocoder.locationFromAutocompleteResult(locJson, query));
             }
-            if (this.options.compare) {
-                results.sort((a, b) => this.options.compare!(a, b, query));
-            }
+            const compare = this.options.compare ?? compareSkedgoResults;
+            results.sort((a, b) => compare(a, b, query));
             this.cache.set(endpoint, results);
             callback(results.slice(0, this.options.resultsLimit));
         }).catch(reason => {
@@ -142,6 +160,8 @@ class SkedgoGeocoder implements IGeocoder {
                     let resolvedLocation;
                     if (locInfo.stop) {
                         resolvedLocation = locInfo.stop;
+                    } else if (locInfo.school) {
+                        resolvedLocation = locInfo.school;
                     } else if (locInfo.carPark) {
                         // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
                         // inconsistent with locations.json endpoint, returning a list of CarParkLocation.

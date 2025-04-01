@@ -1,15 +1,11 @@
-import { TKUITheme, white } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import { TKUITheme } from "../jss/TKUITheme";
 
-export const tKUIStripePaymentCardDefaultStyle = (theme: TKUITheme) => ({
+export const tKUIBookingCardDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
         ...genStyles.column,
-        height: '100%',
-        padding: '16px'
-    },
-    paymentForm: {
-        marginTop: '20px'
+        height: '100%'
     },
     loadingPanel: {
         ...genStyles.flex,
@@ -17,8 +13,9 @@ export const tKUIStripePaymentCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.center,
         position: 'absolute',
         top: '0',
-        background: white(1, theme.isDark),
+        backgroundColor: '#ffffffbf',
         height: '100%',
-        width: '100%'
+        width: '100%',
+        zIndex: 5
     }
 });

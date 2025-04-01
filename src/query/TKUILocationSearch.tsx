@@ -13,9 +13,9 @@ import { ReactComponent as IconDirections } from '../images/ic-directions.svg';
 import FavouritesData from "../data/FavouritesData";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
-import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUICard from "../card/TKUICard";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
@@ -191,7 +191,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                         routingContext.onQueryChange(Util.iAssign(routingContext.query, { to: value }));
                         if (value !== null && !value.isCurrLoc()) {
                             FavouritesData.recInstance.add(value instanceof StopLocation ?
-                                FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
+                                FavouriteStop.create(value) : FavouriteLocation.create(value));
                         }
                     },
                     onResultHighlight: routingContext.onPreChange &&

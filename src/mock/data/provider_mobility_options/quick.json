@@ -1,0 +1,126 @@
+[
+  {
+    "bookingURLIsDeepLink": false,
+    "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/5e05e2f2-ac13-4c72-bc31-5bb1fdf682ea/8B45u7AN/quick/1?bsb=1&psb=1",
+    "input": [
+      {
+        "id": "mobilityOptions",
+        "type": "MULTIPLE_CHOICE",
+        "options": [
+          {
+            "id": "canePhysicalAid",
+            "title": "Cane - Physical Aid"
+          },
+          {
+            "id": "crutches",
+            "title": "Crutches"
+          }
+        ],
+        "title": "Mobility options",
+        "values": [
+          "canePhysicalAid"
+        ],
+        "required": false
+      },
+      {
+        "id": "purpose",
+        "type": "SINGLE_CHOICE",
+        "options": [
+          {
+            "id": "work",
+            "title": "Work"
+          },
+          {
+            "id": "home",
+            "title": "Home"
+          },
+          {
+            "id": "dialysis",
+            "title": "Dialysis"
+          },
+          {
+            "id": "medical",
+            "title": "Medical - General"
+          },
+          {
+            "id": "religious",
+            "title": "Religious"
+          },
+          {
+            "id": "recreational",
+            "title": "Recreational"
+          },
+          {
+            "id": "social",
+            "title": "Social"
+          },
+          {
+            "id": "family",
+            "title": "Family"
+          },
+          {
+            "id": "legal",
+            "title": "Legal/Court"
+          },
+          {
+            "id": "school",
+            "title": "School"
+          },
+          {
+            "id": "shopping",
+            "title": "Shopping (non grocery)"
+          },
+          {
+            "id": "grocery",
+            "title": "Grocery"
+          },
+          {
+            "id": "petAnimal",
+            "title": "Pet/Animal Related"
+          },
+          {
+            "id": "postOp",
+            "title": "Post op"
+          }
+        ],
+        "title": "Purpose",
+        "value": "",
+        "required": true
+      },
+      {
+        "id": "returnTrip",
+        "type": "RETURN_TRIP",
+        "title": "Return trip",
+        "value": "",
+        "required": true
+      },
+      {
+        "id": "notes",
+        "type": "LONG_TEXT",
+        "title": "Add note",
+        "value": "",
+        "required": false
+      }
+    ],
+    "fares": [],
+    "billingEnabled": false,
+    "bookingResponseType": "OPTIONS",
+    "modeInfo": {
+      "identifier": "ps_drt",
+      "localIcon": "shuttlebus",
+      "alt": "Shuttle",
+      "color": {
+        "red": 115,
+        "green": 169,
+        "blue": 243
+      },
+      "remoteIconIsTemplate": false
+    },
+    "singleFareOnly": false,
+    "index": 1,
+    "count": 1,
+    "tickets": [],
+    "title": "On-demand transit",
+    "bookingTitle": "Take shuttle"
+  }
+]
