@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import * as React from "react";
+import React, { ReactNode } from "react";
 import { TKUIConfig } from "./TKUIConfig";
 import Util from "../util/Util";
 import TKStateConsumer from "./TKStateConsumer";
@@ -15,7 +15,7 @@ interface IProps {
      * @ctype
      */
     config: TKUIConfig;
-    children: ((state: TKState) => React.ReactNode) | React.ReactNode;
+    children: ((state: TKState) => React.ReactNode) | React.ReactNode;    
 }
 
 /**
@@ -44,7 +44,7 @@ class TKRoot extends React.Component<IProps, {}> {
                         }
                     </TKStateConsumer>
                     :
-                    this.addRootStyleToChildren(this.props.children)
+                    this.addRootStyleToChildren(this.props.children as ReactNode)
                 }
                 <TKStateController
                     onInit={this.props.config.onInitState}

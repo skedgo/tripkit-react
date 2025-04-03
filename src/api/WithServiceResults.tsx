@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode } from "react";
 import { Moment } from "moment-timezone";
 import Segment from "../model/trip/Segment";
 import ServiceDeparture from "../model/service/ServiceDeparture";
@@ -23,6 +23,7 @@ import { ERROR_DEPARTURES_FROM_OLD_REQUEST, default as TKErrorHelper } from "../
 
 export interface IWithServiceResultsProps {
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
+    children?: ReactNode;
 }
 
 interface IWithServiceResultsState {

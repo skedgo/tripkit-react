@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import injectSheet from "react-jss";
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import classNames from "classnames";
@@ -44,6 +44,7 @@ interface IProps extends TKUISlideUpOptions, TKUIWithClasses<IProps, IStyle> {
     parentElement?: any;
     ariaLabel?: string;
     role?: string;
+    children?: ReactNode;
 }
 
 interface IState {
@@ -186,6 +187,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         const parentElement = this.props.parentElement ? this.props.parentElement : document.getElementsByTagName("BODY")[0];
         return (
             ReactDOM.createPortal(
+                // @ts-expect-error
                 <Draggable
                     axis="y"
                     bounds={{

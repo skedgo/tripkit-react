@@ -27,6 +27,7 @@
     "sideEffects": false,
     "dependencies": {
         "@auth0/auth0-react": "^1.6.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@mapbox/polyline": "^1.0.0",
@@ -96,11 +97,11 @@
         "uuidv4": "^6.2.13"
     },
     "peerDependencies": {
-        "react": ">=17.0.0",
-        "react-dom": ">=17.0.0"
+        "react": ">=18.3.1",
+        "react-dom": ">=18.3.1"
     },
     "scripts": {
-        "start": "react-app-rewired start",
+        "start": "NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
         "test": "react-scripts-ts test --env=jsdom",
         "eject": "react-scripts-ts eject",
         "build:lib": "npm run build:babel:esm && npm run build:types && node ./scripts/copyFiles.mjs",
@@ -131,10 +132,10 @@
         "@types/qrcode.react": "^1.0.0",
         "@types/query-string": "^6.3.0",
         "@types/rc-tooltip": "^3.4.12",
-        "@types/react": "^16.9.2",
+        "@types/react": "^18.3.1",
         "@types/react-autocomplete": "^1.8.3",
         "@types/react-datepicker": "^3.1.5",
-        "@types/react-dom": "^16.9.0",
+        "@types/react-dom": "^18.3.1",
         "@types/react-jss": "^8.6.4",
         "@types/react-modal": "^3.2.1",
         "@types/react-responsive": "^8.0.2",

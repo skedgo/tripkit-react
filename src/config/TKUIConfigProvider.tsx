@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode } from "react";
 import { IThemeCreatorProps, TKUIConfig } from "./TKUIConfig";
 import { generateClassNameSeed, tKUIDeaultTheme, TKUITheme } from "../jss/TKUITheme";
 import { JssProvider, ThemeProvider, useTheme } from "react-jss";
@@ -15,7 +15,8 @@ export const TKUIThemeConsumer: React.FunctionComponent<{ children: (theme: TKUI
     };
 
 interface IProps {
-    config: TKUIConfig
+    config: TKUIConfig;
+    children?: ReactNode;
 }
 
 interface IState {

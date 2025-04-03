@@ -3,7 +3,7 @@
     "declaration": true,
     "baseUrl": "src",
     "outDir": "./dist",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "lib": [
       "es6",
       "dom",

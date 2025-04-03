@@ -17,7 +17,7 @@ export const TKAccessibilityContext = React.createContext<IAccessibilityContext>
 });
 
 
-const TKAccessibilityProvider: React.SFC<{ children: any }> = props => {
+const TKAccessibilityProvider: React.FunctionComponent<{ children: any }> = props => {
     const [isUserTabbing, setUserTabbing] = useState<boolean>(false);
     const enableTabbingDetection = () => {
         window.addEventListener('keydown', handleFirstTab);

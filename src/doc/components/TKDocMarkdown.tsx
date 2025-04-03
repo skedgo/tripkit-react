@@ -34,112 +34,112 @@ Pre.propTypes = {
 
 export const baseOverrides = {
     a: {
-        component: Link as React.SFC,
+        component: Link as React.FunctionComponent,
     },
     h1: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 1,
         },
     },
     h2: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 2,
         },
     },
     h3: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 3,
         },
     },
     h4: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 4,
         },
     },
     h5: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 5,
         },
     },
     h6: {
-        component: MarkdownHeading as React.SFC,
+        component: MarkdownHeading as React.FunctionComponent,
         props: {
             level: 6,
         },
     },
     p: {
-        component: Para as React.SFC,
+        component: Para as React.FunctionComponent,
         props: {
             semantic: 'p',
         },
     },
     em: {
-        component: Text as React.SFC,
+        component: Text as React.FunctionComponent,
         props: {
             semantic: 'em',
         },
     },
     strong: {
-        component: Text as React.SFC,
+        component: Text as React.FunctionComponent,
         props: {
             semantic: 'strong',
         },
     },
     ul: {
-        component: List as React.SFC,
+        component: List as React.FunctionComponent,
     },
     ol: {
-        component: List as React.SFC,
+        component: List as React.FunctionComponent,
         props: {
             ordered: true,
         },
     },
     blockquote: {
-        component: Blockquote as React.SFC,
+        component: Blockquote as React.FunctionComponent,
     },
     code: {
-        component: Code as React.SFC,
+        component: Code as React.FunctionComponent,
     },
     pre: {
-        component: Pre as React.SFC,
+        component: Pre as React.FunctionComponent,
     },
     input: {
-        component: Checkbox as React.SFC,
+        component: Checkbox as React.FunctionComponent,
     },
     hr: {
-        component: Hr as React.SFC,
+        component: Hr as React.FunctionComponent,
     },
     table: {
-        component: Table as React.SFC,
+        component: Table as React.FunctionComponent,
     },
     thead: {
-        component: TableHead as React.SFC,
+        component: TableHead as React.FunctionComponent,
     },
     th: {
-        component: TableCell as React.SFC,
+        component: TableCell as React.FunctionComponent,
         props: {
             header: true,
         },
     },
     tbody: {
-        component: TableBody as React.SFC,
+        component: TableBody as React.FunctionComponent,
     },
     tr: {
-        component: TableRow as React.SFC,
+        component: TableRow as React.FunctionComponent,
     },
     td: {
-        component: TableCell as React.SFC,
+        component: TableCell as React.FunctionComponent,
     },
     details: {
-        component: Details as React.SFC,
+        component: Details as React.FunctionComponent,
     },
     summary: {
-        component: DetailsSummary as React.SFC,
+        component: DetailsSummary as React.FunctionComponent,
     },
 };
 

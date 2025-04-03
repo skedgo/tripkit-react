@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { I18n, translate } from '../ext_lib/react-polyglot/src/index';
 import Environment from "../env/Environment";
 import messages_en from "./i18n_en.json";
@@ -39,7 +39,8 @@ const WithTranslate = translate()(
 );
 
 interface IProps {
-    dataPromise?: { locale: string, translations: Partial<TKI18nMessages> } | Promise<{ locale: string, translations: Partial<TKI18nMessages> }>
+    dataPromise?: { locale: string, translations: Partial<TKI18nMessages> } | Promise<{ locale: string, translations: Partial<TKI18nMessages> }>;
+    children?: ReactNode;
 }
 
 interface IState {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import TripGoApi from "./TripGoApi";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
@@ -39,6 +39,7 @@ export interface IWithRoutingResultsProps {
     locale?: string;
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
     finishInitLoadingPromise?: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
+    children?: ReactNode;
 }
 
 interface IWithRoutingResultsState {

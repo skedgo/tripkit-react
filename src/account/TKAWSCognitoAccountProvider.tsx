@@ -283,7 +283,7 @@ interface IProps {
     // exclusiveModes?: boolean;
     requestUserToken?: (input: RequestUserTokenInput) => Promise<TKAuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
-    children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
+    children: React.ReactNode;
 }
 
 const TKAWSCognitoAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {

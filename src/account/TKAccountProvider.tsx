@@ -184,7 +184,7 @@ interface IProps {
     exclusiveModes?: boolean;
     requestUserToken?: (auth0AccessToken: string) => Promise<TKAuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
-    children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
+    children: React.ReactNode;
 }
 
 const TKAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {

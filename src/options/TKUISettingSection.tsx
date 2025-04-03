@@ -30,7 +30,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUISettingSection"
 };
 
-const TKUISettingSection: React.SFC<IProps> = (props: IProps) => {
+const TKUISettingSection: React.FunctionComponent<IProps> = (props: IProps) => {
     const classes = props.classes;
     const t = props.t;
     return (

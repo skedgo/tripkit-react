@@ -36,7 +36,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMapLocationPopup"
 };
 
-const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
+const TKUIMapLocationPopup: React.FunctionComponent<IProps> = (props: IProps) => {
     const location = props.location;
     const t = props.t;
     const classes = props.classes;

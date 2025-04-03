@@ -48,15 +48,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
     const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
-    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
-    if (process.env.NODE_ENV === "development") {
-        useEffect(() => {   // TODO: remove, just for development.
-            if (favouriteList.length !== 0) {
-                // setEditingFav(favouriteList[0]);
-                console.log(favouriteList);
-            }
-        }, [favouriteList]);
-    }
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);    
     const handleEditClose = async (update?: Favourite) => {
         setEditingFav(undefined);
         if (update) {

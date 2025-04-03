@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 import { TKUIConfig } from "./TKUIConfig";
 import OptionsProvider, { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import ServiceResultsProvider, { ServiceResultsContext } from "../service/ServiceResultsProvider";
@@ -12,6 +12,7 @@ import TKState from "./TKState";
 
 interface IProps {
     config: TKUIConfig;
+    children?: ReactNode;
 }
 
 class TKStateProvider extends React.Component<IProps, {}> {

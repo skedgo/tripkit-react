@@ -1,5 +1,5 @@
 import { createGenerateId } from 'react-jss'
-import * as CSS from 'csstype';
+import { Property, Properties } from 'csstype';
 import DeviceUtil from "../util/DeviceUtil";
 import Color from "../model/trip/Color";
 import genStyles from "../css/GenStyle.css";
@@ -40,7 +40,7 @@ export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): stri
     return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 6]];
 }
 
-function important(style: CSS.Properties): CSS.Properties {
+function important(style: Properties): Properties {
     const styleImportant = { ...style };
     for (const key of Object.keys(style)) {
         if (styleImportant[key].includes('!important')) {
@@ -53,13 +53,13 @@ function important(style: CSS.Properties): CSS.Properties {
 
 
 export interface TKUITheme {
-    colorPrimary: CSS.Color;
-    colorSuccess: CSS.Color;
-    colorInfo: CSS.Color;
-    colorWarning: CSS.Color;
-    colorError: CSS.Color;
+    colorPrimary: Property.Color;
+    colorSuccess: Property.Color;
+    colorInfo: Property.Color;
+    colorWarning: Property.Color;
+    colorError: Property.Color;
 
-    fontFamily: CSS.FontFamilyProperty;
+    fontFamily: Property.FontFamily;
 
     isDark: boolean;
     isLight: boolean;    // Shouldn't be customizable, it's derived: always the opposite of isDark.

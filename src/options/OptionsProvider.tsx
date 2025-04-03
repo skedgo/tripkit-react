@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { ReactNode, SetStateAction } from "react";
 import OptionsData from "../data/OptionsData";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { EventSubscription } from "fbemitter";
@@ -31,6 +31,7 @@ export const OptionsContext = React.createContext<IOptionsContext>({
 interface IProps {
     defaultValue?: TKUserProfile;
     reset?: boolean;
+    children?: ReactNode;
 }
 
 class OptionsProvider extends React.Component<IProps, { value: TKUserProfile, show: boolean }> {
