@@ -96,6 +96,24 @@
         "utility-types": "^2.1.0",
         "uuidv4": "^6.2.13"
     },
+    "overrides": {
+        "@mongodb-js/react-mapbox-gl-leaflet": {
+            "react": "18.3.1",
+            "react-dom": "18.3.1"
+        },
+        "react-leaflet-google-layer": {
+            "react": "18.3.1",
+            "react-dom": "18.3.1"
+        },
+        "react-autocomplete": {
+            "react": "18.3.1",
+            "react-dom": "18.3.1"
+        },
+        "react-styleguidist": {
+            "react": "18.3.1",
+            "react-dom": "18.3.1"
+        }
+    },
     "peerDependencies": {
         "react": ">=18.3.1",
         "react-dom": ">=18.3.1"
