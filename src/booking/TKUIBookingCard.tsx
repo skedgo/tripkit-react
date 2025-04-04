@@ -47,15 +47,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingCard"
 };
 
-type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "TICKETS" | "REVIEW" | "PAYMENT" | "DETAILS";
+type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "TICKETS" | "PROVIDER_OPTIONS_RETURN" | "TICKETS_RETURN" | "REVIEW" | "PAYMENT" | "DETAILS";
 
 function screenTitle(screen: Screens): string {
     switch (screen) {
         case "BOOKING":
             return "Add booking details";
         case "PROVIDER_OPTIONS":
+        case "PROVIDER_OPTIONS_RETURN":
             return "Select provider";
         case "TICKETS":
+        case "TICKETS_RETURN":
             return "Select Tickets";
         case "REVIEW":
             return "Review booking";
@@ -71,7 +73,9 @@ function screenCloseButton(screen: Screens): string {
         case "BOOKING":
             return "Cancel";
         case "PROVIDER_OPTIONS":
+        case "PROVIDER_OPTIONS_RETURN":
         case "TICKETS":
+        case "TICKETS_RETURN":
         case "REVIEW":
         case "PAYMENT":
             return "Back";
@@ -120,7 +124,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const [selectedProviderIndex, setSelectedProviderIndex] = useState<number | undefined>(undefined);
     const selectedProvider: AvailableProviderOption | undefined = selectedProviderIndex !== undefined ? providerOptionsForm?.availableList[selectedProviderIndex!] : undefined;
 
-    // TICKETS screens data
+    // TICKETS and TICKETS_RETURN screens data
     function isSingleFareAndSingleTicket(provider: AvailableProviderOption): boolean {
         return provider.fares?.length === 1 && provider.fares[0].max === 1;
     }
@@ -129,20 +133,40 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         try {
             const bookingResult = await TripGoApi.submitProviderAndFares(selectedProvider!);
             setWaiting(false);
-            setBookingResult(bookingResult as BookingPaymentForm);
-            const { reviews } = bookingResult as BookingPaymentForm;
-            if (reviews) {
-                // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
-                reviews.forEach((review: BookingReview) => {
-                    const timezone = trip!.segments[0].from.timezone;
-                    if (review.origin) {
-                        review.origin.timezone = timezone;
+            if (bookingResult instanceof ProviderOptionsForm) { // Provider options for return trip
+                try {
+                    setProviderOptionsFormReturn(bookingResult);
+                    // Only a single available option and no unavailable ones => Straight to ticket selection
+                    if (bookingResult.availableList.length === 1 && bookingResult.unavailableList.length === 0 &&
+                        // Except that single provider option has single fare and single ticket, in which case we prefer
+                        // to show the provider option and skip ticket selection.
+                        !(isSingleFareAndSingleTicket(bookingResult.availableList[0]))) {
+                        setSelectedProviderIndexReturn(0);
+                        pushScreen("TICKETS_RETURN");
+                    } else {
+                        pushScreen("PROVIDER_OPTIONS_RETURN");
                     }
-                    if (review.destination) {
-                        review.destination.timezone = timezone;
-                    }
-                })
-                pushScreen("REVIEW");
+                } catch (error) {
+                    UIUtil.errorMsg(error as Error);
+                } finally {
+                    setWaiting?.(false);
+                }
+            } else {
+                setBookingResult(bookingResult as BookingPaymentForm);
+                const { reviews } = bookingResult as BookingPaymentForm;
+                if (reviews) {
+                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                    reviews.forEach((review: BookingReview) => {
+                        const timezone = trip!.segments[0].from.timezone;
+                        if (review.origin) {
+                            review.origin.timezone = timezone;
+                        }
+                        if (review.destination) {
+                            review.destination.timezone = timezone;
+                        }
+                    })
+                    pushScreen("REVIEW");
+                }
             }
         } catch (error) {
             UIUtil.errorMsg(error as Error);
@@ -150,6 +174,11 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
             setWaiting?.(false);
         }
     }
+
+    // PROVIDER_OPTIONS_RETURN
+    const [providerOptionsFormReturn, setProviderOptionsFormReturn] = useState<ProviderOptionsForm | undefined>(undefined);
+    const [selectedProviderIndexReturn, setSelectedProviderIndexReturn] = useState<number | undefined>(undefined);
+    const selectedProviderReturn: AvailableProviderOption | undefined = selectedProviderIndex !== undefined ? providerOptionsFormReturn?.availableList[selectedProviderIndexReturn!] : undefined;
 
     // REVIEW and PAYMENT screens data
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
@@ -310,33 +339,55 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             }
                         }}
                     />}
-                {topScreen() === "PROVIDER_OPTIONS" &&
+                {(topScreen() === "PROVIDER_OPTIONS" || topScreen() === "PROVIDER_OPTIONS_RETURN") &&
                     <TKUIBookingProviderOptions
-                        form={providerOptionsForm!}
+                        form={topScreen() === "PROVIDER_OPTIONS" ? providerOptionsForm! : providerOptionsFormReturn!}
                         onProviderSelected={(value: AvailableProviderOption) => {
-                            setSelectedProviderIndex(providerOptionsForm!.availableList.indexOf(value));
+                            if (topScreen() === "PROVIDER_OPTIONS") {
+                                setSelectedProviderIndex(providerOptionsForm!.availableList.indexOf(value));
+                            } else {
+                                setSelectedProviderIndexReturn(providerOptionsFormReturn!.availableList.indexOf(value));
+                            }
                             if (isSingleFareAndSingleTicket(value)) {
                                 onSubmitTickets(value);
                             } else {
-                                pushScreen("TICKETS");
+                                pushScreen(topScreen() === "PROVIDER_OPTIONS" ? "TICKETS" : "TICKETS_RETURN");
                             }
                         }}
                     />}
-                {topScreen() === "TICKETS" &&
+                {(topScreen() === "TICKETS" || topScreen() === "TICKETS_RETURN") &&
                     <TKUIProviderTicketsForm
-                        provider={selectedProvider!}
+                        provider={topScreen() === "TICKETS" ? selectedProvider! : selectedProviderReturn!}
                         onChange={(tickets: TicketOption[]) => {
-                            const providerOptionsFormUpdate = Util.deepClone(providerOptionsForm!);
-                            providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
-                            setProviderOptionsForm(providerOptionsFormUpdate);
+                            if (topScreen() === "TICKETS") {
+                                const providerOptionsFormUpdate = Util.deepClone(providerOptionsForm!);
+                                providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
+                                setProviderOptionsForm(providerOptionsFormUpdate);
+                            } else {
+                                const providerOptionsFormUpdateReturn = Util.deepClone(providerOptionsFormReturn!);
+                                providerOptionsFormUpdateReturn.availableList[providerOptionsFormReturn!.availableList.indexOf(selectedProviderReturn!)!].fares = tickets;
+                                setProviderOptionsFormReturn(providerOptionsFormUpdateReturn);
+                            }
                         }}
                         onSubmit={() => {
-                            setProviderOptionsForm((value) => {
-                                const selectedProvider: AvailableProviderOption | undefined = value?.availableList[selectedProviderIndex!];
-                                onSubmitTickets(selectedProvider!);
-                                return value;
-                            });
+                            if (topScreen() === "TICKETS") {
+                                // onSubmit can be called right after onChange (for single fare and single selectionticket case), 
+                                // so this is to ensure we submit the latest version of the selected provider
+                                setProviderOptionsForm((value) => {
+                                    const selectedProvider: AvailableProviderOption | undefined = value?.availableList[selectedProviderIndex!];
+                                    onSubmitTickets(selectedProvider!);
+                                    return value;
+                                });
+                            } else {
+                                // Idem above.
+                                setProviderOptionsFormReturn((value) => {
+                                    const selectedProviderReturn: AvailableProviderOption | undefined = value?.availableList[selectedProviderIndexReturn!];
+                                    onSubmitTickets(selectedProviderReturn!);
+                                    return value;
+                                });
+                            }
                         }}
+                        key={topScreen()}   // Force re-mounting the component when switching between TICKETS and TICKETS_RETURN
                     />}
                 {topScreen() === "REVIEW" &&
                     <TKUIBookingReview
