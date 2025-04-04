@@ -33,10 +33,7 @@ export const tKUIProviderTicketsFormDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.grow,
         ...genStyles.justifyEnd,
         marginLeft: '20%',
-        '& button:only-child': {
-            ...genStyles.grow
-        },
-        '& button:not(:only-child)': {
+        '& button': {
             marginLeft: '30px'
         }
     }

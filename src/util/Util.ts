@@ -48,7 +48,7 @@ class Util {
      * Generic immutable assign, requires T to have a default constructor Util.clone can be used.
      */
 
-    public static iAssign<T>(target: T, source: Update<T>): T {
+    public static iAssign<T extends { constructor: any }>(target: T, source: Update<T>): T {
         return Object.assign(Util.clone(target), source);
     }
 

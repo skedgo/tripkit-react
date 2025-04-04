@@ -35,28 +35,36 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps) => {
     const { provider, onChange, onSubmit, onClose, cancelText, classes, t } = props;
-    const numOfTickets = provider.fares!.reduce((acc, ticket) => acc + ticket.value, 0);
-    const totalPrice = provider.fares!.reduce((acc, ticket) => acc + ticket.price * ticket.value, 0);
+    const fares = provider.fares!;
+    const numOfTickets = fares.reduce((acc, ticket) => acc + ticket.value, 0);
+    const totalPrice = fares.reduce((acc, ticket) => acc + ticket.price * ticket.value, 0);
+    const singleTicketSelection = provider.singleFareOnly && fares.every(t => t.max === 1);
     return (
         <div className={classes.main}>
             <TKUITicketSelect
-                tickets={provider.fares!}
+                title={provider.bookingTitle}
+                tickets={fares}
                 singleFareOnly={provider.singleFareOnly}
                 onChange={(tickets) => {
                     onChange(tickets);
+                    if (singleTicketSelection) {
+                        onSubmit();
+                    }
                 }}
+                groups={provider.fareGroups}
             />
             <div className={classes.divider} />
             <div className={classes.footer}>
-                <div className={classes.fareSummary}>
-                    <div>
-                        {numOfTickets + " " + (numOfTickets === 1 ? "ticket" : "tickets")}
-                    </div>
-                    <div>⋅</div>
-                    <div>
-                        {FormatUtil.toMoney(totalPrice, { nInCents: true, forceDecimals: true, zeroAsFree: false })}
-                    </div>
-                </div>
+                {!singleTicketSelection &&
+                    <div className={classes.fareSummary}>
+                        <div>
+                            {numOfTickets + " " + (numOfTickets === 1 ? "ticket" : "tickets")}
+                        </div>
+                        <div>⋅</div>
+                        <div>
+                            {FormatUtil.toMoney(totalPrice, { nInCents: true, forceDecimals: true, zeroAsFree: false })}
+                        </div>
+                    </div>}
                 <div className={classes.buttons}>
                     {onClose &&
                         <TKUIButton
@@ -64,12 +72,13 @@ const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps)
                             type={TKUIButtonType.SECONDARY}
                             onClick={() => onClose()}
                         />}
-                    <TKUIButton
-                        text={t("Continue")}
-                        onClick={onSubmit}
-                        disabled={!provider.fares!.some(ticket => ticket.value > 0)}
-                        name="continue-tickets-btn"
-                    />
+                    {!singleTicketSelection &&
+                        <TKUIButton
+                            text={t("Continue")}
+                            onClick={onSubmit}
+                            disabled={!fares.some(ticket => ticket.value > 0)}
+                            name="continue-tickets-btn"
+                        />}
                 </div>
             </div>
         </div>

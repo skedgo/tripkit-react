@@ -195,10 +195,10 @@ class TripGoApi {
             .then(this.deserializeProviderOptions);
     }
 
-    public static submitProviderAndFares(provider: AvailableProviderOption): Promise<BookingPaymentForm> {
-        return TripGoApi.apiCallUrl(provider.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(provider))
-            // For testing without performing booking.            
-            .then(this.deserializeBookingResult);
+    // Can return the payment form if the trip is one-way-only, or the the provider options form if the trip is round-trip.
+    public static async submitProviderAndFares(provider: AvailableProviderOption): Promise<BookingPaymentForm | ProviderOptionsForm> {
+        const resultJson = await TripGoApi.apiCallUrl(provider.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(provider));
+        return provider.bookingResponseType === "REVIEW" ? this.deserializeBookingResult(resultJson) : this.deserializeProviderOptions(resultJson);
     }
 
     public static deserializeRoutingResults(resultsJson): RoutingResults {

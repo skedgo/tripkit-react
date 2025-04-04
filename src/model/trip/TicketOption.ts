@@ -15,6 +15,10 @@ export interface PurchasedTicket {
     status: string;
 }
 
+export interface FareGroup {
+    id: string;
+    name: string;
+}
 @JsonObject
 class TicketOption implements ITicketOption {
     @JsonProperty("id", String, true)
@@ -33,6 +37,10 @@ class TicketOption implements ITicketOption {
     public max?: number = undefined;
     @JsonProperty("purchasedTickets", [Any], true)
     public purchasedTickets?: PurchasedTicket[] = undefined;
+    @JsonProperty("type", String, true)
+    public type?: string = undefined;
+    @JsonProperty("groups", [Any], true)
+    public groups?: FareGroup[] = undefined;
 }
 
 export default TicketOption;

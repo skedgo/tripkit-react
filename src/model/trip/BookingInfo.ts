@@ -1,6 +1,6 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
 import Color from "./Color";
-import TicketOption from "./TicketOption";
+import TicketOption, { FareGroup } from "./TicketOption";
 import ModeInfo from "./ModeInfo";
 
 @JsonObject
@@ -65,6 +65,8 @@ class AvailableProviderOption {
     public maxPrice: number = 0;
     @JsonProperty("fares", [TicketOption], true)
     public fares: TicketOption[] | undefined = undefined;
+    @JsonProperty("fareGroups", [Any], true)
+    public fareGroups?: FareGroup[] = undefined;
     @JsonProperty("modeInfo", ModeInfo, true)
     public modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty("singleFareOnly", Boolean, true)

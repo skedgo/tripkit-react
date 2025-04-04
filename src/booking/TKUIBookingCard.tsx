@@ -129,8 +129,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         try {
             const bookingResult = await TripGoApi.submitProviderAndFares(selectedProvider!);
             setWaiting(false);
-            setBookingResult(bookingResult);
-            const { reviews } = bookingResult;
+            setBookingResult(bookingResult as BookingPaymentForm);
+            const { reviews } = bookingResult as BookingPaymentForm;
             if (reviews) {
                 // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
                 reviews.forEach((review: BookingReview) => {
@@ -330,7 +330,13 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
                             setProviderOptionsForm(providerOptionsFormUpdate);
                         }}
-                        onSubmit={() => onSubmitTickets(selectedProvider!)}
+                        onSubmit={() => {
+                            setProviderOptionsForm((value) => {
+                                const selectedProvider: AvailableProviderOption | undefined = value?.availableList[selectedProviderIndex!];
+                                onSubmitTickets(selectedProvider!);
+                                return value;
+                            });
+                        }}
                     />}
                 {topScreen() === "REVIEW" &&
                     <TKUIBookingReview
