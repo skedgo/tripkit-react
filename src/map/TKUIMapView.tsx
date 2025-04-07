@@ -16,7 +16,6 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
-import ReactResizeDetector from "../util_components/ReactResizeDetector";
 import { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
 import TKUIMapLocations, { TKUIModeLocationMarker } from "./TKUIMapLocations";
@@ -50,6 +49,7 @@ import TKMapboxGLLayer from "./TKMapboxGLLayer";
 import TKLeafletLayer from "./TKLeafletLayer";
 import { MultiPolygon } from "geojson";
 import TKUIMapLocationMarker from "./TKUIMapLocationMarker";
+import ResizeObserverWrapper from "../util_components/ResizeObserverWrapper";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -739,11 +739,13 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.children}
                     {this.props.childrenThis?.(this)}
                 </RLMap>
-                <ReactResizeDetector handleWidth={true} handleHeight={true}
+                <ResizeObserverWrapper
                     onResize={() => {
                         this.onResize();
                         this.props.onResize?.();
-                    }} targetRef={this.mainRef}
+                        console.log("onResize 2");
+                    }}
+                    targetRef={this.mainRef}
                 />
                 {this.props.showCurrLocBtn !== false &&
                     <TKUITooltip
