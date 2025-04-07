@@ -13,7 +13,7 @@ export function ResizeObserverWrapper({ targetRef, onResize }) {
         return () => {
             observer.disconnect();
         };
-    }, [targetRef, onResize]);
+    }, [targetRef]);
 
     return null; // like ReactResizeDetector, nothing is rendered
 }
