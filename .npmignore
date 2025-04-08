@@ -9,7 +9,6 @@
 /.babelrc
 /.env
 /.gitignore
-/.gitlab-ci.yml
 /.svgorc
 /package-lock.json
 /README_DEV.md
