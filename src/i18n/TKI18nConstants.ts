@@ -4,5 +4,13 @@
 export const i18n: { t: any, locale: string, distanceUnit: () => "metric" | "imperial" } = {
     t: (key: string, params?: any) => "",
     locale: "en",
-    distanceUnit: () => i18n.locale === "en-US" ? "imperial" : "metric"
+    distanceUnit: () => {
+        switch (i18n.locale) {
+            case "en-US":
+            case "en-GB":
+                return "imperial";
+            default:
+                return "metric";
+        }
+    }
 }

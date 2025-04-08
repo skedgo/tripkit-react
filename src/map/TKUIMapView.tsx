@@ -743,7 +743,6 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     onResize={() => {
                         this.onResize();
                         this.props.onResize?.();
-                        console.log("onResize 2");
                     }}
                     targetRef={this.mainRef}
                 />
