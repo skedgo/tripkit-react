@@ -17,15 +17,14 @@ npm install tripkit-react
 
 ```
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import 'reflect-metadata';  // Important: Polyfill for Metadata Reflection API
+import { createRoot } from 'react-dom/client';
 import { TKRoot, TKUITripPlanner } from 'tripkit-react';
 
 const config = {
     apiKey: <MY_TRIPGO_API_KEY>
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root'));
 
 root.render(
   <TKRoot config={config}>
