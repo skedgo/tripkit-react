@@ -261,14 +261,6 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     };
 }
 
-export function emptyValues<T>(sample: T): T {
-    const emptyValues = {};
-    for (const key of Object.keys(sample)) {
-        emptyValues[key] = {};
-    }
-    return emptyValues as T;
-}
-
 function isObject(x): boolean {
     return typeof x === 'object' && x !== null;
 }

@@ -19,7 +19,6 @@
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
     "babel-plugin-typescript-to-proptypes",
-    "@babel/plugin-proposal-export-default-from",
-    "@babel/proposal-object-rest-spread"
+    "@babel/plugin-proposal-export-default-from"
   ]
  }
