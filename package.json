@@ -164,7 +164,7 @@
         "msw": "^0.48.0",
         "react-docgen": "^5.3.0",
         "react-docgen-displayname-handler": "^3.0.1",
-        "react-docgen-typescript": "^1.20.1",
+        "react-docgen-typescript": "^2.2.2",
         "react-scripts": "5.0.1",
         "react-styleguidist": "^13.1.4",
         "svg-react-loader": "^0.4.6",
