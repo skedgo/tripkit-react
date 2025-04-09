@@ -18,6 +18,7 @@ export interface PurchasedTicket {
 export interface FareGroup {
     id: string;
     name: string;
+    selected: boolean;
 }
 @JsonObject
 class TicketOption implements ITicketOption {
@@ -39,8 +40,8 @@ class TicketOption implements ITicketOption {
     public purchasedTickets?: PurchasedTicket[] = undefined;
     @JsonProperty("type", String, true)
     public type?: string = undefined;
-    @JsonProperty("groups", [Any], true)
-    public groups?: FareGroup[] = undefined;
+    @JsonProperty("groupIDs", [String], true)
+    public groupIDs?: string[] = undefined;
 }
 
 export default TicketOption;

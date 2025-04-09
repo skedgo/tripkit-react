@@ -123,6 +123,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     groups?: FareGroup[];
     title?: string;
     onChange?: (update: TicketOption[]) => void;
+    onSelectedGroup?(group: FareGroup): void;
     singleFareOnly?: boolean;
 }
 
@@ -137,7 +138,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUITicketSelect: React.FunctionComponent<IProps> =
-    ({ tickets, groups, title, onChange, singleFareOnly, classes, injectedStyles, theme }) => {
+    ({ tickets, groups, title, onChange, onSelectedGroup, singleFareOnly, classes, injectedStyles, theme }) => {
         const readonly = !onChange;
         const singleTicketSelection = singleFareOnly && tickets.every(t => t.max === 1);
         const onTicketValueChange = (ticket: TicketOption, increase: boolean) => {
@@ -151,13 +152,13 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
         const purchasedTickets = tickets?.reduce((ptickets, ticket) => ptickets.concat(ticket.purchasedTickets ?? []), [] as PurchasedTicket[]);
         // Select by default the first group with a selected ticket. For the single ticket selection case, this allows to preserve the group
         // selecation state along in the tickets array, so going forward and back to this view preserves the group selection.
-        const [selectedGroup, setSelectedGroup] = useState<FareGroup | undefined>(groups?.find(group => tickets.some(ticket => ticket.value > 0 && ticket.groups?.some(tg => tg.id === group.id))) ?? groups?.[0]);
-        const selectedGroupTickets = selectedGroup ? tickets!.filter(ticket => ticket.groups?.some(tg => tg.id === selectedGroup.id)) : tickets;
-        const groupTabs = groups &&
+        const selectedGroup = groups?.find(group => group.selected) ?? groups?.[0];
+        const selectedGroupTickets = selectedGroup ? tickets!.filter(ticket => ticket.groupIDs?.some(tgid => tgid === selectedGroup.id)) : tickets;
+        const groupTabs = groups && onSelectedGroup &&
             <div className={classes.tabs}>
                 <Tabs
                     value={selectedGroup}
-                    onChange={(_event, value) => setSelectedGroup(value)}
+                    onChange={(_event, value) => onSelectedGroup(value)}
                 >
                     {groups.map((group, i) =>
                         <Tab key={i} value={group} label={Util.toFirstUpperCase(group.name)} disableFocusRipple disableTouchRipple />)}

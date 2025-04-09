@@ -358,15 +358,15 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                 {(topScreen() === "TICKETS" || topScreen() === "TICKETS_RETURN") &&
                     <TKUIProviderTicketsForm
                         provider={topScreen() === "TICKETS" ? selectedProvider! : selectedProviderReturn!}
-                        onChange={(tickets: TicketOption[]) => {
+                        onChange={(providerUpdate: AvailableProviderOption) => {
                             if (topScreen() === "TICKETS") {
                                 const providerOptionsFormUpdate = Util.deepClone(providerOptionsForm!);
-                                providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!].fares = tickets;
+                                providerOptionsFormUpdate.availableList[providerOptionsForm!.availableList.indexOf(selectedProvider!)!] = providerUpdate;
                                 setProviderOptionsForm(providerOptionsFormUpdate);
                             } else {
-                                const providerOptionsFormUpdateReturn = Util.deepClone(providerOptionsFormReturn!);
-                                providerOptionsFormUpdateReturn.availableList[providerOptionsFormReturn!.availableList.indexOf(selectedProviderReturn!)!].fares = tickets;
-                                setProviderOptionsFormReturn(providerOptionsFormUpdateReturn);
+                                const providerOptionsFormReturnUpdate = Util.deepClone(providerOptionsFormReturn!);
+                                providerOptionsFormReturnUpdate.availableList[providerOptionsFormReturn!.availableList.indexOf(selectedProviderReturn!)!] = providerUpdate;
+                                setProviderOptionsFormReturn(providerOptionsFormReturnUpdate);
                             }
                         }}
                         onSubmit={() => {

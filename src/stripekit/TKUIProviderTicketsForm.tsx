@@ -6,14 +6,14 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIConfig } from "../config/TKUIConfig";
 import { TKUICardClientProps } from "../card/TKUICard";
 import { AvailableProviderOption } from "../model/trip/BookingInfo";
-import TicketOption from "../model/trip/TicketOption";
 import TKUITicketSelect from "./TKUITicketSelect";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import FormatUtil from "../util/FormatUtil";
+import Util from "../util/Util";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     provider: AvailableProviderOption;
-    onChange: (update: TicketOption[]) => void;
+    onChange: (update: AvailableProviderOption) => void;
     onSubmit: () => void;
     onClose?: () => void;
     cancelText?: string;
@@ -46,12 +46,18 @@ const TKUIProviderTicketsForm: React.FunctionComponent<IProps> = (props: IProps)
                 tickets={fares}
                 singleFareOnly={provider.singleFareOnly}
                 onChange={(tickets) => {
-                    onChange(tickets);
+                    const providerUpdate = Util.iAssign(provider, { fares: tickets });
+                    onChange(providerUpdate);
                     if (singleTicketSelection) {
                         onSubmit();
                     }
                 }}
                 groups={provider.fareGroups}
+                onSelectedGroup={(group) => {
+                    const providerUpdate = Util.deepClone(provider);
+                    provider.fareGroups?.forEach(g => g.selected = g.id === group.id ? true : false);
+                    onChange(providerUpdate);
+                }}
             />
             <div className={classes.divider} />
             <div className={classes.footer}>
