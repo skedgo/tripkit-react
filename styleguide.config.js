@@ -1,5 +1,6 @@
 const path = require('path');
 const sectionsJson = require('./src/doc/data/sections.json');
+const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
 module.exports = {
     styleguideDir: 'docs/site/reference',
@@ -36,6 +37,16 @@ module.exports = {
                 maxWidth: 1300
             }
         }
+    },
+    dangerouslyUpdateWebpackConfig(webpackConfig, env) {
+        // Remove ModuleScopePlugin to allow imports outside of src/
+        webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.filter(
+            plugin => !(plugin instanceof ModuleScopePlugin)
+        );
+
+        console.log("✅ Removed ModuleScopePlugin restriction");
+
+        return webpackConfig;
     }
 
 };
