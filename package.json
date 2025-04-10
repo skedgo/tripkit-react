@@ -61,7 +61,7 @@
         "leaflet": "^1.6.0",
         "leaflet-css": "^0.1.0",
         "mapbox-gl": "^1.11.1",
-        "mapbox-gl-leaflet": "^0.0.15",
+        "mapbox-gl-leaflet": "^0.0.16",
         "mapbox.js": "^3.1.1",
         "moment": "^2.22.2",
         "moment-timezone": "^0.5.21",
