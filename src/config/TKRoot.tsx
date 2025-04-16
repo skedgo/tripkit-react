@@ -15,13 +15,13 @@ interface IProps {
      * @ctype
      */
     config: TKUIConfig;
-    children: ((state: TKState) => React.ReactNode) | React.ReactNode;    
+    children: ((state: TKState) => React.ReactNode) | React.ReactNode;
 }
 
 /**
- * Component to be used as root of (the sub-tree of the app using) the SDK components.
- * It provides the environment that handles the global state of the SDK ([](TKState)), the TripGo API traffic, and the
- * injection of general and component-specific configs to the system.
+ * Component wrapping all the other SDK components. It allows to specify global and component-specific configs,
+ * and also provides a shared state and actions layer, which SDK components can optionally connect to in order to
+ * share data and interact with the TripGo API.
  */
 
 class TKRoot extends React.Component<IProps, {}> {
