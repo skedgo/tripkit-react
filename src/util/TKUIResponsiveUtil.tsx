@@ -34,8 +34,8 @@ export const TKUIViewportUtil: React.FunctionComponent<{ children: (props: TKUIV
         );
     };
 
-export function useResponsiveUtil(): { portrait: boolean, landscape: boolean } {
-    const isPortrait = useMediaQuery({ query: `(max-width: ${TKUIResponsiveUtil.getPortraitWidth()}px)` });
+export function useResponsiveUtil({ maxWidth = TKUIResponsiveUtil.getPortraitWidth() }: { maxWidth?: number } = {}): { portrait: boolean, landscape: boolean } {
+    const isPortrait = useMediaQuery({ query: `(max-width: ${maxWidth}px)` });
     return { portrait: isPortrait, landscape: !isPortrait };
 }
 
