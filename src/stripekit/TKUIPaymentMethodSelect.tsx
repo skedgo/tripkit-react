@@ -79,9 +79,7 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 
-export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], subOptionsPlaceholder?: string, selectedSubOption?: SelectOption } };
-// selectedSubOption will be changed by mutating the object, so the clients of this component won't be aware of an update on this. That shouldn't be a problem since just need
-// to check the value on "Purchase" click (and, e.g. show a "required" error if no option was selected).
+export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod } };
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     value: SGPaymentMethod;
     options: SGPaymentMethod[];
@@ -101,15 +99,6 @@ function iconFromBrand(brand: string) {
 const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
     ({ value, options, onChange, onRemove, classes, theme }) => {
         const [editing, setEditing] = useState<boolean>(false);
-        const [selectedSubOptionMap, setSelectedSubOptionMap] = useState<Map<SGPaymentMethod, SelectOption | undefined>>(() => {
-            const map = new Map<SGPaymentMethod, SelectOption | undefined>();
-            options.forEach(paymentMethod => {
-                if (paymentMethod.data?.selectedSubOption) {    // Option specified as the default.
-                    map.set(paymentMethod, paymentMethod.data?.selectedSubOption);
-                }
-            });
-            return map;
-        });
         function renderPaymentMethod(paymentMethod: SGPaymentMethod, i: number): ReactNode {
             const paymentMethodClass = classNames(classes.card, value === paymentMethod && classes.selected);
             switch (paymentMethod.paymentOption.paymentMode) {
@@ -158,32 +147,13 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                         </div>
                     );
                 case "INVOICE":
-                    const selectOptions = paymentMethod.data!.subOptions!;
                     return (
                         <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
                             <TKUIRadio checked={value === paymentMethod} theme={theme} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
                             </div>
-                            <div>{paymentMethod.paymentOption.description} to</div>
-                            <div style={{ marginLeft: '30px', color: black(1) }}>
-                                <TKUISelect
-                                    options={selectOptions}
-                                    value={selectedSubOptionMap.get(paymentMethod)}
-                                    onChange={(option) => {
-                                        paymentMethod.data!.selectedSubOption = option;
-                                        const update = new Map(selectedSubOptionMap);
-                                        update.set(paymentMethod, option);
-                                        setSelectedSubOptionMap(update);
-                                        onChange(paymentMethod);
-                                    }}
-                                    placeholder={paymentMethod.data!.subOptionsPlaceholder}
-                                    isDisabled={paymentMethod !== value}
-                                // styles={{
-                                //     main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
-                                // }}
-                                />
-                            </div>
+                            <div>{paymentMethod.paymentOption.description} to department</div>
                         </div>
                     );
                 default:
