@@ -118,7 +118,7 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
             setCount(undefined);
             setWaiting(true);
         }
-        return requestBookings({ valid, max: silent ? (bookings ?? []).length + 1 : undefined })
+        return requestBookings({ valid, max: silent ? (bookings ?? []).length : undefined })
             .then((result: ConfirmedBookingsResult) => {
                 setBookings(result.bookings);
                 setCountValid(result.count);
@@ -155,13 +155,15 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
         if (!signedIn) {
             return;
         }
-        const refreshInterval = setInterval(() => refreshBookings({ valid: section === Sections.Valid }), 60000);
+        const valid = section === Sections.Valid;
+        // Refresh bookings every minute if valid, every 10 minutes if expired
+        const refreshInterval = setInterval(() => refreshBookings({ valid }), 60_000 * (valid ? 1 : 10));
         return () => {
             if (refreshInterval) {
                 clearTimeout(refreshInterval);
             }
         }
-    }, [bookingsValid, bookingsExpired, setBookingsValid, setBookingsExpired, waitingValid, waitingExpired, signedIn]);
+    }, [bookingsValid, bookingsExpired, setBookingsValid, setBookingsExpired, waitingValid, waitingExpired, signedIn, section === Sections.Valid]);
 
     const tabs =
         <Tabs
