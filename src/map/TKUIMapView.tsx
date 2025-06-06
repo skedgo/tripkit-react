@@ -475,7 +475,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     private userLocationSubscription?: any;
 
-    private onTrackUserLocation(fit: boolean = false, onError?: (error: Error) => void) {
+    public onTrackUserLocation(fit: boolean = false, onError?: (error: Error) => void) {
         fit && this.state.userLocation && this.fitMap(Location.create(this.state.userLocation.latLng, "", "", ""), null);
         if (this.userLocationSubscription) {
             return;
@@ -494,6 +494,15 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     this.setState({ userLocation: undefined });
                     onError && onError(error);
                 });
+    }
+
+    public stopTrackingUserLocation() {
+        if (this.userLocationSubscription) {
+            this.userLocationSubscription.unsubscribe();
+            this.userLocationSubscription = undefined;
+        }
+        this.setState({ userLocation: undefined });
+        this.showUserLocTooltip(undefined);
     }
 
     private showUserLocTooltip(text: string | undefined) {
