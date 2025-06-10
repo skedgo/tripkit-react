@@ -9,6 +9,7 @@ import BookingInfo, { AvailableProviderOption, BookingField, ProviderOptionsForm
 import BookingReview from "../model/trip/BookingReview";
 import { i18n } from "../i18n/TKI18nConstants";
 import { BookingPaymentForm } from "../model/payment/BookingPaymentForm";
+import { v4 as uuidv4 } from 'uuid';
 
 type TripGoApiHeader = "x-tripgo-version" | "x-tripgo-key" | "x-tripgo-client-id" | "x-tsp-client-userid" | "x-tsp-client-tenantid" | "x-account-access-token" | "userid" | "usertoken";
 export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
@@ -23,6 +24,7 @@ class TripGoApi {
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
     public static userToken?: string = undefined;
+    public static uuid: string = uuidv4();
     public static resetUserToken: () => void = () => { };
     public static clientID?: string = undefined;
     public static accountAccessToken?: string = undefined;
@@ -81,8 +83,10 @@ class TripGoApi {
                 'referer': 'https://tripgo.com',
                 'accept': 'application/json',
                 'content-type': 'application/json',
-                ...this.userToken && {
+                ...this.userToken ? {
                     'usertoken': this.userToken
+                } : {
+                    'x-tripgo-uuid': this.uuid
                 },
                 ...this.accountAccessToken && {
                     'x-account-access-token': this.accountAccessToken
