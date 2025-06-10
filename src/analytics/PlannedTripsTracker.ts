@@ -34,12 +34,18 @@ class PlannedTripsTracker {
         this._selected = value;
     }
 
-    public scheduleTrack(props: { long?: boolean, anonymous?: boolean }) {
-        const { long, anonymous } = props;
+    public scheduleTrack(props: { anonymous?: boolean }) {
+        const { anonymous } = props;
         if (this.timeoutId !== null) {
             clearTimeout(this.timeoutId);
         }
-        this.timeoutId = setTimeout(() => this.track(!!anonymous), long ? 10000 : 2000);
+        this.timeoutId = setTimeout(() => this.track(!!anonymous), 5000);
+    }
+
+    public cancelScheduledTrack() {
+        if (this.timeoutId !== null) {
+            clearTimeout(this.timeoutId);
+        }
     }
 
     public track(anonymous: boolean) {
