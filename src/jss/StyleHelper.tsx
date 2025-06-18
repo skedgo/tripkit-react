@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { JssProvider, useTheme, createUseStyles } from "react-jss";
 import { Subtract } from "utility-types";
 import { Classes } from "jss";
@@ -239,6 +239,22 @@ export function withStyleInjection<
     }
 }
 
+export function useStyles<
+    PROPS extends { styles?: TKUICustomStyles<STYLE, PROPS> },
+    STYLE,
+    OUTPROPS = PROPS & TKUIWithClasses<STYLE, PROPS>
+>(props: PROPS, stylesJss: StyleCreator<keyof STYLE, TKUITheme, PROPS>): OUTPROPS {
+    // >(props: PROPS, stylesJss: TKUIStyles<STYLE, PROPS>): OUTPROPS {
+    const theme = useTheme();
+    const resultStyles = props.styles ? overrideStyles(stylesJss, props.styles) : stylesJss;
+    const useStylesJSS = useMemo(() => createUseStyles<Extract<keyof STYLE, string>, PROPS, TKUITheme>(resultStyles as ((theme: TKUITheme) => Styles<Extract<keyof STYLE, string>, PROPS>)), []);
+    const classes = useStylesJSS({ ...props, theme: theme as any });
+    const injectedStyles = resultStyles(theme as any) as any;
+    // const appClasses = useAppGlobalStyles({ theme: theme as any });
+    const consumerProps = { ...props, classes, injectedStyles } as OUTPROPS; // See why I need to do this.
+    return consumerProps;
+}
+
 export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     Consumer: React.ComponentType<PROPS>,
     stylesJss: (theme: TKUITheme) => STYLE) {
@@ -247,13 +263,16 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
         const theme = useTheme<TKUITheme>();
         const classes = useStyles({ ...props, theme });
         const i18nContext = useContext(TKI18nContext);
-        return <Consumer
-            {...props}
-            classes={classes}
-            injectedStyles={stylesJss(theme)}
-            refreshStyles={() => { }}
-            theme={theme}
-            {...i18nContext} />;
+        return (
+            <Consumer
+                {...props}
+                classes={classes}
+                injectedStyles={stylesJss(theme)}
+                refreshStyles={() => { }}
+                theme={theme}
+                {...i18nContext}
+            />
+        );
     };
     return (props: Subtract<PROPS, TKUIWithClasses<STYLE, PROPS>>) => {
         const consumerProps = { ...props } as PROPS; // See why I need to do this.
