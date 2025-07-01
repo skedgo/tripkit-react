@@ -982,6 +982,10 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         return this.leafletElement;
     }
 
+    public getUserCurrentPosition(): TKUserPosition | undefined {
+        return this.state.userLocation;
+    }
+
 }
 
 let geocodingData: MultiGeocoder;
