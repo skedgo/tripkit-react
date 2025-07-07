@@ -20,3 +20,7 @@ nav:
 
 theme:
     name: skedgo
+
+markdown_extensions:
+    - toc:
+          permalink: true
