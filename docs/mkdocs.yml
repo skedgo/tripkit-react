@@ -2,6 +2,7 @@ site_name: TripKit SDK for React
 site_author: SkedGo Pty Ltd
 site_description: Documentation of TripKit React - the React SDK of the TripGo API.
 docs_dir: src_mkdocs
+copyright: © 2025 SkedGo. All rights reserved.
 
 nav:
     - Getting Started: index.md
@@ -10,13 +11,12 @@ nav:
           - Customization: reference/#/Customization
           - Example Use Cases: reference/#/Example%20Use%20Cases
           - Components API: reference/#/Components%20API
-    - Developer:
-          - Docs: https://developer.tripgo.com/
-          - API: https://developer.tripgo.com/specs
-          - Android: https://android.developer.tripgo.com
-          - iOS: https://ios.developer.tripgo.com
-          - React: https://react.developer.tripgo.com
-    - SkedGo: https://www.skedgo.com
 
 theme:
     name: skedgo
+    highlightjs: true
+    hljs_style: atom-one-dark
+
+markdown_extensions:
+    - toc:
+          permalink: "#"
