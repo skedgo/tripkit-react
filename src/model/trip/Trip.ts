@@ -53,6 +53,8 @@ class Trip {
     @JsonProperty("availabilityInfo", String, true)
     public availabilityInfo?: string = undefined;
 
+    public reference?: string;
+
     private _satappQuery: string = "";
     private _arrivalSegment: Segment | undefined;
 

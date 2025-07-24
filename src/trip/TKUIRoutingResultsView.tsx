@@ -4,7 +4,7 @@ import { tKUIResultsDefaultStyle } from "./TKUIRoutingResultsView.css";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import TripGroup from "../model/trip/TripGroup";
-import TKUICard, { CardPresentation } from "../card/TKUICard";
+import TKUICard, { CardPresentation, TKUICardClientProps } from "../card/TKUICard";
 import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import { default as TKUITripRow, TKTripCostType } from "./TKUITripRow";
@@ -128,6 +128,11 @@ interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, P
      * @default true
      */
     automaticTripSelection?: boolean;
+
+    /**
+         * @ctype TKUICard props
+         */
+    cardProps?: TKUICardClientProps;
 }
 
 interface IConsumedProps {
@@ -353,7 +358,7 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
     }
 
     public render(): React.ReactNode {
-        const { query: routingQuery, onQueryChange, showTransportsBtn = true, classes, t, injectedStyles } = this.props;
+        const { query: routingQuery, onQueryChange, showTransportsBtn = true, cardProps, classes, t, injectedStyles } = this.props;
         const showTimeSelect = onQueryChange && this.props.showTimeSelect !== false;
         let error: JSX.Element | undefined = undefined;
         const routingError = this.props.routingError;
@@ -458,6 +463,7 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                 slideUpOptions={this.props.slideUpOptions}
                 // Flex grow on body seem not take effect on Safari.
                 styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({ height: '100%' }) } : undefined}
+                {...cardProps}
             >
                 <div className={classes.main}>
                     {!routingError && this.props.values.length > 0 &&

@@ -27,7 +27,7 @@ export const tKUIMapViewDefaultStyle = (theme: TKUITheme) => ({
         '& .leaflet-bar': {
             boxShadow: 'none',
             ...theme.cardBackground,
-            ...genStyles.borderRadius(4)
+            borderRadius: '4px'
         },
         '& .leaflet-bar a:first-child': {
             ...theme.divider

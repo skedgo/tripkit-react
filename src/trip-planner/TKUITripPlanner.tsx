@@ -78,6 +78,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderTopRight?: () => React.ReactNode;
     transportSettingsUI?: "BRIEF" | "FULL" | "BRIEF_TO_FULL";
     hideSearch?: boolean;
+    hideQueryInput?: boolean;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext, IAccountContext {
@@ -558,7 +559,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIMyBookings
                 onRequestClose={() => this.setState({ showMyBookings: false })}
             />;
-        const queryInput = directionsView &&
+        const queryInput = !this.props.hideQueryInput && directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
             !this.props.selectedTripSegment &&    // not displaying MxM view
             emptyCardStack &&
@@ -682,7 +683,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 DeviceUtil.isTouch() ? undefined :
                                     this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             draggable: DeviceUtil.isTouch(),
-                            modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalUp: this.props.landscape ? { top: this.props.hideQueryInput ? cardSpacing() : 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                             modalMiddle: { top: 55, unit: '%' },
                             modalDown: { top: 90, unit: '%' }
                         }}

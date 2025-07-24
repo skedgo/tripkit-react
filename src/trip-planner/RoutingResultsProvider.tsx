@@ -1,5 +1,5 @@
 import * as React from "react";
-import withRoutingResults, { IWithRoutingResultsProps } from "../api/WithRoutingResults";
+import withRoutingResults, { IWithRoutingResultsProps, IWithRoutingResultsState } from "../api/WithRoutingResults";
 import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
@@ -26,6 +26,7 @@ export interface IRoutingResultsContext {
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
     onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise<Trip[] | undefined>;
+    setRoutingState: (routingState: Partial<IWithRoutingResultsState>) => void;
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -87,6 +88,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onQueryChange: (query: RoutingQuery) => { },
     onQueryUpdate: (update: Partial<RoutingQuery>) => { },
     onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise.resolve(undefined),
+    setRoutingState: (routingState: Partial<IWithRoutingResultsState>) => { },
     viewport: { center: MapUtil.worldCoords, zoom: 2 },
     onViewportChange: (viewport: { center?: LatLng, zoom?: number }) => { },
     computeTripsForQuery: false,

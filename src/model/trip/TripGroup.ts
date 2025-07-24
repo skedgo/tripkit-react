@@ -1,5 +1,5 @@
 import Trip from "./Trip";
-import {Any, JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 
 @JsonObject
 class TripGroup extends Trip {
@@ -16,6 +16,10 @@ class TripGroup extends Trip {
 
     get trips(): Trip[] {
         return this._trips;
+    }
+
+    set trips(value: Trip[]) {
+        this._trips = value;
     }
 
     get frequency(): number | null {

@@ -42,7 +42,7 @@ export interface IWithRoutingResultsProps {
     children?: ReactNode;
 }
 
-interface IWithRoutingResultsState {
+export interface IWithRoutingResultsState {
     query: RoutingQuery;
     preFrom?: Location;
     preTo?: Location;
@@ -101,6 +101,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onQueryUpdate = this.onQueryUpdate.bind(this);
             this.clearTrips = this.clearTrips.bind(this);
             this.onTripJsonUrl = this.onTripJsonUrl.bind(this);
+            this.setRoutingState = this.setRoutingState.bind(this);
             this.onChange = this.onChange.bind(this);
             this.setSelectedSegment = this.setSelectedSegment.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
@@ -719,6 +720,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     onQueryChange={this.onQueryChange}
                     onQueryUpdate={this.onQueryUpdate}
                     onTripJsonUrl={this.onTripJsonUrl}
+                    setRoutingState={this.setRoutingState}
                     preFrom={this.state.preFrom}
                     preTo={this.state.preTo}
                     onPreChange={(from: boolean, location?: Location) => {
@@ -830,6 +832,19 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return trips;
             }).catch((e) => Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false, e.toString()))
             )
+        }
+
+        public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
+            this.setState({
+                query,
+                trips,
+                selected,
+                computeTripsForQuery: true,
+                waiting: false
+            }, () => this.refreshRegion());
+            if (selected) {
+                this.onReqRealtimeFor(selected);
+            }
         }
 
         public resultsFromJsonString(tripUrl: string): Promise<RoutingResults> {
