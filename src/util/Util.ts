@@ -19,6 +19,9 @@ class Util {
      */
 
     public static clone<T extends { constructor: any }>(instance: T): T {
+        if (!instance || !instance.constructor) {
+            console.log("Instance must have a constructor", instance);
+        }
         return Object.assign(new (instance.constructor as { new(): T })(), instance);
     }
 

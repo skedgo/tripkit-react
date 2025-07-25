@@ -74,8 +74,13 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         renderIcon: () => <IconCity />
     });
     RegionsData.instance.requireRegions().then(() => {
-        citiesGeocoder.setValues(RegionsData.instance.getCities()!
-            .map((city: City) => Util.iAssign(city, { source: TKDefaultGeocoderNames.cities })));
+        const cities = RegionsData.instance.getCities();
+        try {
+            citiesGeocoder.setValues(cities!
+                .map((city: City) => Util.iAssign(city, { source: TKDefaultGeocoderNames.cities })));
+        } catch (e) {
+            console.log("Error setting cities in geocoder", e, cities);
+        }
     });
 
     const favToLocations = (favourites: Favourite[], recent: boolean) => {
