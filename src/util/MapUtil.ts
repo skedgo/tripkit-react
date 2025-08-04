@@ -92,6 +92,9 @@ class MapUtil {
     }
 
     public static boundsFromLatLngArray(latLngArray: LatLng[]): BBox {
+        if (latLngArray.length === 1) {
+            return BBox.createBBox(latLngArray[0], latLngArray[0]);
+        }
         return this.turfBBoxToBBox(bbox(lineString(latLngArray.map(latLng => [latLng.lng, latLng.lat]))))
     }
 
