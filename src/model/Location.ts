@@ -45,6 +45,10 @@ class Location extends LatLng {
     public state?: string = undefined;
     @JsonProperty('zip', String, true)
     public zip?: string = undefined;
+    @JsonProperty("w3w", String, true)
+    public readonly w3w?: string = undefined;
+    @JsonProperty("w3wInfoURL", String, true)
+    public readonly w3wInfoURL?: string = undefined;
 
     public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
