@@ -3,6 +3,7 @@ import BBox from "../BBox";
 import MapUtil from "../../util/MapUtil";
 import LatLng from "../LatLng";
 import City from "../location/City";
+import { MultiPolygon } from "geojson";
 
 @JsonObject
 class Region {
@@ -25,6 +26,10 @@ class Region {
 
     get polygon(): string {
         return this._polygon;
+    }
+
+    get polygonGeojson(): MultiPolygon {
+        return MapUtil.decodePolylineGeoJsonMultiPolygon(this._polygon);
     }
 
     get timezone(): string {

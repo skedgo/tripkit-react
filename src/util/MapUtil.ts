@@ -112,6 +112,17 @@ class MapUtil {
         return decoded;
     }
 
+    public static decodePolylineGeoJsonMultiPolygon(encoded: string): MultiPolygon {
+        const decoded = MapUtil.decodePolylineGeoJson(encoded);
+        if (JSON.stringify(decoded[0]) !== JSON.stringify(decoded[decoded.length - 1])) {
+            decoded.push(decoded[0]);
+        }
+        return {
+            type: "MultiPolygon",
+            coordinates: [[decoded]]
+        };
+    }
+
     public static pointInPolygon(point: LatLng, polygon: LatLng[]): boolean {
         return inside([point.lat, point.lng], polygon.map((polyPoint: LatLng) => [polyPoint.lat, polyPoint.lng]));
     }
