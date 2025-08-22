@@ -79,6 +79,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     transportSettingsUI?: "BRIEF" | "FULL" | "BRIEF_TO_FULL";
     hideSearch?: boolean;
     hideQueryInput?: boolean;
+    noTripsCarousel?: boolean;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext, IAccountContext {
@@ -705,7 +706,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
-            if (DeviceUtil.isTouch()) {
+            if (DeviceUtil.isTouch() || this.props.noTripsCarousel) {
                 tripDetailView =
                     <TKUITripOverviewView
                         value={this.props.selectedTrip!}
@@ -716,8 +717,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             slideUpOptions: {
                                 position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
                                 initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                                draggable: true,
-                                modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                draggable: !this.props.noTripsCarousel,
+                                modalUp: this.props.landscape ? { top: this.props.noTripsCarousel ? 16 : 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                                 modalMiddle: { top: 55, unit: '%' },
                                 modalDown: { top: 90, unit: '%' }
                             },

@@ -394,6 +394,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         return undefined;
                     }
                     const selectedTGroup = trip as TripGroup;
+                    tripUpdate.reference = trip.reference;
                     selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
                     // Update the selected segment since it's a different object, and it causes an index mismatch on MxM view.
                     if (this.state.selectedSegment) {
@@ -835,13 +836,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
-            this.setState({
-                query,
-                trips,
-                selected,
-                computeTripsForQuery: true,
+            this.setState(prevState => ({
+                query: query ?? prevState.query,
+                trips: trips ?? prevState.trips,
+                selected: selected ?? prevState.selected,
+                computeTripsForQuery: computeTripsForQuery ?? prevState.computeTripsForQuery,
                 waiting: false
-            }, () => this.refreshRegion());
+            }), () => this.refreshRegion());
             if (selected) {
                 this.onReqRealtimeFor(selected);
             }
