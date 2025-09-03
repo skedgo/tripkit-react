@@ -52,9 +52,10 @@ export class RegionsData {
             });
         this.regionsPromise = this.regionsRequest.then((regionResults: RegionResults) => {
             this.regions = new Map<string, Region>();
-            const filteredRegions = RegionsData.regionsFilterRegex ?
+            let filteredRegions = RegionsData.regionsFilterRegex ?
                 regionResults.regions.filter(region => RegionsData.regionsFilterRegex!.test(region.name)) :
                 regionResults.regions;
+            filteredRegions = filteredRegions.filter(region => region.polygon);
             for (const region of filteredRegions) {
                 this.regions.set(region.name, region);
             }
