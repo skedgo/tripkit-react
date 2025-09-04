@@ -35,6 +35,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IProps) => {
     const { form, onProviderSelected, renderProviderAction, onClose, cancelText, classes, t } = props;
+    const availableList = form.availableList.filter(option => !option.warningMessage).concat(form.availableList.filter(option => !!option.warningMessage));
     return (
         <div className={classes.main}>
             <div className={classes.body}>
@@ -42,7 +43,7 @@ const TKUIBookingProviderOptions: React.FunctionComponent<IProps> = (props: IPro
                     Available
                 </div>
                 <div className={classes.available}>
-                    {form.availableList.map((option, i) => {
+                    {availableList.map((option, i) => {
                         const price = FormatUtil.toMoney(option.minPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true })
                             + (option.minPrice !== option.maxPrice ?
                                 " - " + FormatUtil.toMoney(option.maxPrice, { currency: option.fares?.[0]?.currency, nInCents: true, forceDecimals: true }) : "");
