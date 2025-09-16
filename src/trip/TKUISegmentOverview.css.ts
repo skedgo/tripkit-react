@@ -125,15 +125,15 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.borderRadius(50, "%")
     },
     iconPin: {
-        opacity: '.4',
+        opacity: theme.isHighContrast ? '.8' : '.4',
         width: '24px',
         height: '24px',
         '& path': {
             fill: black(0, theme.isDark)
         }
     },
-    icon: {        
-        opacity: '.4',
+    icon: {
+        opacity: theme.isHighContrast ? '.8' : '.4',
         width: '24px!important',
         height: '24px'
     },
@@ -152,7 +152,7 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
         background: 'white',
         padding: '2px',
         width: '28px',
-        height: '28px',        
+        height: '28px',
         ...genStyles.borderRadius(50, '%'),
         '& img': {
             width: '24px!important',
@@ -162,8 +162,8 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
     description: {
         padding: '10px 0',
         marginRight: '16px',
-        borderTop: '1px solid ' + black(4, theme.isDark),
-        borderBottom: '1px solid ' + black(4, theme.isDark),
+        borderTop: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
+        borderBottom: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
         ...genStyles.grow,
     },
     action: {
@@ -172,7 +172,7 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
     },
     notes: {
         ...genStyles.fontS,
-        color: black(1, theme.isDark)
+        color: black(theme.isHighContrast ? 0 : 1, theme.isDark)
     },
     occupancy: {
         marginBottom: '4px',

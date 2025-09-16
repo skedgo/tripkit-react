@@ -90,7 +90,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     subtitle: {
-        color: black(1, theme.isDark),
+        ...theme.textColorGray,
         ...genStyles.flex,
         ...genStyles.center
     }

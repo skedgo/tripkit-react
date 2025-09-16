@@ -64,6 +64,8 @@ export interface TKUITheme {
     isDark: boolean;
     isLight: boolean;    // Shouldn't be customizable, it's derived: always the opposite of isDark.
 
+    isHighContrast: boolean;
+
     // textColorDefault: CSSProps<{}>;
     textColorDefault: any;
     textColorGray: any;
@@ -105,15 +107,19 @@ const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
              * @ignore
              */
             isLight: isLight,
+            /**
+             * @ignore
+             */
+            isHighContrast,
 
             textColorDefault: {
-                color: isLight ? tKUIColors.black : tKUIColors.white
+                color: isHighContrast ? (isLight ? 'black' : 'white') : (isLight ? tKUIColors.black : tKUIColors.white),
             },
             textColorGray: {
-                color: isLight ? tKUIColors.black1 : tKUIColors.white1
+                color: isHighContrast ? (isLight ? tKUIColors.black : tKUIColors.white) : (isLight ? tKUIColors.black1 : tKUIColors.white1)
             },
             textColorDisabled: {
-                color: isLight ? tKUIColors.black2 : tKUIColors.white2
+                color: isHighContrast ? (isLight ? tKUIColors.black1 : tKUIColors.white1) : (isLight ? tKUIColors.black2 : tKUIColors.white2)
             },
 
             textSizeBody: genStyles.fontM,
@@ -135,15 +141,15 @@ const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
             cardBackground: {
                 backgroundColor: white(0, isDark),
                 boxShadow: !isDark ?
-                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important' :
-                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)!important',
-                ...genStyles.borderRadius(12)
+                    `0 0 4px 0 rgba(0,0,0,${isHighContrast ? 1 : .2}), 0 6px 12px 0 rgba(0,0,0,.08)!important` :
+                    `0 0 4px 0 rgba(255,255,255,${isHighContrast ? 1 : .2}), 0 6px 12px 0 rgba(255,255,255,.08)!important`,
+                ...genStyles.borderRadius(12),
             },
             secondaryBackground: {
                 backgroundColor: isLight ? '#F6F6F6' : '#384450',
             },
             divider: {
-                borderBottom: '1px solid ' + black(4, isDark)
+                borderBottom: '1px solid ' + black(isHighContrast ? 1 : 4, isDark)
             },
             modalFog: {
                 background: (!isDark ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),

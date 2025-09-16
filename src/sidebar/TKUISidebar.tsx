@@ -53,7 +53,7 @@ export const buttonStylesOverride = (theme: TKUITheme) => ({
             background: black(5, theme.isDark)
         },
         ...theme.textWeightRegular,
-        color: black(1, theme.isDark) + '!important',
+        color: black(theme.isHighContrast ? 0 : 1, theme.isDark) + '!important',
         border: 'none!important',
         width: '100%!important',
         ...genStyles.justifyStart

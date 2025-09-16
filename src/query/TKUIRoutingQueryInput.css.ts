@@ -62,7 +62,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         background: black(1, theme.isDark)
     },
     divider: {
-        borderBottom: '1px solid ' + black(4, theme.isDark)
+        borderBottom: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark)
     },
     swap: {
         ...resetStyles.button,
@@ -78,7 +78,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         flexWrap: 'wrap',
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
-        borderTop: '1px solid ' + tKUIColors.black4,
+        borderTop: '1px solid ' + black(theme.isHighContrast ? 1 : 4),
         padding: '6px 12px',
         ...genStyles.flex,
         ...genStyles.alignCenter,

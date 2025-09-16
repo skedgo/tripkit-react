@@ -7,9 +7,9 @@ import { resetStyles } from "../css/ResetStyle.css";
 export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
     main: {
         background: white(0, theme.isDark),
-        borderTop: '1px solid ' + black(4, theme.isDark),
+        borderTop: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
         borderRight: '1px solid ' + black(4, theme.isDark),
-        borderBottom: '1px solid ' + black(4, theme.isDark),
+        borderBottom: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
         cursor: 'pointer',
         ...genStyles.flex,
         ...genStyles.column
@@ -29,7 +29,7 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     info: {
-        color: black(1, theme.isDark),
+        ...theme.textColorGray,
         ...genStyles.fontS,
         margin: '0 10px'
     },
@@ -55,7 +55,7 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
     alternative: {
         ...resetStyles.button,
         ...rowStyle(theme),
-        borderBottom: '1px solid ' + black(4, theme.isDark)
+        borderBottom: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark)
     },
     selectedAlternative: {
         ...rowSelectedStyle(theme)
