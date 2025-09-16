@@ -60,7 +60,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     info: {
-        fontSize: '13px',
+        fontSize: 'clamp(13px, .8125rem, 16px)',
         lineHeight: 'normal',
         ...genStyles.flex,
         ...genStyles.column,
