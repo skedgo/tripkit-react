@@ -24,7 +24,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Button icon.
      * @ctype JSX.Element
      */
-    icon?: JSX.Element;
+    icon?: React.ReactNode;
 
     /**
      * Button click handler.

@@ -76,7 +76,7 @@
         "react-chartjs-2": "^4.3.1",
         "react-confirm-alert": "^3.0.6",
         "react-datepicker": "^4.10.0",
-        "react-draggable": "4.2.0",
+        "react-draggable": "^4.5.0",
         "react-ga": "^3.3.1",
         "react-ga4": "^2.0.0",
         "react-jss": "^10.9.0",

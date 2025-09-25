@@ -60,9 +60,10 @@ export enum TKUISlideUpPosition {
 
 class TKUISlideUp extends React.Component<IProps, IState> {
 
-    private elem?: any;
     // To get its height, allows to calculate percent units (TODO), and to properly set card height for scroll.
     private containerElem?: any;
+
+    private nodeRef = React.createRef<HTMLDivElement>();
 
     public static defaultProps: Partial<IProps> = {
         initPosition: TKUISlideUpPosition.UP,
@@ -187,7 +188,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         const parentElement = this.props.parentElement ? this.props.parentElement : document.getElementsByTagName("BODY")[0];
         return (
             ReactDOM.createPortal(
-                // @ts-expect-error
                 <Draggable
                     axis="y"
                     bounds={{
@@ -202,17 +202,10 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     onStop={this.onStop}
                     disabled={this.props.draggable === false}
                     handle={this.props.handleSelector}
+                    nodeRef={this.nodeRef}
                 >
                     <div className={classNames(classes.container, this.props.containerClass)}
-                        ref={(ref: any) => {
-                            if (ref) {
-                                this.elem = ref;
-                            }
-                            if (ref && ref.parentElement !== this.containerElem) {
-                                this.containerElem = ref.parentElement;
-                                this.onPositionChange(this.getPosition());
-                            }
-                        }}
+                        ref={this.nodeRef}
                         aria-label={this.props.ariaLabel}
                         role={this.props.role}
                     >
@@ -268,7 +261,11 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        setupScopedFocus(this.elem);
+        if (this.nodeRef.current && this.nodeRef.current.parentElement !== this.containerElem) {
+            this.containerElem = this.nodeRef.current.parentElement;
+            this.onPositionChange(this.getPosition());
+        }
+        setupScopedFocus(this.nodeRef.current);
     }
 
     componentWillUnmount() {

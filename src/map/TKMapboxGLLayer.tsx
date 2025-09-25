@@ -142,7 +142,7 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
                         map.mapboxGlMap = mapboxGlMap.current;
                         map.resolveMapboxGlMap(mapboxGlMap.current);
                     });
-                    mapboxGlMap.current.on('load', () => {
+                    mapboxGlMap.current?.on('load', () => {
                         refresh();
                     });
                     // Workaround on https://github.com/mapbox/mapbox-gl-js/issues/2268#issuecomment-401979967

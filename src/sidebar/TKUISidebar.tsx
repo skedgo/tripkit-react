@@ -21,7 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: () => void;
     onShowFavourites?: () => void;
     onShowSettings?: () => void;
-    menuItems?: (defaultMenuItems: JSX.Element[]) => React.ReactNode;
+    menuItems?: (defaultMenuItems: React.ReactNode) => React.ReactNode;
     nativeAppsTitle?: string;
     renderNativeAppLinks?: () => React.ReactNode;
     appStoreUrl?: string;
