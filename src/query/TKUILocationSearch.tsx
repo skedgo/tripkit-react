@@ -156,7 +156,7 @@ const TKUILocationSearch: React.FunctionComponent<IProps> = (props) => {
                                 // Finally notice that I cannot do left: props => `-${(onShowSideMenuClicked ? 36 : 0) + 25}px`,
                                 // since those props are TKUILocationBox props, not TKUILocationSearch's.
                                 left: () => `-${(onShowSideMenuClicked && !callToAction ? 36 : 0) + 25}px`,
-                                width: () => `calc(100% + ${(onShowSideMenuClicked && !callToAction ? 36 : 0) + (onDirectionsClick && !portrait ? 53 : 0) + (callToAction ? 24 : 32)}px)`
+                                width: () => `calc(100% + ${(onShowSideMenuClicked && !callToAction ? 36 : 0) + (onDirectionsClick && !portrait ? 53 : 0) + (callToAction && !portrait ? 24 : 32)}px)`
                             })
                         }}
                         inputId={inputId}

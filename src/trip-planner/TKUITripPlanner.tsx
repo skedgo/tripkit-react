@@ -27,7 +27,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import TKUIMapView, { TKUIMapPadding, TKUIMapViewClientProps, TKUIMapViewHelpers } from "../map/TKUIMapView";
+import TKUIMapView, { TKUIMapPadding, TKUIMapViewClientProps, TKUIMapViewHelpers, TKUIMapViewProps } from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
 import { TKUIViewportUtilProps, useResponsiveUtil } from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
@@ -874,30 +874,37 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     </div>
                     <div id="map-main" className={classes.mapMain}>
                         <TKUIMapViewHelpers.TKStateProps>
-                            {stateProps => <TKUIMapView
-                                {...stateProps}
-                                hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                padding={mapPadding}
-                                locationActionHandler={(loc: Location) => {
-                                    if (loc instanceof StopLocation) {
-                                        return () => {
-                                            this.showTimetableFor(loc as StopLocation);
-                                            FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation));
-                                        };
-                                    } else if (loc.isCurrLoc()) {
+                            {stateProps =>
+                                <TKUIMapView
+                                    {...stateProps}
+                                    hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                    padding={mapPadding}
+                                    locationActionHandler={(loc: Location) => {
+                                        if (loc instanceof StopLocation) {
+                                            return () => {
+                                                this.showTimetableFor(loc as StopLocation);
+                                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation));
+                                            };
+                                        } else if (loc.isCurrLoc()) {
+                                            return undefined;
+                                        } else if (loc.isResolved() && !loc.isDroppedPin()) {
+                                            return () => this.setState({ showLocationDetailsFor: loc });
+                                        }
                                         return undefined;
-                                    } else if (loc.isResolved() && !loc.isDroppedPin()) {
-                                        return () => this.setState({ showLocationDetailsFor: loc });
-                                    }
-                                    return undefined;
-                                }}
-                                mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
-                                rightClickMenu={[
-                                    { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
-                                    { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
-                                    ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
-                                ]}
-                                {...topCardView?.mapProps} />}
+                                    }}
+                                    mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
+                                    rightClickMenu={[
+                                        { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
+                                        { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
+                                        ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
+                                    ]}
+                                    {...topCardView?.mapProps}
+                                    styles={{
+                                        currentLocBtnPortrait: overrideClass({
+                                            top: (props: TKUIMapViewProps) => props.mapClickBehaviour === "SET_FROM_TO" ? '83px' : searchCallToAction ? '113px' : '68px'
+                                        })
+                                    }}
+                                />}
                         </TKUIMapViewHelpers.TKStateProps>
                     </div>
                     <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
