@@ -85,6 +85,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype
      */
     iconEmpty?: JSX.Element;
+    iconLeft?: React.ReactNode;
     /**
      * To be called when the input element recives focus.
      * @ctype
@@ -473,6 +474,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         const { classes } = this.props;
         return (
             <div className={classes.main} role="none">
+                {this.props.iconLeft}
                 <input type="text"
                     spellCheck={false}
                     autoComplete="off"

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUILocationSearchDefaultStyle } from "./TKUILocationSearch.css";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
@@ -16,6 +16,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUICard from "../card/TKUICard";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import classNames from "classnames";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
@@ -42,6 +43,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * @default false
      */
     portrait?: boolean;
+
+    callToAction?: string;
 }
 
 interface IConsumedProps {
@@ -87,20 +90,9 @@ interface IConsumedProps {
     menuContainer?: HTMLElement;
 }
 
-interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> { }
+type IStyle = ReturnType<typeof tKUILocationSearchDefaultStyle>;
 
-interface IStyle {
-    main: CSSProps<IProps>;
-    sideBarBtn: CSSProps<IProps>;
-    sideBarIcon: CSSProps<IProps>;
-    locationBox: CSSProps<IProps>;
-    locationBoxInput: CSSProps<IProps>;
-    resultsMenu: CSSProps<IProps>;
-    glassIcon: CSSProps<IProps>;
-    divider: CSSProps<IProps>;
-    directionsBtn: CSSProps<IProps>;
-    directionsIcon: CSSProps<IProps>;
-}
+interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUILocationSearchProps = IProps;
 export type TKUILocationSearchStyle = IStyle;
@@ -111,74 +103,82 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUILocationSearch"
 };
 
-class TKUILocationSearch extends React.Component<IProps, {}> {
-
-    public render(): React.ReactNode {
-        const { portrait, classes } = this.props;
-        const placeholder = this.props.t("Search.for.destination");
-        const inputId = "input-search";
-        const ariaLabel = this.props.value ?
-            "To " + this.props.value.getDisplayString() : placeholder;
-        return (
-            <TKUICard scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}
-                styles={{
-                    main: overrideClass({ overflow: 'visible' })
-                }}
-                role="search"
-            >
-                <div className={classes.main}>
-                    {this.props.onShowSideMenuClicked &&
-                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideMenuClicked}
-                            aria-label="Menu"
-                        >
-                            <IconMenu className={classes.sideBarIcon} />
-                        </button>}
+const TKUILocationSearch: React.FunctionComponent<IProps> = (props) => {
+    const { value, onChange, callToAction, onShowSideMenuClicked, onResultHighlight, onInputTextChange,
+        injectedStyles, onDirectionsClick, onLocationBoxRef, menuContainer, portrait, onMenuVisibilityChange, classes, t } = props;
+    const placeholder = t("Search.for.destination");
+    const inputId = "input-search";
+    const ariaLabel = value ?
+        "To " + value.getDisplayString() : placeholder;
+    return (
+        <TKUICard scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}
+            styles={{
+                main: overrideClass({ overflow: 'visible' })
+            }}
+            role="search"
+        >
+            <div className={classNames(classes.main, callToAction && classes.withCallToAction)}>
+                {onShowSideMenuClicked &&
+                    <button
+                        className={classes.sideBarBtn}
+                        onClick={onShowSideMenuClicked}
+                        aria-label="Menu"
+                    >
+                        <IconMenu className={classes.sideBarIcon} />
+                    </button>}
+                {callToAction &&
+                    <div className={classes.callToAction}>
+                        {callToAction}
+                    </div>
+                }
+                <div className={classes.locationBoxContainer}>
                     <TKUILocationBox
                         showCurrLoc={false}
-                        value={this.props.value}
+                        value={value}
                         placeholder={placeholder}
                         onChange={(value: Location | null) => {
-                            this.props.onChange?.(value);
-                            this.props.onResultHighlight?.(null);
+                            onChange?.(value);
+                            onResultHighlight?.(null);
                         }}
-                        onResultHighlight={this.props.onResultHighlight}
-                        onInputTextChange={this.props.onInputTextChange}
-                        iconEmpty={<IconGlass className={classes.glassIcon} />}
+                        onResultHighlight={onResultHighlight}
+                        onInputTextChange={onInputTextChange}
+                        iconEmpty={!callToAction ? <IconGlass className={classes.glassIcon} /> : undefined}
+                        iconLeft={callToAction ? <IconGlass className={classes.glassIcon} /> : undefined}
                         styles={{
-                            wrapper: overrideClass(this.props.injectedStyles.locationBox),
-                            input: overrideClass(this.props.injectedStyles.locationBoxInput),
+                            wrapper: overrideClass(injectedStyles.locationBox),
+                            main: overrideClass(callToAction ? { padding: '0 12px', marginLeft: '-16px' } : {}),
+                            input: overrideClass(injectedStyles.locationBoxInput),
                             menu: overrideClass({
-                                ...this.props.injectedStyles.resultsMenu as any,
+                                ...injectedStyles.resultsMenu as any,
                                 // I need to specify next two styles as functions as a workaround so they update dynamically. 
                                 // Otherwise, the style of TKUILocationBox gets fixed to the first values of these props.
-                                // Also notice this works since this.props is a reference, in a function component would need to use useRef.
-                                // Finally notice that I cannot do left: props => `-${(props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
+                                // Also notice this works since props is a reference, in a function component would need to use useRef.
+                                // Finally notice that I cannot do left: props => `-${(onShowSideMenuClicked ? 36 : 0) + 25}px`,
                                 // since those props are TKUILocationBox props, not TKUILocationSearch's.
-                                left: () => `-${(this.props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
-                                width: () => `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClick && !this.props.portrait ? 53 : 0) + 32}px)`
+                                left: () => `-${(onShowSideMenuClicked && !callToAction ? 36 : 0) + 25}px`,
+                                width: () => `calc(100% + ${(onShowSideMenuClicked && !callToAction ? 36 : 0) + (onDirectionsClick && !portrait ? 53 : 0) + (callToAction ? 24 : 32)}px)`
                             })
                         }}
                         inputId={inputId}
                         ariaLabel={"Search location"}
                         inputAriaLabel={ariaLabel}
-                        onRef={this.props.onLocationBoxRef}
-                        menuContainer={this.props.menuContainer}
-                        onMenuVisibilityChange={this.props.onMenuVisibilityChange}
+                        onRef={onLocationBoxRef}
+                        menuContainer={menuContainer}
+                        onMenuVisibilityChange={onMenuVisibilityChange}
                     />
-                    {this.props.onDirectionsClick && !portrait &&
-                        <Fragment>
-                            <div className={classes.divider} />
-                            <button className={classes.directionsBtn} onClick={this.props.onDirectionsClick}
-                                aria-label="Get directions"
-                            >
-                                <IconDirections className={classes.directionsIcon} />
-                            </button>
-                        </Fragment>}
                 </div>
-            </TKUICard>
-        );
-    }
-
+                {props.onDirectionsClick && !portrait &&
+                    <Fragment>
+                        <div className={classes.divider} />
+                        <button className={classes.directionsBtn} onClick={props.onDirectionsClick}
+                            aria-label="Get directions"
+                        >
+                            <IconDirections className={classes.directionsIcon} />
+                        </button>
+                    </Fragment>}
+            </div>
+        </TKUICard >
+    );
 }
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {

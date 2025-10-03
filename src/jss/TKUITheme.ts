@@ -15,12 +15,15 @@ export const tKUIColors = {
     black3: '#212a332e',
     black4: '#212a331f',
     black5: '#212a3314',
+    black6: '#0000000F',
     white: '#ffffff',
     white1: '#ffffffa6',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
     white4: '#ffffff1f',
-    white5: '#ffffff14'
+    white5: '#ffffff14',
+    white6: '#ffffff0f',
+
 };
 
 export function colorWithOpacity(colorS: string, opacity: number): string {
@@ -32,12 +35,12 @@ function cardSpacing(landscape: boolean = true) {
     return landscape ? 16 : 5;
 }
 
-export function black(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
+export function black(n: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0, dual: boolean = false): string {
     return dual ? white(n) : tKUIColors[Object.keys(tKUIColors)[n]];
 }
 
-export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
-    return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 6]];
+export function white(n: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0, dual: boolean = false): string {
+    return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 7]];
 }
 
 function important(style: Properties): Properties {

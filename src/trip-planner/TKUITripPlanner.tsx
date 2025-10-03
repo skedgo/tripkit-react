@@ -80,6 +80,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
     hideQueryInput?: boolean;
     noTripsCarousel?: boolean;
+    searchCallToAction?: boolean;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext, IAccountContext {
@@ -496,7 +497,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const props = this.props;
-        const { isUserTabbing, classes, t, tkconfig, status } = this.props;
+        const { isUserTabbing, searchCallToAction, classes, t, tkconfig, status } = this.props;
         const directionsView = this.props.directionsView;
         // const emptyCardStack = this.state.cardStack.length === 0;
         const emptyCardStack = true;
@@ -518,6 +519,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             }}
                             onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
                             onMenuVisibilityChange={open => this.setFadeOutHome(open)}
+                            callToAction={searchCallToAction ? t("Where.do.you.want.to.go?") : undefined}
                         />
                     }
                 </TKUILocationSearchHelpers.TKStateProps>
@@ -586,6 +588,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }
             </TKUIRoutingQueryInputHelpers.TKStateProps>;
         const locationHasVehicleAvailability = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor instanceof CarPodLocation && this.state.showLocationDetailsFor.supportsVehicleAvailability;
+        const locationSearchHeight = (searchCallToAction ? 92 : 48);  // TKUILocationSearch height
         const locationDetailView = this.state.showLocationDetailsFor &&
             this.state.showLocationDetailsFor.isResolved() &&
             !this.state.showLocationDetailsFor.isDroppedPin() &&
@@ -602,7 +605,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                         draggable: DeviceUtil.isTouch(),
                         modalUp: this.props.landscape ?
-                            { top: (this.isShowTripDetail() || this.props.selectedTripSegment || locationHasVehicleAvailability) ? cardSpacing() : (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                            {
+                                top: (this.isShowTripDetail() || this.props.selectedTripSegment || locationHasVehicleAvailability) ? cardSpacing() :
+                                    (directionsView ? 176 : locationSearchHeight) + 2 * cardSpacing(), unit: 'px'
+                            } :
                             { top: cardSpacing(false), unit: 'px' },
                         modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
                         zIndex: this.props.selectedTripSegment || locationHasVehicleAvailability ? 1006 : undefined,   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
@@ -625,7 +631,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
                                 draggable: false,
                                 modalUp: this.props.landscape ?
-                                    { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                                    { top: (directionsView ? 176 : locationSearchHeight) + 2 * cardSpacing(), unit: 'px' } :
                                     { top: cardSpacing(false), unit: 'px' },
                                 modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
                             },
@@ -646,7 +652,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 position: DeviceUtil.isTouch() ? undefined :
                                     this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                                 draggable: DeviceUtil.isTouch(),
-                                modalUp: this.props.landscape ? { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                modalUp: this.props.landscape ? { top: (directionsView ? 176 : locationSearchHeight) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                                 modalDown: { top: this.getContainerHeight() - 130, unit: 'px' }
                             },
                             onRequestClose: () => this.props.onServiceSelection(undefined)
@@ -662,7 +668,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         slideUpOptions={{
                             initPosition: TKUISlideUpPosition.UP,
                             draggable: DeviceUtil.isTouch(),
-                            modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalUp: this.props.landscape ? { top: locationSearchHeight + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                             modalMiddle: { top: 55, unit: '%' },
                             modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
                         }}
@@ -698,7 +704,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     onMyBookings={() => this.setState({ showMyBookings: true })}
                     styles={{
                         main: overrideClass({
-                            maxHeight: this.getContainerHeight() - 48 - 3 * cardSpacing() // 48 is TKUILocationSearch height
+                            maxHeight: this.getContainerHeight() - locationSearchHeight - 3 * cardSpacing()
                         })
                     }}
                 />
