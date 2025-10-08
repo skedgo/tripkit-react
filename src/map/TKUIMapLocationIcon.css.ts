@@ -16,69 +16,75 @@ export function getTransIconOpacity(modeInfo: ModeInfo, isDarkMode: boolean): st
     return (isDarkMode && !isRemoteIcon(modeInfo)) ? '.7' : undefined;
 }
 
-export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyle, TKUIMapLocationIconProps> =
-    (theme: TKUITheme) => {
-        return ({
-            main: {},
-            iconPin: {
-                width: '26px',
-                height: '39px',
-                '& path': {
-                    fill: (props: TKUIMapLocationIconProps) => {
-                        const location = props.location;
-                        let iconPinColor = props.from ? theme.colorPrimary : theme.colorError;
-                        if (location instanceof FacilityLocation && location.facilityType === "Bring-The-Paint") {
-                            iconPinColor = black(0);
-                        } else if (location instanceof FacilityLocation ||
-                            (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE"))
-                            || location instanceof SchoolLocation) {
-                            iconPinColor = white(0);
-                        } else if (location instanceof ModeLocation) {
-                            let transportColor = TransportUtil.getTransportColor(location.modeInfo);
-                            if (transportColor === null) {
-                                transportColor = black(0);
-                            }
-                            iconPinColor = transportColor;
+export const tKUIMapLocationIconDefaultStyle = (theme: TKUITheme) => {
+    return ({
+        main: {},
+        iconPin: {
+            width: '26px',
+            height: '39px',
+            '& path': {
+                fill: (props: TKUIMapLocationIconProps) => {
+                    const location = props.location;
+                    let iconPinColor = props.from ? theme.colorPrimary : theme.colorError;
+                    if (location instanceof FacilityLocation && location.facilityType === "Bring-The-Paint") {
+                        iconPinColor = black(0);
+                    } else if (location instanceof FacilityLocation ||
+                        (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE"))
+                        || location instanceof SchoolLocation) {
+                        iconPinColor = white(0);
+                    } else if (location instanceof ModeLocation) {
+                        let transportColor = TransportUtil.getTransportColor(location.modeInfo);
+                        if (transportColor === null) {
+                            transportColor = black(0);
                         }
-                        return iconPinColor;
-                    },
-                    stroke: (props: TKUIMapLocationIconProps) => {
-                        // Put stroke just if theme is dark, to separate from background (dark map)
-                        const location = props.location;
-                        if (location instanceof SchoolLocation) {
-                            return theme.isDark ? white(1) : black(1);
-                        }
-                        return (location instanceof ModeLocation && theme.isDark) ? white(1) : undefined;
+                        iconPinColor = transportColor;
                     }
+                    return iconPinColor;
                 },
-            },
-            icon: {
-                position: 'absolute',
-                left: '0',
-                top: '0',
-                height: '26px',
-                width: '26px',
-                padding: props => props.location instanceof FacilityLocation ? '1px' : '4px',
-                '& img, svg': {
-                    width: '100%',
-                    height: '100%',
-                    opacity: (props: TKUIMapLocationIconProps) => props.location instanceof ModeLocation ?
-                        getTransIconOpacity(props.location.modeInfo, props.theme.isDark) : undefined
+                stroke: (props: TKUIMapLocationIconProps) => {
+                    // Put stroke just if theme is dark, to separate from background (dark map)
+                    const location = props.location;
+                    if (location instanceof SchoolLocation) {
+                        return theme.isDark ? white(1) : black(1);
+                    }
+                    return (location instanceof ModeLocation && theme.isDark) ? white(1) : undefined;
                 }
             },
-            iconInverted: {
-                padding: '5px',
-                '& img': {
-                    // Icon is inverted w.r.t. what we wanted, which is always "for dark", so got "for light",
-                    // so need light background.
-                    background: white(0),
-                    border: '1px solid ' + white(2)
-                }
-            },
-            clickAndHold: {
-                '& $icon img, $icon svg': {
-                    display: 'none'
-                }
+        },
+        icon: {
+            position: 'absolute',
+            left: '0',
+            top: '0',
+            height: '26px',
+            width: '26px',
+            padding: props => props.location instanceof FacilityLocation ? '1px' : '4px',
+            '& img, svg': {
+                width: '100%',
+                height: '100%',
+                opacity: (props: TKUIMapLocationIconProps) => props.location instanceof ModeLocation ?
+                    getTransIconOpacity(props.location.modeInfo, props.theme.isDark) : undefined
             }
-        })
-    };
+        },
+        contentIcon: {
+            position: 'absolute',
+            left: '0',
+            top: '0',
+            height: '26px',
+            width: '26px'
+        },
+        iconInverted: {
+            padding: '5px',
+            '& img': {
+                // Icon is inverted w.r.t. what we wanted, which is always "for dark", so got "for light",
+                // so need light background.
+                background: white(0),
+                border: '1px solid ' + white(2)
+            }
+        },
+        clickAndHold: {
+            '& $icon img, $icon svg': {
+                display: 'none'
+            }
+        }
+    })
+};
