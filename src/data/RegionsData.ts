@@ -191,6 +191,10 @@ export class RegionsData {
         return this._regionList;
     }
 
+    public getModes(): Map<string, ModeIdentifier> {
+        return this._modes;
+    }
+
     public getRegionInfoP(code: string): Promise<RegionInfo> {
         if (!this.regionInfosRequests.get(code)) {
             const regionInfoRequest =

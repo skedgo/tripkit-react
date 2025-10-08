@@ -9,6 +9,9 @@ import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import TKAccessibilityProvider, { TKAccessibilityContext } from "./TKAccessibilityProvider";
 import TKState from "./TKState";
+import { RegionsData } from "../data/RegionsData";
+import ModeIdentifier from "../model/region/ModeIdentifier";
+import Util from "../util/Util";
 
 interface IProps {
     config: TKUIConfig;
@@ -29,6 +32,22 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (props.config.i18n) {
             TripGoApi.locale = Promise.resolve(props.config.i18n)
                 .then(({ locale }) => locale);
+        }
+        if (props.config.parkAndRideMode) {
+            RegionsData.instance.requireRegions().then(() => {
+                RegionsData.instance.getRegionList()!.forEach(region => {
+                    region.modes.push("park-and-ride")
+                });
+                RegionsData.instance.getModes().set("park-and-ride", Util.deserialize({
+                    "title": "Park & Ride",
+                    "color": {
+                        "red": 45,
+                        "green": 197,
+                        "blue": 104
+                    },
+                    "icon": "parkAndRide",
+                }, ModeIdentifier));
+            });
         }
     }
 

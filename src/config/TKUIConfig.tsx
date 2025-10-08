@@ -209,6 +209,10 @@ export interface ITKUIConfigOptional {
      */
     computeModeSetsBuilder: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     /**
+     * @ignore
+     */
+    parkAndRideMode?: boolean;
+    /**
      * @ignore     
      */
     booking: {
