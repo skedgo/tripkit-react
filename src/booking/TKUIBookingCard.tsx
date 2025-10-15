@@ -21,9 +21,9 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import { BookingPaymentForm } from '../model/payment/BookingPaymentForm';
 import TKUIBookingProviderOptions from './TKUIBookingProviderOptions';
-import TicketOption from '../model/trip/TicketOption';
 import TKUIProviderTicketsForm from '../stripekit/TKUIProviderTicketsForm';
 import Util from '../util/Util';
+import TKUIBookingActionRequired from './TKUIBookingActionRequired';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -47,9 +47,9 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingCard"
 };
 
-type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "TICKETS" | "PROVIDER_OPTIONS_RETURN" | "TICKETS_RETURN" | "REVIEW" | "PAYMENT" | "DETAILS";
+type Screens = "BOOKING" | "PROVIDER_OPTIONS" | "TICKETS" | "PROVIDER_OPTIONS_RETURN" | "TICKETS_RETURN" | "REVIEW" | "PAYMENT" | "DETAILS" | "USER_ACTION_REQUIRED";
 
-function screenTitle(screen: Screens): string {
+function screenTitle(screen: Screens): string | undefined {
     switch (screen) {
         case "BOOKING":
             return "Add booking details";
@@ -68,7 +68,7 @@ function screenTitle(screen: Screens): string {
     }
 }
 
-function screenCloseButton(screen: Screens): string {
+function screenCloseButton(screen: Screens): string | undefined {
     switch (screen) {
         case "BOOKING":
             return "Cancel";
@@ -183,6 +183,9 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     // REVIEW and PAYMENT screens data
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
 
+    // USER_ACTION_REQUIRED" screens data
+    const [actionRequired, setActionRequired] = useState<any>(undefined);
+
     useEffect(() => {
         if (booking.confirmation) {
             return;
@@ -192,7 +195,8 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         if (process.env.NODE_ENV === 'development') {
             // setMockData();
             // setMockData2();
-            // return;
+            setMockDataActionRequired();
+            return;
         }
         TripGoApi.requestBookingOptions(bookingInfosUrl)
             .then(bookingInfos => {
@@ -242,6 +246,17 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         // setScreensStack(["PAYMENT", "REVIEW", "BOOKING", "TRIPS", "QUERY"]);            
     }
 
+    async function setMockDataActionRequired() {
+        Features.instance.realtimeEnabled = false;
+        setBookingResult(TripGoApi.deserializeBookingResult(await (await fetch("/booking/v1/3dxyz/quick", { method: "POST" })).json()));
+        setScreensStack(["PAYMENT"]);
+        // await onRequestTripRefresh(trip.updateURL);  // Ask for post booking trip update, which will contain the confirmation input object
+        // setScreensStack(["DETAILS", "PAYMENT"]);
+        setActionRequired(TripGoApi.deserializePaidResult(await (await fetch("/paid", { method: "GET" })).json()).actionRequired);
+        setScreensStack(["USER_ACTION_REQUIRED", "PAYMENT"]);
+
+    }
+
     function handleRequestClose() {
         if (topScreen() === "BOOKING" || topScreen() === "DETAILS") {
             onRequestClose?.();
@@ -258,11 +273,12 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
             presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={{ draggable: false }}
             focusTrap={true}
-            renderHeader={props =>
-                <TKUICardHeader {...props}
-                    renderLeft={<TKUIButton text={screenCloseButton(topScreen())} type={TKUIButtonType.PRIMARY_LINK} onClick={handleRequestClose} />}
-                    renderRight={screenRightBtnProps && <TKUIButton type={TKUIButtonType.PRIMARY_LINK} {...screenRightBtnProps} />}
-                />}
+            renderHeader={screenCloseButton(topScreen()) ?
+                props =>
+                    <TKUICardHeader {...props}
+                        renderLeft={<TKUIButton text={screenCloseButton(topScreen())} type={TKUIButtonType.PRIMARY_LINK} onClick={handleRequestClose} />}
+                        renderRight={screenRightBtnProps && <TKUIButton type={TKUIButtonType.PRIMARY_LINK} {...screenRightBtnProps} />}
+                    /> : undefined}
             styles={{
                 modalContent: overrideClass({
                     width: '700px'
@@ -420,7 +436,13 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         bookingPaymentForm: bookingResult!,
                         setWaiting,
                         // Rename to onPaymentDone?
-                        onSubmit: async ({ updateURL }) => {
+                        onSubmit: async ({ updateURL, actionRequired }) => {
+                            if (actionRequired) {
+                                pushScreen("USER_ACTION_REQUIRED");
+                                setActionRequired(actionRequired);
+                                setWaiting(false);
+                                return;
+                            }
                             setWaiting?.(true);
                             try {
                                 await onRequestTripRefresh(updateURL);   // After trip refresh, if booking.confirmation is defined, then DETAILS screen will be shown and setWaiting(false) will be called.
@@ -435,6 +457,10 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                             })
                         }
                     })}
+                {topScreen() === "USER_ACTION_REQUIRED" && actionRequired &&
+                    <TKUIBookingActionRequired
+                        data={actionRequired}
+                    />}
                 {topScreen() === "DETAILS" &&
                     <TKUIBookingDetails
                         trip={trip}

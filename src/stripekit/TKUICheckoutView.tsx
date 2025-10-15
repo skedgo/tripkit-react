@@ -28,6 +28,7 @@ import { BookingField } from '../model/trip/BookingInfo';
 import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
 import DateTimeUtil from '../util/DateTimeUtil';
 import TKUICheckbox from '../util_components/TKUICheckbox';
+import BookingActionRequired from '../model/trip/BookingActionRequired';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -156,7 +157,7 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     bookingPaymentForm: BookingPaymentForm;
-    onSubmit: (data: { updateURL?: string }) => void;
+    onSubmit: (data: { updateURL?: string, actionRequired?: BookingActionRequired }) => void;
     onClose?: () => void;
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
@@ -181,7 +182,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUICheckoutViewClientProps = IClientProps;
 
-function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
+function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?: string, actionRequired?: BookingActionRequired }) => void, setWaiting?: (waiting: boolean) => void) {
     setWaiting?.(true);
     request.then(data => {
         if (data.warning) {
@@ -196,7 +197,7 @@ function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?:
         }
         return data;
     })
-        .then(data => onSubmit(data))
+        .then(data => onSubmit(TripGoApi.deserializePaidResult(data)))
         .catch(UIUtil.errorMsg)
         .finally(() => setWaiting?.(false));
 }

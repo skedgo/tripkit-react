@@ -95,6 +95,7 @@ import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKU
 import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKUIBookingReview";
 import { TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle } from "../booking/TKUIBookingProviderOptions";
 import { TKUIProviderTicketsFormProps, TKUIProviderTicketsFormStyle } from "../stripekit/TKUIProviderTicketsForm";
+import { TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle } from "../booking/TKUIBookingActionRequired";
 
 /**
  * SDK configuration
@@ -322,6 +323,7 @@ export interface ITKUIConfigOptional {
     TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;
     TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
     TKUIFromTo: TKComponentConfig<TKUIFromToProps, TKUIFromToStyle>;
+    TKUIBookingActionRequired: TKComponentConfig<TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
