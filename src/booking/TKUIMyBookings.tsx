@@ -21,7 +21,8 @@ import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
 import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIMyBooking from './TKUIMyBooking';
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext"
-import { bookingActionToHandler } from './TKUIBookingActions';
+import { cancelActionHandlerBuilder } from './TKUIBookingActions';
+import { BookingAction } from '../model/trip/BookingInfo';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -236,16 +237,25 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
         <TKPropsOverride
             componentKey="TKUIBookingActions"
             propsOverride={{
-                actionToHandler: action => bookingActionToHandler(action, {
-                    requestRefresh: async () => {
-                        await refreshBookings({ silent: true, valid: true }).then(() => { });
-                    },
-                    setWaitingFor: action => onWaitingStateLoad(!!action)   //**TODO:** Consider moving this to TKUIMyBooking, passing to it onRefreshBookings
-                })
+                actionToHandler: (action: BookingAction) => {
+                    if (action.type === "CANCEL" || action.confirmation || action.confirmationMessage) {
+                        return cancelActionHandlerBuilder(action, {
+                            requestRefresh: async () => {
+                                await refreshBookings({ silent: true, valid: true }).then(() => { });
+                            },
+                            setWaitingFor: action => onWaitingStateLoad(!!action)   //**TODO:** Consider moving this to TKUIMyBooking, passing to it onRefreshBookings                            
+                        });
+                    }
+                    if (action.externalURL) {   // E.g. CALL
+                        return () => {
+                            window.open(action.externalURL, "_self");
+                        }
+                    }
+                }
             }}
         >
             {content}
-        </TKPropsOverride>;
+        </TKPropsOverride >;
     return content;
 };
 

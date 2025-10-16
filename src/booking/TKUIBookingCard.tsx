@@ -1,6 +1,6 @@
 import React, { Key, useContext, useEffect, useState } from 'react';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
-import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { connect, mapperFromFunction, TKPropsOverride } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIBookingCardDefaultStyle } from "./TKUIBookingCard.css";
 import Trip from '../model/trip/Trip';
@@ -24,6 +24,9 @@ import TKUIBookingProviderOptions from './TKUIBookingProviderOptions';
 import TKUIProviderTicketsForm from '../stripekit/TKUIProviderTicketsForm';
 import Util from '../util/Util';
 import TKUIBookingActionRequired from './TKUIBookingActionRequired';
+import { cancelActionHandlerBuilder } from './TKUIBookingActions';
+import { TKError } from '../error/TKError';
+import NetworkUtil from '../util/NetworkUtil';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -192,12 +195,12 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         }
         const bookingInfosUrl = booking.quickBookingsUrl!;
         setWaiting(true);
-        if (process.env.NODE_ENV === 'development') {
-            // setMockData();
-            // setMockData2();
-            setMockDataActionRequired();
-            return;
-        }
+        // if (process.env.NODE_ENV === 'development') {
+        // setMockData();
+        // setMockData2();
+        // setMockDataActionRequired();
+        // return;
+        // }
         TripGoApi.requestBookingOptions(bookingInfosUrl)
             .then(bookingInfos => {
                 pushScreen("BOOKING");
@@ -458,9 +461,40 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         }
                     })}
                 {topScreen() === "USER_ACTION_REQUIRED" && actionRequired &&
-                    <TKUIBookingActionRequired
-                        data={actionRequired}
-                    />}
+                    <TKPropsOverride
+                        componentKey="TKUIBookingActions"
+                        propsOverride={{
+                            actionToHandler: (action) => {
+                                if (action.type === "CANCEL") {
+                                    return cancelActionHandlerBuilder(action, {
+                                        setWaitingFor: action => setWaiting(!!action),
+                                        requestRefresh: onRequestTripRefresh
+                                    });
+                                } else if (action.type === "CONFIRM") {
+                                    return async () => {
+                                        setWaiting(true);
+                                        try {
+                                            const { refreshURLForSourceObject } = await TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(action.internalURL!, TripGoApi.apiVersion), NetworkUtil.MethodType.GET);
+                                            await onRequestTripRefresh?.(refreshURLForSourceObject);
+                                            setWaiting(false);
+                                        } catch (error) {
+                                            UIUtil.errorMsg(new TKError("Error confirming trip", "", false, (error as any).stack));
+                                            setWaiting(false);
+                                        }
+                                    }
+                                }
+                            }
+                        }}
+                    >
+                        <TKUIBookingActionRequired
+                            data={actionRequired}
+                            styles={{
+                                main: overrideClass({
+                                    flexGrow: 1
+                                })
+                            }}
+                        />
+                    </TKPropsOverride>}
                 {topScreen() === "DETAILS" &&
                     <TKUIBookingDetails
                         trip={trip}

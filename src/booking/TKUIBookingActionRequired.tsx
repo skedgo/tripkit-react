@@ -7,6 +7,7 @@ import TKUIFromTo from './TKUIFromTo';
 import TKUIBookingActions from './TKUIBookingActions';
 import { ReactComponent as IconInfo } from '../images/ic-info-circle-2.svg';
 import BookingActionRequired from '../model/trip/BookingActionRequired';
+import { white } from '../jss/TKUITheme';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     data: BookingActionRequired;
@@ -43,7 +44,7 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
         </div>
     );
     return (
-        <div>
+        <div className={classes.main}>
             <div className={classes.status}>
                 <div className={classes.statusInfo}>
                     <div className={classes.statusTitle}>
@@ -57,6 +58,28 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
             {actions.length > 0 &&
                 <TKUIBookingActions
                     actions={actions}
+                    styles={(theme) => ({
+                        actions: {
+                            marginTop: 'auto',
+                            display: 'flex',
+                            margin: '20px 16px',
+                            '&>*': {
+                                flexGrow: 1,
+                                padding: '12px 16px!important',
+                                color: white() + '!important',
+                                borderRadius: '100px'
+                            },
+                            '&>*:not(:first-child)': {
+                                marginLeft: '16px'
+                            },
+                            ...actions.reduce((accStyles, action, index) => {
+                                accStyles[`&>*:nth-child(${index + 1})`] = {
+                                    background: action.type === "CANCEL" ? '#FB2C36' : theme.colorSuccess
+                                };
+                                return accStyles;
+                            }, {})
+                        } as any
+                    })}
                 />}
         </div>
     );

@@ -67,8 +67,11 @@ import { TKUIConfigContext } from "../config/TKUIConfigProvider";
 import { IAccountContext, SignInStatus, TKAccountContext } from "../account/TKAccountContext";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
-import { bookingActionToHandler } from "../booking/TKUIBookingActions";
+import { cancelActionHandlerBuilder } from "../booking/TKUIBookingActions";
 import { getTripBookingInfo } from "../trip/TripUtil";
+import TKUIBookingActionRequired from "../booking/TKUIBookingActionRequired";
+import UIUtil from "../util/UIUtil";
+import { BookingAction } from "../model/trip/BookingInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -408,28 +411,26 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 <TKPropsOverride
                     componentKey="TKUIBookingActions"
                     propsOverride={{
-                        actionToHandler: (action) => bookingActionToHandler(action, {
-                            requestRefresh: handleRequestTripRefresh,
-                            onRequestAnother: () => {
-                                this.props.onQueryChange(RoutingQuery.create());
-                                this.props.onComputeTripsForQuery(false);
-                                this.props.setSelectedTripSegment(undefined);
-                                if (this.state.showMyBookings) {
-                                    this.setState({ showMyBookings: false });
+                        actionToHandler: (action: BookingAction) => {
+                            switch (action.type) {
+                                case "SHOW_RELATED_TRIP": return () => {
+                                    this.popCardView({ viewId: "BOOKING_CARD" });
+                                    this.onShowTripUrl(action.internalURL);
+                                };
+                                case "REVIEW": return () => this.onShowBookingReview(action.internalURL!, handleRequestTripRefresh)
+                            }
+                            if (action.type === "CANCEL" || action.confirmation || action.confirmationMessage) {
+                                return cancelActionHandlerBuilder(action, {
+                                    setWaitingFor: action => this.props.onWaitingStateLoad(!!action),
+                                    requestRefresh: handleRequestTripRefresh
+                                });
+                            }
+                            if (action.externalURL) {   // E.g. CALL
+                                return () => {
+                                    window.open(action.externalURL, "_self");
                                 }
-                                if (this.props.showUserProfile) {
-                                    this.props.setShowUserProfile(false);
-                                }
-                                setTimeout(() => !this.props.directionsView && !this.props.query.to &&
-                                    this.locSearchBoxRef && this.locSearchBoxRef.focus(), 100);
-                                this.clearCardStack();
-                            },
-                            onShowRelatedTrip: () => {
-                                this.popCardView({ viewId: "BOOKING_CARD" });
-                                this.onShowTripUrl(action.internalURL);
-                            },
-                            setWaitingFor: action => this.props.onWaitingStateLoad(!!action)
-                        })
+                            }
+                        }
                     }}
                 >
                     {tkconfig.booking!.renderBookingCard!({
@@ -493,6 +494,83 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 readonly: true
             }
         })
+    }
+
+    private async onShowBookingReview(reviewUrl: string, onTripRefresh?: (refreshURLForSourceObject?: string) => Promise<Trip | undefined>) {
+        const { onWaitingStateLoad } = this.props;
+        onWaitingStateLoad(true);
+        try {
+            const { actionRequired } = await TripGoApi.deserializePaidResult(await TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(reviewUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET));
+            onWaitingStateLoad(false);
+            this.pushCardView({
+                viewId: "BOOKING_REVIEW",
+                renderCard: () => (
+                    <TKUICard
+                        presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                        slideUpOptions={{ draggable: false }}
+                        modalOptions={{ ensureOverlay: true }}
+                        focusTrap={true}
+                        styles={{
+                            modalContent: {
+                                background: 'none',
+                                border: 'none',
+                                position: 'fixed',
+                                inset: '0!important'
+                            },
+                            main: overrideClass({
+                                position: 'absolute',    // Needed to reander a floating footer (e.g. in TKUIBookingForm)
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxHeight: 'calc(100vh - 80px)',
+                                height: 'initial!important',
+                                width: '700px'
+                            })
+                        }}
+                    >
+                        <TKPropsOverride
+                            componentKey="TKUIBookingActions"
+                            propsOverride={{
+                                actionToHandler: (action) => {
+                                    if (action.type === "CANCEL") {
+                                        return cancelActionHandlerBuilder(action, {
+                                            setWaitingFor: action => this.props.onWaitingStateLoad(!!action),
+                                            requestRefresh: onTripRefresh,
+                                            onActionDone: () => this.popCardView({ viewId: "BOOKING_REVIEW" })
+                                        });
+                                    } else if (action.type === "CONFIRM") {
+                                        return async () => {
+                                            onWaitingStateLoad(true);
+                                            try {
+                                                await TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(action.internalURL!, TripGoApi.apiVersion), NetworkUtil.MethodType.GET);
+                                                // await TripGoApi.apiCallUrl(TripGoApi.defaultToVersion('https://example.com', TripGoApi.apiVersion), NetworkUtil.MethodType.GET);
+                                                // await NetworkUtil.delayPromise(1000)(null);
+                                                this.popCardView({ viewId: "BOOKING_REVIEW" });
+                                                await onTripRefresh?.();
+                                                onWaitingStateLoad(false);
+                                            } catch (error) {
+                                                UIUtil.errorMsg(new TKError("Error confirming trip", "", false, (error as any).stack));
+                                                onWaitingStateLoad(false);
+                                                this.popCardView({ viewId: "BOOKING_REVIEW" });
+                                            }
+                                        }
+                                    }
+                                }
+                            }}
+                        >
+                            <TKUIBookingActionRequired
+                                data={actionRequired!}
+                            />
+                        </TKPropsOverride>
+                    </TKUICard>
+                ),
+                onPop: () => this.props.onSelectedTripChange(undefined)
+            });
+        }
+        catch (error) {
+            onWaitingStateLoad(false,
+                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, (error as any).stack));
+        }
     }
 
     public render(): React.ReactNode {
@@ -1056,9 +1134,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             }
         });
 
-        // Focus location search box on web-app load.
-        setTimeout(() => !this.props.directionsView && !this.props.query.to &&
-            this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
+        // Focus location search box on web-app load.        
+        setTimeout(() => !this.props.directionsView && !this.props.query.to
+            && document.visibilityState === "visible" && document.hasFocus()    // Just focus if page is visible and has focus (e.g. not loading in background tab).
+            && this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
 
     private setFadeOutHome(fadeOutHome: boolean) {

@@ -6,6 +6,10 @@ export const tKUIBookingActionRequiredDefaultStyle = (theme: TKUITheme) => {
     const { isHighContrast, isDark } = theme;
     return ({
         ...tKUIBookingFormDefaultStyle(theme),
+        main: {
+            ...genStyles.flex,
+            ...genStyles.column
+        },
         statusInfo: {
             background: theme.colorPrimary,
             display: 'flex',

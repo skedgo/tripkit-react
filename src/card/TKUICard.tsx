@@ -331,7 +331,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         isOpen={this.props.open!}
                         style={{
                             content: this.props.injectedStyles.modalContent,
-                            ...(!this.firstModal ?
+                            ...(!this.firstModal && !this.props.modalOptions?.ensureOverlay ?
                                 { overlay: { background: 'none' } } :
                                 { overlay: this.props.injectedStyles.modalOverlay }
                             )
