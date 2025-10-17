@@ -46,6 +46,20 @@ export const tKUIBookingActionRequiredDefaultStyle = (theme: TKUITheme) => {
             borderRadius: '4px',
             background: black(1),
             padding: '4px 8px'
+        },
+        actions: {
+            marginTop: 'auto',
+            display: 'flex',
+            margin: '20px 16px',
+            '&>*': {
+                flexGrow: 1,
+                padding: '12px 16px!important',
+                color: white() + '!important',
+                borderRadius: '100px'
+            },
+            '&>*:not(:first-child)': {
+                marginLeft: '16px'
+            }
         }
     });
 };

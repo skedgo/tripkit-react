@@ -20,7 +20,7 @@ export function cancelActionHandlerBuilder(action: BookingAction, helpers: {
         const confirmationPrompt = action.confirmation
             ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.
         UIUtil.confirmMsg({
-            message: confirmationPrompt.message,
+            message: confirmationPrompt.message ?? ("Are you sure you want to proceed?"),
             confirmLabel: confirmationPrompt.confirmActionTitle || "Yes",
             cancelLabel: confirmationPrompt.abortActionTitle || "No",
             onConfirm: () => {

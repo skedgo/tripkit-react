@@ -27,6 +27,7 @@ import TKUIBookingActionRequired from './TKUIBookingActionRequired';
 import { cancelActionHandlerBuilder } from './TKUIBookingActions';
 import { TKError } from '../error/TKError';
 import NetworkUtil from '../util/NetworkUtil';
+import BookingActionRequired from '../model/trip/BookingActionRequired';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
@@ -187,7 +188,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const [bookingResult, setBookingResult] = useState<BookingPaymentForm | undefined>(undefined);
 
     // USER_ACTION_REQUIRED" screens data
-    const [actionRequired, setActionRequired] = useState<any>(undefined);
+    const [actionRequired, setActionRequired] = useState<BookingActionRequired | undefined>(undefined);
 
     useEffect(() => {
         if (booking.confirmation) {

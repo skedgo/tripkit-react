@@ -60,18 +60,7 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
                     actions={actions}
                     styles={(theme) => ({
                         actions: {
-                            marginTop: 'auto',
-                            display: 'flex',
-                            margin: '20px 16px',
-                            '&>*': {
-                                flexGrow: 1,
-                                padding: '12px 16px!important',
-                                color: white() + '!important',
-                                borderRadius: '100px'
-                            },
-                            '&>*:not(:first-child)': {
-                                marginLeft: '16px'
-                            },
+                            ...injectedStyles.actions as any,
                             ...actions.reduce((accStyles, action, index) => {
                                 accStyles[`&>*:nth-child(${index + 1})`] = {
                                     background: action.type === "CANCEL" ? '#FB2C36' : theme.colorSuccess
