@@ -46,8 +46,8 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                         const icon = L.divIcon({
                                             html: transIconHTML,
                                             className: this.props.segmentIconClassName,
-                                            iconSize: [40, 62],
-                                            iconAnchor: [20, 62]
+                                            iconSize: [40, 57],
+                                            iconAnchor: [20, 57]
                                         });
                                         return <Marker
                                             icon={icon}

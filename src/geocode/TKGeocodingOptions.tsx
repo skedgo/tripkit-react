@@ -185,17 +185,17 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         if (mutualRelevance > .8 && distanceInMetres < 100 ||   // very similar and very close
             (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .6 && distanceInMetres < 300 || // rather similar and rather close, when one is a school
             (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .5 && distanceInMetres < 70) {  // a bit less similar but very close, when one is a school
-            console.log("----- Analog -----");
-            console.log(r1DisplayString, r1);
-            console.log(r2DisplayString, r2);
-            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            // console.log("----- Analog -----");
+            // console.log(r1DisplayString, r1);
+            // console.log(r2DisplayString, r2);
+            // console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
             return true;
         } else if ((r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && distanceInMetres < 300) {
-            console.log("----- NOT Analog -----");
-            console.log(r1DisplayString, r1);
-            console.log(r2DisplayString, r2);
-            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
-            console.log("--------");
+            // console.log("----- NOT Analog -----");
+            // console.log(r1DisplayString, r1);
+            // console.log(r2DisplayString, r2);
+            // console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            // console.log("--------");
         }
         return false;
     }

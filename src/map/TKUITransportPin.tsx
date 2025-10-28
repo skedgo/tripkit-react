@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ReactComponent as IconPinHead } from "../images/ic-map-pin-head.svg";
 import { ReactComponent as IconPinHeadPointer } from "../images/ic-map-pin-head-pointer.svg";
-import iconPinBase from "../images/ic-map-pin-base.png";
+import { ReactComponent as IconPinBase } from "../images/ic-map-pin-base.svg";
 import Segment from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import Constants from "../util/Constants";
@@ -49,7 +49,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime === true, onDark: wantIconForDark });
         const isTransIconForDark = segment.arrival || (isDarkMode && !isRemoteIcon(modeInfo));
-        const timeS = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));        
+        const timeS = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));
         return <TKUITransportPinConnected
             icon={transIcon}
             label={timeS}
@@ -68,7 +68,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const startStop = firstTravelledShape && firstTravelledShape.stops && firstTravelledShape.stops[0];
         const rotation = startStop && startStop.bearing;
         const wantIconForDark = isDarkMode;
-        const transIcon = TransportUtil.getTransIcon(modeInfo, { isRealtime: false, onDark: wantIconForDark });        
+        const transIcon = TransportUtil.getTransIcon(modeInfo, { isRealtime: false, onDark: wantIconForDark });
         const isTransIconForDark = isDarkMode && !isRemoteIcon(serviceDeparture.modeInfo);
         const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.timeFormat(false));
         return <TKUITransportPinConnected icon={transIcon} isIconForDark={isTransIconForDark} label={timeS} rotation={rotation} />
@@ -81,7 +81,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
             <div className={classNames(classes.main,
                 this.props.firstSegment && classes.firstSegment,
                 this.props.arriveSegment && classes.arriveSegment)}>
-                <div>
+                <div style={{ zIndex: '201' }}>
                     <PinHead className={classes.pin}
                         style={rotation ?
                             {
@@ -98,7 +98,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
                         {label}
                     </div>
                 </div>
-                <img src={iconPinBase} className={classes.base} />
+                <IconPinBase className={classes.base} />
             </div>
         )
     }
