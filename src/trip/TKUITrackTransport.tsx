@@ -21,6 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
     brief?: boolean;
     info?: boolean;
+    onClick?: (segment: Segment) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -34,7 +35,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITrackTransport"
 };
 
-const TKUITrackTransport: React.FunctionComponent<IProps> = ({ segment, t, theme, brief, classes }) => {
+const TKUITrackTransport: React.FunctionComponent<IProps> = ({ segment, t, theme, brief, onClick, classes }) => {
     const { userProfile } = useContext(OptionsContext);
     const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;
     let infoTitle: string | undefined;
@@ -76,7 +77,14 @@ const TKUITrackTransport: React.FunctionComponent<IProps> = ({ segment, t, theme
     const transportIconUrl = TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime ?? false, onDark: theme.isDark });
     const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
     return (
-        <div className={classes.main}>
+        <div
+            className={classes.main}
+            onClick={onClick ?
+                (e: any) => {
+                    e.stopPropagation();
+                    onClick(segment);
+                } : undefined}
+        >
             <div className={classes.compositeIcon}>
                 {modeInfo.remoteIconIsBranding && modeInfo.remoteIcon &&
                     <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark, useLocal: true })}

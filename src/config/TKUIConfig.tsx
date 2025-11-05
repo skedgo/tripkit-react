@@ -96,6 +96,7 @@ import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKU
 import { TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle } from "../booking/TKUIBookingProviderOptions";
 import { TKUIProviderTicketsFormProps, TKUIProviderTicketsFormStyle } from "../stripekit/TKUIProviderTicketsForm";
 import { TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle } from "../booking/TKUIBookingActionRequired";
+import { TKUIMapTripSegmentProps, TKUIMapTripSegmentStyle } from "../map/TKUIMapTripSegment";
 
 /**
  * SDK configuration
@@ -324,6 +325,7 @@ export interface ITKUIConfigOptional {
     TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
     TKUIFromTo: TKComponentConfig<TKUIFromToProps, TKUIFromToStyle>;
     TKUIBookingActionRequired: TKComponentConfig<TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle>;
+    TKUIMapTripSegment: TKComponentConfig<TKUIMapTripSegmentProps, TKUIMapTripSegmentStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

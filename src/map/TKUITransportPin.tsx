@@ -16,10 +16,12 @@ import { Visibility } from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
 import { ReactComponent as RealtimeIcon } from "../images/ic-realtime.svg";
 import { isRemoteIcon } from "./TKUIMapLocationIcon.css";
+import ModeInfo from "../model/trip/ModeInfo";
 
 
 type IStyle = ReturnType<typeof tKUITransportPinDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    modeInfo: ModeInfo;
     icon: string;
     isIconForDark: boolean;
     label: string;
@@ -51,6 +53,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const isTransIconForDark = segment.arrival || (isDarkMode && !isRemoteIcon(modeInfo));
         const timeS = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));
         return <TKUITransportPinConnected
+            modeInfo={modeInfo}
             icon={transIcon}
             label={timeS}
             isRealtime={segment.realTime ?? undefined}
@@ -71,7 +74,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const transIcon = TransportUtil.getTransIcon(modeInfo, { isRealtime: false, onDark: wantIconForDark });
         const isTransIconForDark = isDarkMode && !isRemoteIcon(serviceDeparture.modeInfo);
         const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.timeFormat(false));
-        return <TKUITransportPinConnected icon={transIcon} isIconForDark={isTransIconForDark} label={timeS} rotation={rotation} />
+        return <TKUITransportPinConnected modeInfo={modeInfo} icon={transIcon} isIconForDark={isTransIconForDark} label={timeS} rotation={rotation} />
     }
 
     public render(): React.ReactNode {

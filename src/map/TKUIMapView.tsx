@@ -6,7 +6,7 @@ import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import Trip from "../model/trip/Trip";
-import MapTripSegment from "./MapTripSegment";
+import MapTripSegment from "./TKUIMapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import LocationUtil from "../util/LocationUtil";
@@ -710,7 +710,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                             onLocationAction={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
                                 this.props.locationActionHandler && this.props.locationActionHandler(segment.from) : undefined}
                             key={i}
-                            t={this.props.t} />
+                        />
                     ))}
                     {service &&
                         <MapService
