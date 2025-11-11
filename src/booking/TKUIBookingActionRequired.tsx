@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -7,7 +7,7 @@ import TKUIFromTo from './TKUIFromTo';
 import TKUIBookingActions from './TKUIBookingActions';
 import { ReactComponent as IconInfo } from '../images/ic-info-circle-2.svg';
 import BookingActionRequired from '../model/trip/BookingActionRequired';
-import { white } from '../jss/TKUITheme';
+import TKUIMapView from '../map/TKUIMapView';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     data: BookingActionRequired;
@@ -31,8 +31,12 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
     console.log(data);
     const { title, message, differences, actions } = data
     const [, ...moreDiffs] = differences;
+    const [selectedDiff, setSelectedDiff] = useState(differences[0]);
+    const mapArrow = differences.length > 1 ?
+        <div className={classes.mapArrow}></div> : null;
     const differencesUI = differences.map(({ bookingType, from, externalFrom, to, externalTo }, index) =>
-        <div className={classes.fromToDetails} key={index}>
+        <div className={classes.fromToDetails} key={index} onMouseOver={() => setSelectedDiff(differences[index])}>
+            {differences[index] === selectedDiff ? mapArrow : null}
             {bookingType === "RETURN" ?
                 <div className={classes.returnTripLabel}>Return trip</div> : null}
             <TKUIFromTo
@@ -54,7 +58,21 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
                     {message}
                 </div>
             </div>
-            {differencesUI}
+            <div className={classes.body}>
+                <div className={classes.differencesContainer}>
+                    {differencesUI}
+                </div>
+                <div className={classes.mapContainer}>
+                    <TKUIMapView
+                        from={selectedDiff?.externalFrom}
+                        to={selectedDiff?.externalTo}
+                        readonly={true}
+                        hideLocations={true}
+                        showCurrLocBtn={false}
+                        padding={{ top: 100, right: 100, bottom: 100, left: 100 }}
+                    />
+                </div>
+            </div>
             {actions.length > 0 &&
                 <TKUIBookingActions
                     actions={actions}

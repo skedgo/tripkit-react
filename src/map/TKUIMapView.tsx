@@ -673,7 +673,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                             }}
                             isFrom={true}
                         >
-                            {this.getLocationPopup(this.props.from!)}
+                            {this.getLocationPopup(this.props.from!, true)}
                         </TKUIMapLocationMarker>}
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
                         <TKUIMapLocationMarker
@@ -684,7 +684,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                                 this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                         >
-                            {this.getLocationPopup(this.props.to!)}
+                            {this.getLocationPopup(this.props.to!, false)}
                         </TKUIMapLocationMarker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
@@ -795,7 +795,13 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         </Popup>;
     }
 
-    private getLocationPopup(location: Location) {
+    /**
+     * 
+     * @param location 
+     * @param isFrom true if corresponds to the from location, false if corresponds to the to location, undefined otherwise.
+     * @returns 
+     */
+    private getLocationPopup(location: Location, isFrom?: boolean) {
         return <Popup
             offset={location.isCurrLoc() ? [0, 0] : [0, -30]}
             closeButton={false}
@@ -805,6 +811,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         >
             <TKUIMapLocationPopup
                 location={location}
+                isFrom={isFrom}
                 onAction={this.props.locationActionHandler && this.props.locationActionHandler(location)}
             />
         </Popup>;

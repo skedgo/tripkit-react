@@ -32,11 +32,26 @@ export const tKUIBookingActionRequiredDefaultStyle = (theme: TKUITheme) => {
         },
         fromToDetails: {
             display: 'flex',
+            flexGrow: 1,
             flexDirection: 'column',
             padding: '16px',
             borderRadius: '12px',
             border: '1px solid ' + black(isHighContrast ? 1 : 4, isDark),
-            margin: '16px'
+            margin: '16px',
+            '&:not(:first-child)': {
+                marginTop: 0
+            },
+            position: 'relative'
+        },
+        mapArrow: {
+            borderLeft: '18px solid lightgreen',
+            borderBottom: '12px solid white',
+            borderTop: '12px solid white',
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '18px',
+            right: '-20px'
         },
         returnTripLabel: {
             ...theme.textSizeCaption,
@@ -46,6 +61,24 @@ export const tKUIBookingActionRequiredDefaultStyle = (theme: TKUITheme) => {
             borderRadius: '4px',
             background: black(1),
             padding: '4px 8px'
+        },
+        body: {
+            display: 'flex',
+            flexGrow: 1
+        },
+        differencesContainer: {
+            width: '50%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start'
+        },
+        mapContainer: {
+            flexGrow: '1',
+            width: '50%',
+            display: 'flex',
+            margin: '16px 0 16px 20px',
+            borderRadius: '12px',
+            overflow: 'hidden'
         },
         actions: {
             marginTop: 'auto',
