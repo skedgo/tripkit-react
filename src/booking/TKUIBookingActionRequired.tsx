@@ -37,8 +37,8 @@ const TKUIBookingActionRequired: React.FunctionComponent<IProps> = (props: IProp
     const differencesUI = differences.map(({ bookingType, from, externalFrom, to, externalTo }, index) =>
         <div className={classes.fromToDetails} key={index} onMouseOver={() => setSelectedDiff(differences[index])}>
             {differences[index] === selectedDiff ? mapArrow : null}
-            {bookingType === "RETURN" ?
-                <div className={classes.returnTripLabel}>Return trip</div> : null}
+            {bookingType === "OUTBOUND" ? <div className={classes.returnTripLabel}>Outbound trip</div> :
+                bookingType === "RETURN" ? <div className={classes.returnTripLabel}>Return trip</div> : null}
             <TKUIFromTo
                 from={from!}
                 to={to!}

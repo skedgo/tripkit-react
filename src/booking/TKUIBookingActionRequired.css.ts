@@ -44,7 +44,7 @@ export const tKUIBookingActionRequiredDefaultStyle = (theme: TKUITheme) => {
             position: 'relative'
         },
         mapArrow: {
-            borderLeft: '18px solid lightgreen',
+            borderLeft: `18px solid ${theme.colorPrimary}`,
             borderBottom: '12px solid white',
             borderTop: '12px solid white',
             position: 'absolute',
