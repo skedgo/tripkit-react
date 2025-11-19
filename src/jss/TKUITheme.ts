@@ -30,7 +30,11 @@ export function colorWithOpacity(colorS: string, opacity: number): string {
     return Color.createFromString(colorS).toRGBA(opacity);
 }
 
-export const queryWidth = 384;
+export function setQueryWidth(width: number): void {
+    queryWidth = width;
+}
+
+export let queryWidth = 384;
 function cardSpacing(landscape: boolean = true) {
     return landscape ? 16 : 5;
 }
