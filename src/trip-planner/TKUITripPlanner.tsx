@@ -82,6 +82,9 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     transportSettingsUI?: "BRIEF" | "FULL" | "BRIEF_TO_FULL";
     hideSearch?: boolean;
     hideQueryInput?: boolean;
+    hideRoutingResults?: boolean;
+    hideTripDetails?: boolean;
+    hideModeByModeView?: boolean;
     noTripsCarousel?: boolean;
     searchCallToAction?: boolean;
 }
@@ -275,7 +278,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private isShowTripDetail(props?: IProps) {
         props = props ? props : this.props;
-        return props.tripDetailsView && props.selectedTrip
+        return props.tripDetailsView && props.selectedTrip && !props.hideTripDetails
     }
 
     private isShowServiceDetail() {
@@ -754,7 +757,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />
                 }
             </TKUIFavouritesViewHelpers.TKStateProps>;
-        const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips ?
+        const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips && !this.props.hideRoutingResults ?
             <TKUIRoutingResultsViewHelpers.TKStateProps>
                 {stateProps =>
                     <TKUIRoutingResultsView
@@ -891,7 +894,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
                 onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({ tripUpdateStatus: undefined }) : undefined}
             />;
-        const mxMView = props.selectedTripSegment &&
+        const mxMView = props.selectedTripSegment && !props.hideModeByModeView &&
             <TKUIMxMViewHelpers.TKStateProps>
                 {stateProps =>
                     <TKUIMxMView

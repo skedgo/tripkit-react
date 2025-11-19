@@ -53,6 +53,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
 
     onShowVehicleAvailabilityForSegment?: (data: { segment: Segment }) => void;
+
+    cardPresentation?: "SLIDE_UP" | "NONE";
 }
 
 interface IConsumedProps {
@@ -505,6 +507,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             <TKUICardCarousel
                 selected={selectedCardIndex}
                 onChange={onSelectedCardIndex}
+                presentation={props.cardPresentation}
                 slideUpOptions={{
                     ...DeviceUtil.isTouch() ? {
                         initPosition: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP
