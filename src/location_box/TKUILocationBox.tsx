@@ -431,7 +431,9 @@ class TKUILocationBox extends Component<IProps, IState> {
             }
         }
         // Reset highlighted item, except that more results arrived for the same query.
-        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current) {
+        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current
+            && !((results[0]?.id === "ai_prompt" || results[0]?.id === "ai_open_chat") && this.autocompleteRef.current.state?.highlightedIndex === 0)
+        ) {
             this.autocompleteRef.current.setState({ highlightedIndex: null });
         }
         this.resultsArrivedForQuery = query;
@@ -576,6 +578,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 onClick={() => this.setValue(location, false, true)}
                 renderIcon={geocoder && geocoder.getOptions().renderIcon}
                 scrollIntoView={!!this.props.menuMaxHeightPx}
+                inputText={this.state.inputText}
             />
         );
     }

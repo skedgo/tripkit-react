@@ -840,13 +840,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             )
         }
 
-        public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
+        public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting, tripDetailsView }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
             this.setState(prevState => ({
                 query: query ?? prevState.query,
                 trips: trips ?? prevState.trips,
                 selected: selected ?? prevState.selected,
                 computeTripsForQuery: computeTripsForQuery ?? prevState.computeTripsForQuery,
-                waiting: false
+                waiting: false,
+                tripDetailsView: tripDetailsView ?? prevState.tripDetailsView
             }), () => this.refreshRegion());
             if (selected) {
                 this.onReqRealtimeFor(selected);

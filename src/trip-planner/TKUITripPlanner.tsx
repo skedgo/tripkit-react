@@ -1216,6 +1216,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // off (display routing results for new query). Notice it shouldn't be other causes of re-computing trips since
         // we are on trip details view.
         if (this.props.tripDetailsView &&
+            !this.props.hideTripDetails &&  // skip this if trip details are hidden, so assume they are handled from outside.
             prevProps.query.from && prevProps.query.to &&   // if from or to were null, then we have just set them (e.g. share trip link), so don't leave trip details view.
             (prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to)) {
             this.props.onTripDetailsView(false);

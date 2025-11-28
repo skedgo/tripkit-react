@@ -62,13 +62,18 @@ export const staticFavouriteData: { values: Favourite[], addChangeListener: (cal
     }
 };
 
+let staticStorageType: "cloud" | "local" | undefined = undefined; // To force this from outside.
+export function setFavouritesStorageType(type: "cloud" | "local") {
+    staticStorageType = type;
+}
+
 const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) => {
     const { children } = props;
     const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.
     function isSupportedDefault({ signInStatus }: { signInStatus: SignInStatus }) {
-        return accountsSupported ? signInStatus === SignInStatus.signedIn : true;
+        return accountsSupported ? (storageType === 'cloud' ? signInStatus === SignInStatus.signedIn : true) : storageType === 'local';
     }
-    const storageType: "cloud" | "local" = accountsSupported ? "cloud" : "local";
+    const storageType: "cloud" | "local" = staticStorageType ?? (accountsSupported ? "cloud" : "local");
     const [isLoading, setIsLoading] = useState<boolean>(storageType === "local" ? false : true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
     const [isSupported, setIsSupported] = useState<boolean>(isSupportedDefault({ signInStatus: status }));
     const [favourites, setFavourites] = useState<Favourite[]>(storageType === "local" ? FavouritesData.instance.get() : []);
