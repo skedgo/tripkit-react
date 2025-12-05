@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import CurrentBundle from "../model/user/CurrentBundle";
 import FutureBundle from "../model/user/FutureBundle";
 
@@ -20,6 +20,10 @@ class TKUserAccount {
     public currentBundle?: CurrentBundle = undefined;
     @JsonProperty('futureBundle', FutureBundle, true)
     public futureBundle?: FutureBundle = undefined;
+    @JsonProperty('aiEarlyAccess', String, true)
+    public aiEarlyAccess?: "GRANTED" | "REQUESTED" = undefined;
+    @JsonProperty('optIn', Any, true)
+    public optIn?: { aiFeatures?: boolean } = undefined;
 }
 
 export default TKUserAccount;

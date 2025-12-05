@@ -2,7 +2,8 @@ import React from "react";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import { black, TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
+import { useStyles } from "../jss/StyleHelper";
+import { TKUIWithStyle } from "..";
 
 const loadingViewJss = (theme: TKUITheme) => ({
     main: {
@@ -18,10 +19,11 @@ const loadingViewJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof loadingViewJss>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IProps extends TKUIWithStyle<IStyle, IProps> { }
 
-}
+const TKLoading: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { classes } = useStyles(props, loadingViewJss);
+    return <IconSpin className={classes.main} focusable="false" />;
+};
 
-const TKLoading: React.FunctionComponent<IProps> = (props: IProps) => <IconSpin className={props.classes.main} focusable="false" />;
-
-export default withStyles(TKLoading, loadingViewJss);
+export default TKLoading;

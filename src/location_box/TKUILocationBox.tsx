@@ -241,8 +241,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             return; // If locationValue === null may still need to clear input text
         }
         let inputText = this.state.inputText;
-        if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? LocationUtil.getMainText(locationValue, this.props.t) : '';
+        if (!highlighted) {   // Set location address as input text, except it's an AI prompt/open chat special location
+            inputText = !locationValue || locationValue.id === "ai_prompt" || locationValue.id === "ai_open_chat" ? '' : LocationUtil.getMainText(locationValue, this.props.t);
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&

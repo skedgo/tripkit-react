@@ -161,6 +161,11 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             return Promise.reject("Still signing in");
         }
     }
+    async function onUserChange(update: TKUserAccount) {
+        setUserAccount(update);
+        const updateResult = await TripGoApi.apiCallT<TKUserAccount>("/data/user/", "PUT", TKUserAccount, update);
+        setUserAccount(updateResult);
+    }
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
@@ -263,6 +268,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             {props.children({
                 status: status,
                 userAccount,
+                onUserChange,
                 login,
                 logout: logoutHandler,
                 accountsSupported: true,
