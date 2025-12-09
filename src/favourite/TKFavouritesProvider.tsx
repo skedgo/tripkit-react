@@ -62,8 +62,18 @@ export const staticFavouriteData: { values: Favourite[], addChangeListener: (cal
     }
 };
 
-let staticStorageType: "cloud" | "local" | undefined = undefined; // To force this from outside.
-export function setFavouritesStorageType(type: "cloud" | "local") {
+/**
+ * Determines where favourites are stored.
+ * - "local": only locally, on browser's local storage.
+ * - "cloud": only on cloud, requiring user to be signed in.
+ * - "local-and-cloud": local when user is not signed in, cloud when user is signed in.
+ *    And on sign in, if no favorites in the cloud, migrates local favourites to the cloud.
+ */
+export type StorageType = "local" | "cloud" | "local-and-cloud";
+
+// TODO: move this to TKUIConfig
+let staticStorageType: StorageType | undefined = undefined; // To force this from outside.
+export function setFavouritesStorageType(type: StorageType) {
     staticStorageType = type;
 }
 
@@ -73,18 +83,20 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     function isSupportedDefault({ signInStatus }: { signInStatus: SignInStatus }) {
         return accountsSupported ? (storageType === 'cloud' ? signInStatus === SignInStatus.signedIn : true) : storageType === 'local';
     }
-    const storageType: "cloud" | "local" = staticStorageType ?? (accountsSupported ? "cloud" : "local");
-    const [isLoading, setIsLoading] = useState<boolean>(storageType === "local" ? false : true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
+    const storageType: StorageType = staticStorageType ?? (accountsSupported ? "cloud" : "local");
+    const [isLoading, setIsLoading] = useState<boolean>(storageType === "local" ? false : true);
     const [isSupported, setIsSupported] = useState<boolean>(isSupportedDefault({ signInStatus: status }));
-    const [favourites, setFavourites] = useState<Favourite[]>(storageType === "local" ? FavouritesData.instance.get() : []);
+    const isCurrentlyLocal = storageType === "local" || storageType === "local-and-cloud" && status !== SignInStatus.signedIn;
+    const [favourites, setFavourites] = useState<Favourite[]>(isCurrentlyLocal ? FavouritesData.instance.get() : []);
     const [recents, setRecents] = useState<Favourite[]>(FavouritesData.recInstance.get());
     useEffect(() => {
-        if (storageType === "local") {
+        if (status === SignInStatus.signedOut) {
+            setIsLoading(false);
+        }
+        if (isCurrentlyLocal) {
             return;
         }
-        // if (process.env.NODE_ENV === "development") {   // TODO: remove
-        refreshFavourites();
-        // }
+        refreshFavourites({ justSignedIn: status === SignInStatus.signedIn });
         const isSupportedFavourites = isSupportedDefault({ signInStatus: status });
         setIsSupported(isSupportedFavourites);
         let refreshInterval
@@ -102,7 +114,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         fireChangeEvent(favourites);
     }, [favourites])
 
-    async function refreshFavourites({ silent, shouldRefreshStops }: { silent?: boolean, shouldRefreshStops?: boolean } = {}) {
+    async function refreshFavourites({ silent, shouldRefreshStops, justSignedIn }: { silent?: boolean, shouldRefreshStops?: boolean, justSignedIn?: boolean } = {}) {
         if (!silent) {
             setIsLoading(true);
             setFavourites([]);
@@ -120,7 +132,24 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 favouritesResult = [];
             }
             await fetchStops(favouritesResult, shouldRefreshStops);
-            setFavourites([...favouritesResult]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.            
+            setFavourites([...favouritesResult]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.
+
+            // If just signed in and no favourites, try to migrate local favourites.
+            if (justSignedIn && favouritesResult.length === 0) {
+                const localFavourites = FavouritesData.instance.get();
+                if (localFavourites.length > 0) {
+                    setIsLoading(true);
+                    await Promise.all(localFavourites.map(async localFav => {
+                        try {
+                            await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(localFav));
+                            FavouritesData.instance.remove(localFav);
+                        } catch (e) {
+                            console.log("Failed to migrate local favourite:", localFav);
+                        }
+                    }));
+                    refreshFavourites();
+                }
+            }
         } else {
             setFavourites([]);
         }
@@ -163,7 +192,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     async function addFavouriteHandler(value: Favourite): Promise<Favourite[]> {
         value.order = favourites.length;
         value.uuid = uuidv4();
-        if (storageType === "local") {
+        if (isCurrentlyLocal) {
             FavouritesData.instance.add(value);
             const update = FavouritesData.instance.get();
             setFavourites(update);
@@ -178,7 +207,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }
 
     async function updateFavouriteHandler(value: Favourite): Promise<Favourite[]> {
-        if (storageType === "local") {
+        if (isCurrentlyLocal) {
             const favouritesUpdate = [...favourites];
             favouritesUpdate.splice(favourites.findIndex(fav => fav.uuid === value.uuid), 1, value);
             FavouritesData.instance.save(favouritesUpdate);
@@ -196,7 +225,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }
 
     async function removeFavouriteHandler(value: Favourite): Promise<Favourite[]> {
-        if (storageType === "local") {
+        if (isCurrentlyLocal) {
             FavouritesData.instance.remove(value);
             const update = FavouritesData.instance.get();
             setFavourites(update);
@@ -212,7 +241,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
 
     function reorderFavouriteHandler(from: number, to: number) {
         const reordered = moveFromTo([...favourites], from, to);
-        if (storageType === "local") {
+        if (isCurrentlyLocal) {
             reordered.forEach((fav, i) => fav.order = i);
             FavouritesData.instance.save(reordered);
             setFavourites(reordered);
@@ -231,7 +260,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     useEffect(() => {
         // In case favourites are changed directly through FavouritesData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
-        if (storageType === "local") {
+        if (isCurrentlyLocal) {
             //     FavouritesData.instance.addChangeListener(setFavourites);
             fetchStops(favourites, true);
         }
@@ -251,7 +280,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 onRemoveFavourite: removeFavouriteHandler,
                 onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) },
                 onReorderFavourite: reorderFavouriteHandler,
-                onRefreshFavourites: storageType === "local" ? undefined : refreshFavourites
+                onRefreshFavourites: isCurrentlyLocal ? undefined : refreshFavourites
             }}>
             {children}
         </TKFavouritesContext.Provider>
