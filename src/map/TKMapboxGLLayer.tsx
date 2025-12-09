@@ -122,11 +122,49 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
         }
     }
 
+    function refreshLayerFilters() {
+        if (!mapboxGlMap.current || !Features.instance.modeSpecificMapTilesEnabled) {
+            return
+        }
+        try {
+            const poiLayers = ['poi-label'];
+
+            for (const layerId of poiLayers) {
+                if (mapboxGlMap.current.getLayer(layerId)) {
+                    // Get the current filter (it will be null or an array)
+                    const currentFilter = mapboxGlMap.current.getFilter(layerId);
+
+                    // Define the new exclusion condition
+                    // Make sure your exclusion filter uses the correct property name (e.g., 'name', 'maki', 'class')
+                    // I'll use 'category_en' as an example as before
+                    const exclusionCondition = ['!=', ['get', 'category_en'], 'Swimming Pool'];
+
+                    let updatedFilter;
+
+                    if (currentFilter) {
+                        // If an existing filter is present, combine it with the new condition using 'all'
+                        // Ensure the existing filter is treated as a single argument within the 'all' array
+                        updatedFilter = ['all', currentFilter, exclusionCondition];
+                    } else {
+                        // If no filter exists, the exclusion condition is the entire new filter
+                        updatedFilter = exclusionCondition;
+                    }
+
+                    // Apply the filter
+                    mapboxGlMap.current.setFilter(layerId, updatedFilter);
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     function refresh() {
         refreshCoverage();
         // On init, or on style change (switch dark / light appearance).
         refreshModeSpecificTiles();
         refreshMapLocale();
+        refreshLayerFilters();
     }
 
     const { attribution, ...restProps } = props;
