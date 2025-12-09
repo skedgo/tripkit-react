@@ -45,6 +45,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     portrait?: boolean;
 
     callToAction?: string;
+
+    placeholder?: string;
 }
 
 interface IConsumedProps {
@@ -105,8 +107,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUILocationSearch: React.FunctionComponent<IProps> = (props) => {
     const { value, onChange, callToAction, onShowSideMenuClicked, onResultHighlight, onInputTextChange,
-        injectedStyles, onDirectionsClick, onLocationBoxRef, menuContainer, portrait, onMenuVisibilityChange, classes, t } = props;
-    const placeholder = t("Search.for.destination");
+        injectedStyles, onDirectionsClick, onLocationBoxRef, menuContainer, portrait, onMenuVisibilityChange, classes, t,
+        placeholder = t("Search.for.destination") } = props;
     const inputId = "input-search";
     const ariaLabel = value ?
         "To " + value.getDisplayString() : placeholder;

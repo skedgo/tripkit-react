@@ -26,3 +26,14 @@ export const TKAccountContext = React.createContext<IAccountContext>({
     resetUserToken: () => { },
     refreshUserProfile: () => Promise.resolve(new TKUserAccount())
 });
+
+export const staticAccountContext: { value: IAccountContext } = {
+    value: {
+        status: SignInStatus.loading,
+        login: () => Promise.resolve(),
+        logout: () => { },
+        finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
+        resetUserToken: () => { },
+        refreshUserProfile: () => Promise.resolve(new TKUserAccount())
+    }
+};

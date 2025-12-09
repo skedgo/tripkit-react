@@ -579,6 +579,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 renderIcon={geocoder && geocoder.getOptions().renderIcon}
                 scrollIntoView={!!this.props.menuMaxHeightPx}
                 inputText={this.state.inputText}
+                onRefresh={() => this.refreshDisplayingResults()}
             />
         );
     }

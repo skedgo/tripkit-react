@@ -24,6 +24,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     scrollIntoView?: boolean;
     inputText?: string;
     renderRight?: () => React.ReactNode;
+    onRefresh?: () => void;
 }
 
 interface IStyle {
