@@ -550,13 +550,14 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.rightClickMenu?.map(({ label, effect, effectFc }, i) =>
                         <div
                             className={classes.menuPopupItem}
-                            onClick={() => {
+                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                 const clickedLatLng = LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng);
                                 if (effect) {
                                     this.onMapLocChanged(effect === "SET_FROM", clickedLatLng);
                                 }
                                 this.setState({ menuPopupPosition: undefined });
                                 effectFc?.(clickedLatLng);
+                                e.stopPropagation();
                             }}
                             key={i}
                         >
