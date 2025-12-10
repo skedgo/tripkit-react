@@ -7,7 +7,7 @@ import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { IAccountContext, SignInStatus, staticAccountContext, TKAccountContext } from "./TKAccountContext";
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from 'aws-amplify/auth';
 import UIUtil from '../util/UIUtil';
 
 class AuthStorage extends LocalStorageItem<TKAuthResponse> {
