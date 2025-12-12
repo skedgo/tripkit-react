@@ -203,6 +203,10 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     //     }
     // }
 
+    useEffect(() => {
+        staticAccountContext.notifyStatusChange(status);
+    }, [status]);
+
     const logoutHandler = () => {
         logout();
         AuthStorage.instance.save(new TKAuthResponse());

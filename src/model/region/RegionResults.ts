@@ -1,4 +1,4 @@
-import {Any, JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import Region from "./Region";
 
 @JsonObject
@@ -12,6 +12,9 @@ class RegionResults {
 
     @JsonProperty("regions", [Region])
     private _regions: Region[] = [];
+
+    @JsonProperty("aiAccessAvailability", Boolean, true)
+    public readonly aiAccessAvailability: boolean = true;
 
 
     get hashCode(): number {
