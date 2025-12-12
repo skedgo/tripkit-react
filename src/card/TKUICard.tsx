@@ -291,7 +291,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     </div>}
                 {this.props.scrollable !== false ?
                     <div
-                        className={classes.body}
+                        className={classNames(classes.body, "no-drag")}
                         style={{
                             overflowY: 'auto',
                             overflowX: 'hidden'

@@ -203,6 +203,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     disabled={this.props.draggable === false}
                     handle={this.props.handleSelector}
                     nodeRef={this.nodeRef}
+                    cancel=".no-drag"
                 >
                     <div className={classNames(classes.container, this.props.containerClass)}
                         ref={this.nodeRef}
@@ -212,9 +213,9 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                         <div style={{
                             height: this.containerElem ?
                                 (
-                                    this.state.dragging ?
-                                        this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
-                                        this.containerElem.offsetHeight - this.state.top + "px"
+                                    // Commented this since this is only necessary if actually allow dragging, but currently this just goes jumping between positions.
+                                    // this.state.dragging ? this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
+                                    this.containerElem.offsetHeight - this.state.top + "px"
                                 ) :
                                 "100%",
                             // Moved from TKUICard.css to here since needs to consider position which changes dinamically

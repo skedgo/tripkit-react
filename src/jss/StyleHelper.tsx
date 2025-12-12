@@ -303,4 +303,4 @@ export function renderToStaticMarkup(elem) {
     return renderToStaticMarkupDomServer(elem);
 }
 
-export { createUseStyles };
+export { createUseStyles, useTheme };
