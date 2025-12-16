@@ -23,14 +23,22 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         },
         boxSizing: 'border-box'
     },
-
+    // Stop using modalContent class, currently passed to react-modal as inline style, and use instead modal class, passed to react-modal as className.
     modalContent: {
+        position: 'absolute',
+        inset: '40px 40px 40px 50%',
         background: 'none',
         border: 'none',
         padding: '5px',
         transform: 'translate(-50%, 0)',
-        left: '50%',
-        width: '500px'
+        width: '500px',
+        overflow: 'auto',
+        borderRadius: '4px',
+        outline: 'none'
+    },
+
+    modal: {
+
     },
 
     modalOverlay: {

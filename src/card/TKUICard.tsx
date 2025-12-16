@@ -336,6 +336,7 @@ class TKUICard extends React.Component<IProps, IState> {
                                 { overlay: this.props.injectedStyles.modalOverlay }
                             )
                         }}
+                        className={classes.modal}
                         shouldCloseOnEsc={true}
                         onRequestClose={this.close}
                         appElement={this.appMainElement}
