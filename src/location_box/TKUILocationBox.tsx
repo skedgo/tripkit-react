@@ -580,6 +580,11 @@ class TKUILocationBox extends Component<IProps, IState> {
                 scrollIntoView={!!this.props.menuMaxHeightPx}
                 inputText={this.state.inputText}
                 onRefresh={() => this.refreshDisplayingResults()}
+                blurInput={() => {
+                    // The _ignoreBlur flag is used internally by Autocomplete to avoid blurring when clicking on an item.
+                    this.autocompleteRef.current && this.autocompleteRef.current.setIgnoreBlur(false);
+                    this.autocompleteRef.current && this.autocompleteRef.current.blur();
+                }}
             />
         );
     }
