@@ -1,14 +1,17 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { TKAccountContext } from "./TKAccountContext";
 import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
+import { TKUIWithClasses, useStyles, withStyles } from "../jss/StyleHelper";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { TKUISlideUpPosition } from "../card/TKUISlideUp";
 import TKUISettingSection from "../options/TKUISettingSection";
 import TKUIRow from "../options/TKUIRow";
-import { TKI18nContext } from '../i18n/TKI18nProvider';
+import { TKUIWithStyle } from '..';
+import TKUserAccount from './TKUserAccount';
+import { PatternFormat } from 'react-number-format';
+import Util from '../util/Util';
 
 const userAccountViewJss = (theme: TKUITheme) => ({
     main: {
@@ -28,20 +31,43 @@ const userAccountViewJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof userAccountViewJss>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     phoneNote?: ReactNode;
+    readonly?: boolean;
 }
 
 const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
-    const { userAccount } = useContext(TKAccountContext);
-    const { t } = useContext(TKI18nContext);
-    if (!userAccount) {
+    const { readonly = true, classes, t } = useStyles(props, userAccountViewJss);
+    const { userAccount: user, onUserChange } = useContext(TKAccountContext);
+    const [update, setUpdate] = useState<TKUserAccount>(user!);
+    if (!user) {
         return null;
     }
-    const classes = props.classes;
-    const name = userAccount.givenName ?
-        userAccount.givenName + (userAccount.surname ? " " + userAccount.surname : "") : userAccount.surname;
+    const name = user.givenName ?
+        user.givenName + (user.surname ? " " + user.surname : "") : user.surname;
+
+    let phoneEntry;
+    if (readonly) {
+        phoneEntry = user.phone &&
+            <TKUIRow
+                title={t("Phone")}
+                subtitle={user.phone}
+            />;
+    } else {
+        phoneEntry =
+            <PatternFormat
+                type='tel'
+                format="+1 (###) ###-####"
+                allowEmptyFormatting
+                mask="_"
+                value={update.phone?.trim() || ''}
+                onValueChange={(values) => {
+                    setUpdate(Util.iAssign(update, { phone: values.formattedValue || undefined }));
+                }}
+                disabled={readonly}
+            />
+    }
     return (
         <TKUIViewportUtil>
             {(viewportProps) =>
@@ -57,22 +83,18 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 >
                     <div className={classes.main}>
                         <TKUISettingSection>
+                            <TKUIRow
+                                title={t("Email")}
+                                subtitle={user.email}
+                            />
                             {name &&
                                 <TKUIRow
                                     title={t("Name")}
                                     subtitle={name}
                                 />}
-                            <TKUIRow
-                                title={t("Email")}
-                                subtitle={userAccount.email}
-                            />
-                            {userAccount.phone &&
-                                <TKUIRow
-                                    title={t("Phone")}
-                                    subtitle={userAccount.phone}
-                                />}
+                            {phoneEntry}
                         </TKUISettingSection>
-                        {userAccount.phone && props.phoneNote &&
+                        {user.phone && props.phoneNote &&
                             <div className={classes.phoneNote}>
                                 {props.phoneNote}
                             </div>}
@@ -82,4 +104,4 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
     )
 };
 
-export default withStyles(TKUIUserAccountView, userAccountViewJss);
+export default TKUIUserAccountView;
