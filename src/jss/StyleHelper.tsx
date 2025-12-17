@@ -242,7 +242,7 @@ export function withStyleInjection<
 export function useStyles<
     PROPS extends { styles?: TKUICustomStyles<STYLE, PROPS> },
     STYLE,
-    OUTPROPS = PROPS & TKUIWithClasses<STYLE, PROPS>
+    OUTPROPS = PROPS & Subtract<TKUIWithClasses<STYLE, PROPS>, TKI18nContextProps>
 >(props: PROPS, stylesJss: StyleCreator<keyof STYLE, TKUITheme, PROPS>): OUTPROPS {
     // >(props: PROPS, stylesJss: TKUIStyles<STYLE, PROPS>): OUTPROPS {
     const theme = useTheme();
