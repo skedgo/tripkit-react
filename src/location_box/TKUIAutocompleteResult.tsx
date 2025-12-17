@@ -25,6 +25,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     inputText?: string;
     renderRight?: () => React.ReactNode;
     onRefresh?: () => void;
+    blurInput?: () => void;
 }
 
 interface IStyle {
