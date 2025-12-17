@@ -53,7 +53,7 @@ const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
             />
             {moreSettings}
             {showAccountView &&
-                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} readonly={false} />}
+                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} />}
         </>
     )
 };

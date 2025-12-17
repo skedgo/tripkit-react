@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { TKAccountContext } from "./TKAccountContext";
-import { TKUITheme } from "../jss/TKUITheme";
+import { TKUITheme, white } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import { TKUIWithStyle, useStyles } from "../jss/StyleHelper";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
@@ -12,8 +12,9 @@ import TKUserAccount from './TKUserAccount';
 import { PatternFormat } from 'react-number-format';
 import Util from '../util/Util';
 import { useI18n } from '../i18n/TKI18nProvider';
-import TKUIButton from '../buttons/TKUIButton';
+import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import TKLoading from '../card/TKLoading';
+import UIUtil from '../util/UIUtil';
 
 const userAccountViewJss = (theme: TKUITheme) => ({
     main: {
@@ -22,6 +23,21 @@ const userAccountViewJss = (theme: TKUITheme) => ({
         padding: '30px 0',
         height: '100%',
         position: 'relative'
+    },
+    entry: {
+        display: 'flex',
+        '& div:first-child': {
+            flexGrow: 1,
+            paddingTop: 0,
+            paddingBottom: 0
+        }
+    },
+    required: {
+        background: theme.colorError,
+        borderRadius: '6px',
+        color: white(),
+        alignSelf: 'flex-start',
+        padding: '0 5px'
     },
     phoneNote: {
         padding: '0 30px',
@@ -37,6 +53,7 @@ const userAccountViewJss = (theme: TKUITheme) => ({
     footer: {
         ...genStyles.flex,
         ...genStyles.justifyEnd,
+        gap: '30px',
         margin: 'auto 30px 0 30px'
     },
     loadingPanel: {
@@ -76,7 +93,7 @@ function isFormValid(update: TKUserAccount) {
 }
 
 const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
-    const { readonly = true, classes } = useStyles(props, userAccountViewJss);
+    const { readonly = true, onRequestClose, classes } = useStyles(props, userAccountViewJss);
     const { t } = useI18n();
     const { userAccount: user, onUserChange } = useContext(TKAccountContext);
     const [update, setUpdate] = useState<TKUserAccount>(user!);
@@ -104,10 +121,15 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 className={classes.phoneInput}
             />
         nameEntry =
-            <TKUIRow
-                title={t("Name")}
-                subtitle={nameInput}
-            />;
+            <div className={classes.entry}>
+                <TKUIRow
+                    title={t("Name")}
+                    subtitle={nameInput}
+                />
+                <div className={classes.required}>
+                    Required
+                </div>
+            </div>;
     }
 
     let phoneEntry;
@@ -137,22 +159,41 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 className={classes.phoneInput}
             />
         phoneEntry =
-            <TKUIRow
-                title={t("Phone")}
-                subtitle={phoneInput}
-            />;
+            <div className={classes.entry}>
+                <TKUIRow
+                    title={t("Phone")}
+                    subtitle={phoneInput}
+                />
+                <div className={classes.required}>
+                    Required
+                </div>
+            </div>;
     }
 
     async function handleSave() {
         if (!isFormValid(update)) {
             return;
         }
-        setWaiting(true);
-        await onUserChange?.(update);
-        setWaiting(false);
+        try {
+            setWaiting(true);
+            await onUserChange?.(update);
+            setWaiting(false);
+            onRequestClose?.();
+        } catch (error) {
+            UIUtil.errorMsg(error as Error);
+        } finally {
+            setWaiting?.(false);
+        }
     }
+
     const footer = !readonly &&
         <div className={classes.footer}>
+            {onRequestClose &&
+                <TKUIButton
+                    text={t("Cancel")}
+                    onClick={() => onRequestClose()}
+                    type={TKUIButtonType.SECONDARY}
+                />}
             <TKUIButton
                 text={t("save")}
                 disabled={!isFormValid(update)}
@@ -166,7 +207,7 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 <TKUICard
                     title={t("My.Account")}
                     presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
-                    onRequestClose={props.onRequestClose}
+                    onRequestClose={onRequestClose}
                     slideUpOptions={{
                         initPosition: TKUISlideUpPosition.UP,
                         modalUp: { top: 5, unit: 'px' },
