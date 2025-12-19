@@ -57,6 +57,31 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         ...theme.cardBackground
     },
 
+    bottomSheetRoot: {
+        fontFamily: theme.fontFamily,
+        ...theme.textColorDefault,
+        ...theme.textSizeBody
+    },
+
+    '@global': {
+        '[data-rsbs-header]': {
+            boxShadow: 'none!important',
+            fontFamily: theme.fontFamily,
+            paddingLeft: '0!important',
+            paddingRight: '0!important',
+            paddingBottom: '0!important'
+        },
+        '[data-rsbs-footer]': {
+            boxShadow: 'none!important',
+            fontFamily: theme.fontFamily,
+            padding: 0
+        },
+        '[data-rsbs-scroll]': {
+        },
+        '[data-rsbs-content]': {
+        }
+    },
+
     mainForSlideUp: {
         ...genStyles.borderRadiusString('12px 12px 0 0')
     },

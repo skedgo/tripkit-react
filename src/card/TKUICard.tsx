@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
 import { Subtract } from "utility-types";
@@ -19,6 +19,7 @@ import { cardSpacing } from "../jss/TKUITheme";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { SpringEvent } from "react-spring-bottom-sheet/dist/types";
 import { usePrevious } from "../util/ReactUtil";
+import 'react-spring-bottom-sheet/dist/style.css';
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -84,6 +85,26 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     modalOptions?: any;
+
+    bottomSheetOptions?: {
+        onSpringStart?: (event: SpringEvent) => void;
+        onSpringCancel?: (event: SpringEvent) => void;
+        onSpringEnd?: (event: SpringEvent) => void;
+        open?: boolean;
+        className?: string;
+        footer?: React.ReactNode;
+        header?: React.ReactNode;
+        initialFocusRef?: false | React.RefObject<HTMLElement>;
+        onDismiss?: () => void;
+        blocking?: boolean;
+        maxHeight?: number;
+        scrollLocking?: boolean;
+        // snapPoints?: import("./types").snapPoints;
+        // defaultSnap?: number | ((props: import("./types").defaultSnapProps) => number);
+        reserveScrollBarGap?: boolean;
+        skipInitialTransition?: boolean;
+        expandOnContentDrag?: boolean;
+    }
 
     /**
      * @ignore
@@ -284,6 +305,9 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
         }
     }, [presentation]);
 
+    const sheetRef = useRef<any>(null);
+    const snapPointsRef = useRef<number[]>(undefined);
+    const [expandOnContentDrag, setExpandOnContentDrag] = useState(false);
 
     /**
      * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
@@ -429,32 +453,58 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
         return (
             <BottomSheet
                 open={!!open}
+                className={classNames(classes.bottomSheetRoot, genClassNames.root)}
                 skipInitialTransition
-                // ref={sheetRef}
+                ref={sheetRef}
                 // initialFocusRef={focusRef}
                 defaultSnap={({ maxHeight }) => maxHeight / 2}
                 snapPoints={({ maxHeight }) => {
                     const snapPoints = [
-                        maxHeight - maxHeight / 10,
+                        maxHeight - 16,
                         maxHeight * 0.6,
                         maxHeight / 4
                     ];
                     console.log(snapPoints)
-                    // snapPointsRef.current = snapPoints;
+                    snapPointsRef.current = snapPoints;
                     return snapPoints;
                 }}
                 onSpringEnd={(e: SpringEvent) => {
                     console.log(e);
-                    // console.log(sheetRef.current);
-                    // if (e.type === 'SNAP' && sheetRef.current && snapPointsRef.current) {
-                    //     console.log("expandOnContentDrag", Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
-                    //     setExpandOnContentDrag(Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
-                    // }
+                    console.log(sheetRef.current);
+                    console.log(sheetRef.current.height);
+                    console.log(snapPointsRef.current);
+                    if (e.type === 'SNAP' && sheetRef.current && snapPointsRef.current) {
+                        console.log("expandOnContentDrag", Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
+                        setExpandOnContentDrag(Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
+                    }
                 }}
-            // expandOnContentDrag={expandOnContentDrag}
+                // expandOnContentDrag={expandOnContentDrag}
+                blocking={false}
+                header={
+                    (showHeader || props.renderSubHeader) &&
+                    <div className={cardHandleClass}>
+                        {showHeader &&
+                            <div ref={(ref: any) => {
+                                handleRef === undefined && setHandleRef(ref);
+                                handleRef === undefined && props.handleRef && props.handleRef(ref);
+                            }}
+                            >
+                                {showHeader &&
+                                    renderHeaderFc({ title, subtitle, onRequestClose: onRequestClose ? close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
+                            </div>}
+                        {props.renderSubHeader &&
+                            <div className={classes.subHeader}>
+                                {props.renderSubHeader()}
+                            </div>}
+                        {(showHeader || props.renderSubHeader) &&
+                            <div className={classes.divider} />}
+                    </div>
+                }
+                {...props.bottomSheetOptions}
             >
-                {body}
-            </BottomSheet>
+                {/* {body} */}
+                {children}
+            </BottomSheet >
         );
     } else {
         return open && body;
