@@ -78,10 +78,16 @@ const Auth0ToTKAccount: React.FunctionComponent<{
         }
     }
     async function onUserChange(update: TKUserAccount): Promise<TKUserAccount> {
+        const originalUser = userAccount;
         setUserAccount(update);
-        const updateResult = await TripGoApi.apiCallT<TKUserAccount>("/data/user/", "PUT", TKUserAccount, update);
-        setUserAccount(updateResult);
-        return updateResult;
+        try {
+            const updateResult = await TripGoApi.apiCallT<TKUserAccount>("/data/user/", "PUT", TKUserAccount, update);
+            setUserAccount(updateResult);
+            return updateResult;
+        } catch (error) {
+            setUserAccount(originalUser);
+            throw error;
+        }
     }
     useEffect(() => {
         // Set userToken to be used by SDK

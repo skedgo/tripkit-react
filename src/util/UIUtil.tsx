@@ -18,34 +18,38 @@ export interface MsgOptions {
 
 class UIUtil {
 
-    public static customConfirmAlert(options: ReactConfirmAlertProps) {
-        const { title, message, buttons, ...otherOptions } = options;
+    public static customConfirmAlert(options: ReactConfirmAlertProps & { focusTrap?: boolean }) {
+        const { title, message, buttons, focusTrap = true, ...otherOptions } = options;
         confirmAlert({
             customUI: ({ onClose }) => {
-                return (
-                    <FocusTrap>
-                        <div className='react-confirm-alert-body'>
-                            {title && <h1>{title}</h1>}
-                            {message}
-                            <div className='react-confirm-alert-button-group'>
-                                {buttons?.map((button, i) => (
-                                    <button
-                                        key={i}
-                                        {...button}
-                                        onClick={() => {
-                                            if (button.onClick) {
-                                                (button.onClick as any)();
-                                            }
-                                            onClose();
-                                        }}
-                                    >
-                                        {button.label}
-                                    </button>
-                                ))}
-                            </div>
+                let result =
+                    <div className='react-confirm-alert-body'>
+                        {title && <h1>{title}</h1>}
+                        {message}
+                        <div className='react-confirm-alert-button-group'>
+                            {buttons?.map((button, i) => (
+                                <button
+                                    key={i}
+                                    {...button}
+                                    onClick={() => {
+                                        if (button.onClick) {
+                                            (button.onClick as any)();
+                                        }
+                                        onClose();
+                                    }}
+                                >
+                                    {button.label}
+                                </button>
+                            ))}
                         </div>
-                    </FocusTrap>
-                )
+                    </div>;
+                if (focusTrap) {
+                    result =
+                        <FocusTrap>
+                            {result}
+                        </FocusTrap>;
+                }
+                return result;
             },
             ...otherOptions
         });
@@ -77,7 +81,8 @@ class UIUtil {
         });
     }
 
-    public static errorMsg(e: TKError, options?: { onClose?: () => void }) {
+    public static errorMsg(e: TKError, options: { onClose?: () => void, focusTrap?: boolean } = {}) {
+        const { focusTrap } = options;
         const buttons = [
             {
                 label: i18n.t("OK"),
@@ -91,6 +96,7 @@ class UIUtil {
             message: messageElems.join(". "),
             closeOnEscape: true,
             closeOnClickOutside: true,
+            focusTrap
             //     customUI: ({ title, message, onClose }) =>
             //         <div className={classNames(genClassNames.flex, genClassNames.column)}>
             //             <div>
