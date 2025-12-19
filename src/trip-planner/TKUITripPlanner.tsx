@@ -40,7 +40,7 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import { TKUserPosition } from "../util/GeolocationUtil";
 import TKUIWaitingRequest, { TKRequestStatus } from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
-import TKUICard, { CardPresentation, TKUICardRaw } from "../card/TKUICard";
+import TKUICard, { CardPresentation, setMainContainerId, setModalContainerId, TKUICardRaw } from "../card/TKUICard";
 import { genClassNames } from "../css/GenStyle.css";
 import Segment, { TripAvailability } from "../model/trip/Segment";
 import { cardSpacing, colorWithOpacity } from "../jss/TKUITheme";
@@ -155,8 +155,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             fadeOutHomeBounce: false,
             cardStack: []
         };
-        TKUICardRaw.modalContainerId = modalContainerId;
-        TKUICardRaw.mainContainerId = mainContainerId;
+        setModalContainerId(modalContainerId);
+        setMainContainerId(mainContainerId);
 
         (this.props.userLocationPromise ||
             GeolocationData.instance.requestCurrentLocation(true, true)
