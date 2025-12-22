@@ -17,7 +17,7 @@ import FocusTrap from "focus-trap-react";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import { cardSpacing } from "../jss/TKUITheme";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import { SpringEvent } from "react-spring-bottom-sheet/dist/types";
+import { defaultSnapProps, snapPoints, SpringEvent } from "react-spring-bottom-sheet/dist/types";
 import { usePrevious } from "../util/ReactUtil";
 import 'react-spring-bottom-sheet/dist/style.css';
 
@@ -99,11 +99,13 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
         blocking?: boolean;
         maxHeight?: number;
         scrollLocking?: boolean;
-        // snapPoints?: import("./types").snapPoints;
-        // defaultSnap?: number | ((props: import("./types").defaultSnapProps) => number);
+        snapPoints?: snapPoints;
+        defaultSnap?: number | ((props: defaultSnapProps) => number);
         reserveScrollBarGap?: boolean;
         skipInitialTransition?: boolean;
         expandOnContentDrag?: boolean;
+        snap?: ((props: Pick<defaultSnapProps, 'snapPoints'>) => number);
+        hide?: boolean;
     }
 
     /**
@@ -311,6 +313,18 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
     const sheetRef = useRef<any>(null);
     const snapPointsRef = useRef<number[]>(undefined);
     const [expandOnContentDrag, setExpandOnContentDrag] = useState(false);
+    const snap = props.bottomSheetOptions?.snap?.(snapPointsRef.current ? { snapPoints: snapPointsRef.current } : { snapPoints: [] });
+
+    useEffect(() => {
+        if (!sheetRef.current) {
+            return;
+        }
+        if (snap !== undefined) {
+            sheetRef.current.snapTo(snap);
+        } else {
+            sheetRef.current.snapTo(props.bottomSheetOptions?.defaultSnap ?? (({ snapPoints }) => snapPoints[1]));
+        }
+    }, [snap]);
 
     /**
      * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
@@ -456,26 +470,24 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
         return (
             <BottomSheet
                 open={!!open}
-                className={classNames(classes.bottomSheetRoot, genClassNames.root)}
+                className={classNames(classes.bottomSheetRoot, genClassNames.root, props.bottomSheetOptions?.hide && classes.hidden)}
+                style={{
+                    '--bottom-sheet-z-index': zIndex
+                } as React.CSSProperties}
                 skipInitialTransition
                 ref={sheetRef}
                 // initialFocusRef={focusRef}
-                defaultSnap={({ maxHeight }) => maxHeight / 2}
+                defaultSnap={({ snapPoints }) => snapPoints[1]}
                 snapPoints={({ maxHeight }) => {
                     const snapPoints = [
                         maxHeight - 16,
                         maxHeight * 0.6,
                         maxHeight / 4
                     ];
-                    console.log(snapPoints)
                     snapPointsRef.current = snapPoints;
                     return snapPoints;
                 }}
                 onSpringEnd={(e: SpringEvent) => {
-                    console.log(e);
-                    console.log(sheetRef.current);
-                    console.log(sheetRef.current.height);
-                    console.log(snapPointsRef.current);
                     if (e.type === 'SNAP' && sheetRef.current && snapPointsRef.current) {
                         console.log("expandOnContentDrag", Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
                         setExpandOnContentDrag(Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);

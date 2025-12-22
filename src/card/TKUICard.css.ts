@@ -64,6 +64,9 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
     },
 
     '@global': {
+        '[data-rsbs-overlay]': {
+            zIndex: 'var(--bottom-sheet-z-index)!important'
+        },
         '[data-rsbs-header]': {
             boxShadow: 'none!important',
             fontFamily: theme.fontFamily,
@@ -119,4 +122,7 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '6px'
     },
 
+    hidden: {
+        display: 'none!important'
+    }
 });

@@ -19,6 +19,7 @@ import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import UIUtil from "../util/UIUtil";
 import { TKError } from "../error/TKError";
 import { useResponsiveUtil } from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -48,7 +49,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
     const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
-    const { onWaitingStateLoad } = useContext(RoutingResultsContext);    
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const handleEditClose = async (update?: Favourite) => {
         setEditingFav(undefined);
         if (update) {
@@ -84,7 +85,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
         <>
             <TKUICard
                 title={title}
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={DeviceUtil.isTouch() ? CardPresentation.BOTTOM_SHEET : CardPresentation.SLIDE_UP}
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
                         <TKUIButton text={editing ? t("Done") : t("edit")}
@@ -115,6 +116,9 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                 slideUpOptions={slideUpOptions}
                 styles={{
                     subHeader: overrideClass({ padding: '0 16px' })
+                }}
+                bottomSheetOptions={{
+                    defaultSnap: ({ snapPoints }) => Math.max(...snapPoints),
                 }}
             >
                 <div className={classes.main}>

@@ -679,7 +679,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 key={this.state.showLocationDetailsFor.getKey()}  // So changing location causes the component to be re-constructed.
                 actions={directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
                 cardProps={{
-                    presentation: CardPresentation.SLIDE_UP,
+                    presentation: DeviceUtil.isTouch() ? CardPresentation.BOTTOM_SHEET : CardPresentation.SLIDE_UP,
                     slideUpOptions: {
                         initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                         position: DeviceUtil.isTouch() ? undefined :
@@ -695,7 +695,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         zIndex: this.props.selectedTripSegment || locationHasVehicleAvailability ? 1006 : undefined,   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
                         ...locationHasVehicleAvailability && { containerClass: classes.wideCard }
                     },
-                    onRequestClose: () => this.setState({ showLocationDetailsFor: undefined })
+                    onRequestClose: () => this.setState({ showLocationDetailsFor: undefined }),
+                    bottomSheetOptions: {
+                        defaultSnap: ({ snapPoints }) => Math.min(...snapPoints)
+                    }
                 }}
             />;
         const timetableView = this.isShowTimetable() ?
@@ -727,7 +730,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     <TKUIServiceView
                         {...stateProps}
                         cardProps={{
-                            presentation: CardPresentation.SLIDE_UP,
+                            presentation: DeviceUtil.isTouch() ? CardPresentation.BOTTOM_SHEET : CardPresentation.SLIDE_UP,
                             slideUpOptions: {
                                 initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                                 position: DeviceUtil.isTouch() ? undefined :
@@ -736,7 +739,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 modalUp: this.props.landscape ? { top: (directionsView ? 176 : locationSearchHeight) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                                 modalDown: { top: this.getContainerHeight() - 130, unit: 'px' }
                             },
-                            onRequestClose: () => this.props.onServiceSelection(undefined)
+                            onRequestClose: () => this.props.onServiceSelection(undefined),
+                            bottomSheetOptions: {
+                                snapPoints: ({ maxHeight }) => [maxHeight - 16, maxHeight * 0.50, 80],
+                                defaultSnap: ({ snapPoints }) => snapPoints[1], // Middle snap point                                
+                            }
                         }}
                     />}
             </TKUIServiceViewHelpers.TKStateProps> : null;
@@ -775,6 +782,17 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             modalMiddle: { top: 55, unit: '%' },
                             modalDown: { top: 90, unit: '%' }
                         }}
+                        {...DeviceUtil.isTouch() && {
+                            cardPresentation: CardPresentation.BOTTOM_SHEET
+                        }}
+                        cardProps={{
+                            bottomSheetOptions: {
+                                snapPoints: ({ maxHeight }) => this.isShowTripDetail() || this.props.selectedTripSegment ? [maxHeight - 16, maxHeight * 0.50, 80, 0] : [maxHeight - 16, maxHeight * 0.50, 80],
+                                defaultSnap: ({ snapPoints }) => snapPoints[1], // Middle snap point
+                                // snap: this.isShowTripDetail() || this.props.selectedTripSegment ? ({ snapPoints }) => 0 : undefined,
+                                hide: !!(this.isShowTripDetail() || this.props.selectedTripSegment)
+                            }
+                        }}
                         showTimeSelect={this.props.portrait}
                         showTransportsBtn={this.props.portrait}
                     />}
@@ -809,7 +827,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 modalMiddle: { top: 55, unit: '%' },
                                 modalDown: { top: 90, unit: '%' }
                             },
-                            presentation: CardPresentation.SLIDE_UP
+                            // presentation: CardPresentation.SLIDE_UP
+                            presentation: CardPresentation.BOTTOM_SHEET,
+                            bottomSheetOptions: {
+                                snapPoints: ({ maxHeight }) => props.selectedTripSegment ? [maxHeight - 16, maxHeight * 0.50, 80, 0] : [maxHeight - 16, maxHeight * 0.50, 80],
+                                defaultSnap: ({ snapPoints }) => snapPoints[1], // Middle snap point
+                                // snap: props.selectedTripSegment ? ({ snapPoints }) => 0 : undefined,
+                                hide: !!(props.selectedTripSegment)
+                            }
                         }}
                         actions={this.getBookingActions(this.props.selectedTrip!)}
                     />
