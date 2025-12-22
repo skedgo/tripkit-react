@@ -244,7 +244,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     + (method === NetworkUtil.MethodType.GET && selectedInitiative) ? `?initiativeID=${selectedInitiative}` : "";
                 const body: any = method === NetworkUtil.MethodType.POST && (selectedInitiative || selectedOrganizationId) ?
                     { initiativeID: selectedInitiative, organizationID: selectedOrganizationId } : undefined;
-                if (paymentOption.paymentMode === "WALLET" || paymentOption.paymentMode === "INVOICE") {
+                if (paymentOption.paymentMode === "WALLET" || paymentOption.paymentMode === "INVOICE" || paymentOption.paymentMode === "CASH") {
                     handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;

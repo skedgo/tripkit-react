@@ -200,6 +200,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         // setMockData();
         // setMockData2();
         // setMockDataActionRequired();
+        // setMockDataCash();
         // return;
         // }
         TripGoApi.requestBookingOptions(bookingInfosUrl)
@@ -258,6 +259,17 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         // setScreensStack(["DETAILS", "PAYMENT"]);
         setActionRequired(TripGoApi.deserializePaidResult(await (await fetch("/paid", { method: "GET" })).json()).actionRequired);
         setScreensStack(["USER_ACTION_REQUIRED", "PAYMENT"]);
+
+    }
+
+    async function setMockDataCash() {
+        Features.instance.realtimeEnabled = false;
+        setBookingResult(TripGoApi.deserializeBookingResult(await (await fetch("/booking/v1/c0xyz/quick", { method: "POST" })).json()));
+        setScreensStack(["PAYMENT"]);
+        // await onRequestTripRefresh(trip.updateURL);  // Ask for post booking trip update, which will contain the confirmation input object
+        // setScreensStack(["DETAILS", "PAYMENT"]);
+        // setActionRequired(TripGoApi.deserializePaidResult(await (await fetch("/paid", { method: "GET" })).json()).actionRequired);
+        // setScreensStack(["USER_ACTION_REQUIRED", "PAYMENT"]);
 
     }
 
