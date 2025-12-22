@@ -293,6 +293,9 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
 
     const prevPresentation = usePrevious(presentation);
     useEffect(() => {
+        if (prevPresentation === undefined) { // Avoid updating counters on first render            
+            return;
+        }
         if (presentation === CardPresentation.MODAL) {
             MODAL_COUNT++;
         } else if (presentation === CardPresentation.SLIDE_UP) {

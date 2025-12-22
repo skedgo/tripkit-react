@@ -558,6 +558,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                                 this.setState({ menuPopupPosition: undefined });
                                 effectFc?.(clickedLatLng);
                                 e.stopPropagation();
+                                e.preventDefault();
                             }}
                             key={i}
                         >
