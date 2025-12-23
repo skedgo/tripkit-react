@@ -14,7 +14,7 @@ class RegionResults {
     private _regions: Region[] = [];
 
     @JsonProperty("aiAccessAvailability", Boolean, true)
-    public readonly aiAccessAvailability: boolean = true;
+    public readonly aiAccessAvailability: boolean = false;
 
 
     get hashCode(): number {
