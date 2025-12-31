@@ -56,7 +56,8 @@ class TKRoot extends React.Component<IProps, {}> {
     }
 }
 
-console.log("Build SHA:", TRIPKIT_REACT_BUILD_SHA);
+// This doesn't work, try changing the return strings in writeBuildInfo.mjs to find out why it doesn't work.
+// console.log("Build SHA:", TRIPKIT_REACT_BUILD_SHA);
 console.log("Build Date:", TRIPKIT_REACT_BUILD_DATE);
 
 export default TKRoot;
