@@ -8,6 +8,7 @@ import { TKState } from "./TKState";
 import TKStateProvider from "./TKStateProvider";
 import classNames from "classnames";
 import { genClassNames } from "../css/GenStyle.css";
+import { TRIPKIT_REACT_BUILD_DATE, TRIPKIT_REACT_BUILD_SHA } from "../build-info";
 
 interface IProps {
     /**
@@ -55,6 +56,7 @@ class TKRoot extends React.Component<IProps, {}> {
     }
 }
 
-console.log("2025_12_31_10_43");
+console.log("Build SHA:", TRIPKIT_REACT_BUILD_SHA);
+console.log("Build Date:", TRIPKIT_REACT_BUILD_DATE);
 
 export default TKRoot;

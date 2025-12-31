@@ -123,7 +123,7 @@
         "test": "react-scripts-ts test --env=jsdom",
         "eject": "react-scripts-ts eject",
         "prepare": "npm run build:lib",
-        "build:lib": "npm run build:babel:esm && npm run build:types && node ./scripts/copyFiles.mjs",
+        "build:lib": "node ./scripts/writeBuildInfo.mjs && npm run build:babel:esm && npm run build:types && node ./scripts/copyFiles.mjs",
         "build:babel:esm": "BABEL_ENV=esm babel --source-maps --extensions \".js,.ts,.tsx\" src --out-dir dist && npm run build:babel:svg",
         "build:types": "tsc -p tsconfig-babel.json",
         "build:babel:svg": "babel --extensions \".svg\" --out-file-extension .svg.js src --out-dir dist",
