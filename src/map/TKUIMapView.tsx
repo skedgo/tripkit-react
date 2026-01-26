@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useContext, useMemo } from "react";
-import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps, Polygon } from "react-leaflet";
+import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps, Polygon, AttributionControl } from "react-leaflet";
 import L, { FitBoundsOptions, LatLngBounds, LatLngExpression } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -622,7 +622,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         }
                     }}
                     zoomControl={false}
-                    attributionControl={this.props.attributionControl !== false}
+                    attributionControl={false} // Disabled to implement a custom one below without the "Leaflet" attribution.
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
                         if (!this.props.readonly && this.props.rightClickMenu) {
                             this.setState({ menuPopupPosition: e });
@@ -749,6 +749,8 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {menuPopup}
                     {this.props.children}
                     {this.props.childrenThis?.(this)}
+                    {this.props.attributionControl !== false &&
+                        <AttributionControl position="bottomright" prefix={false} />}
                 </RLMap>
                 <ResizeObserverWrapper
                     onResize={() => {
