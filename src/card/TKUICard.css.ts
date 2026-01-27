@@ -60,7 +60,22 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
     bottomSheetRoot: {
         fontFamily: theme.fontFamily,
         ...theme.textColorDefault,
-        ...theme.textSizeBody
+        ...theme.textSizeBody,
+        '& > div': {
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                width: queryWidth + 'px',
+                left: cardSpacing() + 'px!important',
+            }
+        }
+    },
+
+    noDrag: {
+        '& div[data-rsbs-header]': {
+            paddingTop: '0!important',
+            '&::before': {
+                display: 'none'
+            }
+        }
     },
 
     '@global': {

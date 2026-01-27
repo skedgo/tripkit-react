@@ -118,7 +118,11 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                     subHeader: overrideClass({ padding: '0 16px' })
                 }}
                 bottomSheetOptions={{
+                    ...slideUpOptions.modalUp?.top !== undefined && {
+                        snapPoints: ({ maxHeight }) => landscape ? [maxHeight - slideUpOptions.modalUp!.top!] : [maxHeight - slideUpOptions.modalUp!.top!, maxHeight * 0.50, 80]
+                    },
                     defaultSnap: ({ snapPoints }) => Math.max(...snapPoints),
+                    disableDrag: landscape
                 }}
             >
                 <div className={classes.main}>

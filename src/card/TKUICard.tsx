@@ -106,6 +106,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
         expandOnContentDrag?: boolean;
         snap?: ((props: Pick<defaultSnapProps, 'snapPoints'>) => number);
         hide?: boolean;
+        disableDrag?: boolean;
     }
 
     /**
@@ -470,7 +471,7 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
         return (
             <BottomSheet
                 open={!!open}
-                className={classNames(classes.bottomSheetRoot, genClassNames.root, props.bottomSheetOptions?.hide && classes.hidden)}
+                className={classNames(classes.bottomSheetRoot, genClassNames.root, props.bottomSheetOptions?.hide && classes.hidden, props.bottomSheetOptions?.disableDrag && classes.noDrag)}
                 style={{
                     '--bottom-sheet-z-index': zIndex
                 } as React.CSSProperties}
@@ -497,7 +498,13 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
                 blocking={false}
                 header={
                     (showHeader || props.renderSubHeader) &&
-                    <div className={cardHandleClass}>
+                    <div
+                        className={cardHandleClass}
+                        {...props.bottomSheetOptions?.disableDrag ? {
+                            onPointerDownCapture: (e) => e.stopPropagation(),
+                            onTouchStartCapture: (e) => e.stopPropagation()
+                        } : {}}
+                    >
                         {showHeader &&
                             <div ref={(ref: any) => {
                                 handleRef === undefined && setHandleRef(ref);
@@ -517,7 +524,6 @@ const TKUICard: React.FC<IProps> = (props: IProps) => {
                 }
                 {...props.bottomSheetOptions}
             >
-                {/* {body} */}
                 {children}
             </BottomSheet >
         );
