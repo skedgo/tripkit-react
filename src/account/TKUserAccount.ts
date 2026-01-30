@@ -4,7 +4,7 @@ import FutureBundle from "../model/user/FutureBundle";
 
 @JsonObject
 class TKUserAccount {
-    @JsonProperty('userId', String, true)
+    @JsonProperty('userID', String, true)
     public userID?: string = undefined;
     @JsonProperty('email', String, true)
     public email?: string = undefined;
