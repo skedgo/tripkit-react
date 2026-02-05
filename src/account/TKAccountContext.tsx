@@ -8,6 +8,7 @@ export enum SignInStatus {
 export interface IAccountContext {
     status: SignInStatus;
     userAccount?: TKUserAccount;
+    userToken?: string;
     onUserChange?: (account: TKUserAccount) => Promise<TKUserAccount>;
     returnToAfterLogin?: string;
     login: (props?: { user: string, password: string }) => Promise<void>;

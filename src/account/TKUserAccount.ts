@@ -24,6 +24,8 @@ class TKUserAccount {
     public aiEarlyAccess?: "GRANTED" | "REQUESTED" = undefined;
     @JsonProperty('optIn', Any, true)
     public optIn?: { aiFeatures?: boolean } = undefined;
+    @JsonProperty('appData', Any, true)
+    public appData?: any = undefined;
 }
 
 export default TKUserAccount;

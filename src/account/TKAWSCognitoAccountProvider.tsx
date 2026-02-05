@@ -273,6 +273,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             {props.children({
                 status: status,
                 userAccount,
+                userToken,
                 onUserChange,
                 login,
                 logout: logoutHandler,
