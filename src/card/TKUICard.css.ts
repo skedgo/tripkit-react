@@ -80,7 +80,8 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
 
     '@global': {
         '[data-rsbs-overlay]': {
-            zIndex: 'var(--bottom-sheet-z-index)!important'
+            zIndex: 'var(--bottom-sheet-z-index)!important',
+            ...theme.cardBackground
         },
         '[data-rsbs-header]': {
             boxShadow: 'none!important',
