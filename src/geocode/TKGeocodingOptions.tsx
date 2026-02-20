@@ -1,4 +1,3 @@
-import React from "react";
 import IGeocoder from "./IGeocoder";
 import Location from "../model/Location";
 import SkedgoGeocoder from "./SkedgoGeocoder";
@@ -10,7 +9,7 @@ import Util from "../util/Util";
 import FavouritesData from "../data/FavouritesData";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
-import { ReactComponent as IconFavourite } from '../images/ic-fav-star.svg';
+import { ReactComponent as IconFavourite } from "../images/ic-favorite-outline.svg";
 import { ReactComponent as IconCity } from '../images/location/ic-city.svg';
 import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 import City from "../model/location/City";
@@ -92,7 +91,8 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
                     favourite instanceof FavouriteStop ? favourite.stop! :
                         favourite instanceof FavouriteLocation ? favourite.location : (favourite as FavouriteTrip).endLocation,
                     { // To avoid mutating original location.
-                        source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites
+                        source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites,
+                        name: favourite.name
                     }));
         // TODO: remove redundant / analogous favourites, which may happen since they come
         // from different sources. Probably use the analogResults function below, but
@@ -106,8 +106,10 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     const recentGeocoder = new StaticGeocoder({
         emptyMatchAll: true,
         resultsLimit: 3,
-        renderIcon: (location: Location) => FavouritesData.instance.getLocations()
-            .find((loc: Location) => location.equals(loc)) ? <IconFavourite /> : <IconClock />
+        renderIcon: (location: Location) => {
+            return favToLocations(staticFavouriteData.values, false)
+                .find((loc: Location) => location.lat === loc.lat && location.lng === loc.lng && location.address === loc.address) ? <IconFavourite /> : <IconClock />;
+        }
     });
     const recLocations = favToLocations(FavouritesData.recInstance.get(), true);
     recentGeocoder.setValues(recLocations);
