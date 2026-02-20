@@ -1,3 +1,4 @@
+import React from "react";
 import IGeocoder from "./IGeocoder";
 import Location from "../model/Location";
 import SkedgoGeocoder from "./SkedgoGeocoder";
