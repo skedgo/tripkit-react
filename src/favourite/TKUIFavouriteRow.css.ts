@@ -31,6 +31,14 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
             fill: theme.colorPrimary
         }
     },
+    iconAlertBackground: {
+        ...genStyles.noShrink,
+        border: '1px solid ' + theme.colorWarning,
+        borderRadius: '50%',
+        '& svg path': {
+            fill: theme.colorWarning
+        }
+    },
     text: {
         marginLeft: '10px',
         ...genStyles.grow

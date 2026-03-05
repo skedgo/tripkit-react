@@ -9,6 +9,7 @@ import { ReactComponent as IconFavTrip } from "../images/favourite/ic-favourite-
 import { ReactComponent as IconHome } from "../images/favourite/ic-home.svg";
 import { ReactComponent as IconWork } from "../images/favourite/ic-work.svg";
 import { ReactComponent as IconInfo } from "../images/ic-info.svg";
+import { ReactComponent as IconAlert } from "../images/ic-alert.svg";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
@@ -56,7 +57,7 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
                     padding: '6px'
                 }}
                 isDarkMode={theme.isDark}
-            /> : <div className={classes.loadingFav} />;
+            /> : value.stop === null ? <IconAlert /> : <div className={classes.loadingFav} />;
         text = value.name ?? (value.stop ? LocationUtil.getMainText(value.stop, t) : "");
     } else if (value instanceof FavouriteLocation) {
         icon = value.type === "home" ? <IconHome /> :
@@ -85,10 +86,14 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
         >
             <IconInfo />
         </button>;
+    let subtitle: string | undefined = undefined;
+    if (value instanceof FavouriteStop) {
+        subtitle = value.stop ? value.stop?.services : value.stop === null ? "Stop no longer available" : undefined;
+    }
     return (
         <div
             className={classNames(classes.main, onClick && classes.pointer)}
-            onClick={onClick}
+            onClick={(value instanceof FavouriteStop && !value.stop) ? undefined : onClick}
             onKeyDown={onClick && WaiAriaUtil.keyDownToClick(onClick)}
             tabIndex={0}
         >
@@ -96,12 +101,17 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
                 <button className={classes.dragHandle} onMouseDown={onHandleMouseDown}>
                     <IconDrag />
                 </button>}
-            <div className={classNames(classes.iconPanel, value instanceof FavouriteLocation || value instanceof FavouriteTrip ? classes.iconBackground : "")}>
+            <div className={
+                classNames(classes.iconPanel, value instanceof FavouriteLocation || value instanceof FavouriteTrip ?
+                    classes.iconBackground :
+                    (value instanceof FavouriteStop && value.stop === null) ?
+                        classes.iconAlertBackground : undefined)
+            }>
                 {icon}
             </div>
             <TKUIRow
                 title={text}
-                subtitle={(value instanceof FavouriteStop && value.stop?.services) ? value.stop?.services : undefined}
+                subtitle={subtitle}
                 styles={{
                     main: overrideClass({
                         ...genStylesJSS.grow

@@ -266,7 +266,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
             this.props.onQueryUpdate({ to: favourite.stop });
-            this.props.onStopChange(favourite.stop);
+            this.props.onStopChange(favourite.stop ?? undefined);
         } else if (favourite instanceof FavouriteLocation) {
             this.props.onQueryUpdate({ from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW });
             this.props.onDirectionsView(true);

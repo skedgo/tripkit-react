@@ -132,7 +132,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 favouritesResult = [];
             }
             await fetchStops(favouritesResult, shouldRefreshStops);
-            setFavourites([...favouritesResult]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.
+            setFavourites(favourites => [...favourites]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.
 
             // If just signed in and no favourites, try to migrate local favourites.
             if (justSignedIn && favouritesResult.length === 0) {
@@ -178,12 +178,23 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                     }
                 );
                 if (stopJson) {
-                    fav.stop = Util.deserialize(stopJson, StopLocation);
+                    const stop = Util.deserialize(stopJson, StopLocation);
+                    fav.stop = stop;
+                    if (fav.stopName !== stop.name) {   // If stop name has changed
+                        if (fav.name === fav.stopName) {    // and the user hasn't customized the fav name (it's the same as stop name), then update the fav name to the new stop name.
+                            fav.name = stop.name;
+                        }
+                        fav.stopName = stop.name;   // Update stopName to the new stop name.
+                        updateFavouriteHandler(fav);
+                    }
+                    fav.stopName = stop.name;
                     setFavourites(favourites => [...favourites]); // Update each fav stop immediatly when the request arrives, so those that hit caché are displayed immediatly in the UI.
                 }
                 return;
             } catch (error) {
                 console.log(error);
+                fav.stop = null;
+                setFavourites(favourites => [...favourites]);
                 return;
             }
         }));
@@ -216,12 +227,23 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             return Promise.resolve(update);
         }
         const addedFav = deserialize(await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "PUT", Util.serialize(value)));
-        const favouritesUpdate = [...favourites];
-        // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
-        // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
-        favouritesUpdate.splice(favourites.findIndex(fav => fav.uuid === value.uuid), 1, value);
-        setFavourites(favouritesUpdate);
-        return favouritesUpdate;
+        // Need to use a promise since I need to use setFavourites with the callback and I need to return the updated favourites\
+        // as result of the updateFavouriteHandler function
+        return new Promise((resolve) => {
+            setFavourites(favourites => {
+                const favouritesUpdate = [...favourites];
+                const favIndex = favourites.findIndex(fav => fav.uuid === value.uuid);
+                if (favIndex === -1) {
+                    // The favourites list could be [] if we triggered a manual refresh, and so the updated favourite is not in the list.
+                    // In that case we just return the current favourites, and the updated favourite will be shown when the refresh finishes.
+                    return favourites;
+                }
+                // Add value instead of addedFav since it has the stop, for FavouriteStop/s.                
+                favouritesUpdate.splice(favIndex, 1, value);
+                resolve(favouritesUpdate);
+                return favouritesUpdate;
+            });
+        });
     }
 
     async function removeFavouriteHandler(value: Favourite): Promise<Favourite[]> {
