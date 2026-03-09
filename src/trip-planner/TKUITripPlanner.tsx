@@ -1292,14 +1292,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // Planned trips tracking.
         if (this.props.selectedTrip !== prevProps.selectedTrip) {
             PlannedTripsTracker.instance.selected = this.props.selectedTrip;
-        }
-        if (this.props.tripDetailsView !== prevProps.tripDetailsView ||
-            this.props.selectedTrip !== prevProps.selectedTrip) {
-            if (this.props.tripDetailsView && this.props.selectedTrip) {
-                PlannedTripsTracker.instance.scheduleTrack({ anonymous: this.props.userProfile.trackTripSelections });
-            } else {
-                PlannedTripsTracker.instance.cancelScheduledTrack();
-            }
+            PlannedTripsTracker.instance.scheduleTrack({ anonymous: this.props.userProfile.trackTripSelections });
         }
 
         if (this.props.trips !== prevProps.trips) {
