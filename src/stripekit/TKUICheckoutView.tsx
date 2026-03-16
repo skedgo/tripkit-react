@@ -473,10 +473,17 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
 
         useEffect(() => {
             if (paymentMode === "INVOICE") {
-                if (selectedDepartment?.initiatives.length === 1) {
+                if (selectedDepartment?.initiatives.length === 1) {  // Invoicing to CBA with one initiative
                     setSelectedInitiative(selectedDepartment.initiatives[0].id);
-                } else {    // To contemplate the case where the organization changed, so need to reset the value.
-                    setSelectedInitiative(undefined);
+                } else if (!selectedDepartment || selectedDepartment.initiatives.length > 1) { // No CBA selected, or invoicing to CBA with more than one initiative
+                    setSelectedInitiative(undefined); // Leave the initiative blank
+                } else { // Invoicing to CBA without initiative (selectedDepartment.initiatives.length === 0)
+                    // Prefill with the last used by the user, if any, otherwise with the initiative in the user's profile, if there's exactly one.
+                    // Call setSelectedInitiative even if prefillInitiative is undefined, to contemplate the case where the organization changed, so need to reset the value.
+                    const prefillInitiative =
+                        initiativeField?.options?.filter(option => !!option.lastUsed).sort((a, b) => b.lastUsed!.localeCompare(a.lastUsed!))[0] ??
+                            initiativeField?.options?.filter(option => option.atUserProfile).length === 1 ? initiativeField.options.find(option => option.atUserProfile)?.id : undefined;
+                    setSelectedInitiative(prefillInitiative);
                 }
             } else {
                 setSelectedInitiative(newPaymentMethodAndPay ? cardPaymentOption?.preFilledInitiative : selectedMethod?.paymentOption.preFilledInitiative);
