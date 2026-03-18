@@ -251,7 +251,7 @@ export function useStyles<
     const classes = useStylesJSS({ ...props, theme: theme as any });
     const injectedStyles = resultStyles(theme as any) as any;
     // const appClasses = useAppGlobalStyles({ theme: theme as any });
-    const consumerProps = { ...props, classes, injectedStyles } as OUTPROPS; // See why I need to do this.
+    const consumerProps = { ...props, classes, injectedStyles, theme } as OUTPROPS; // See why I need to do this.
     return consumerProps;
 }
 
