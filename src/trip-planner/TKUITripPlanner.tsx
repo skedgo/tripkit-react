@@ -87,6 +87,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideModeByModeView?: boolean;
     noTripsCarousel?: boolean;
     searchCallToAction?: boolean;
+    enableHomeCard?: boolean;
+    focusSearchOnLoad?: boolean;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext, IAccountContext {
@@ -578,7 +580,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const props = this.props;
-        const { isUserTabbing, searchCallToAction, classes, t, tkconfig, status } = this.props;
+        const {
+            isUserTabbing, searchCallToAction, classes, t, tkconfig, status,
+            enableHomeCard = !!tkconfig.booking // default this flag to true if booking is supported.
+        } = this.props;
         const directionsView = this.props.directionsView;
         // const emptyCardStack = this.state.cardStack.length === 0;
         const emptyCardStack = true;
@@ -810,7 +815,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         showTransportsBtn={this.props.portrait}
                     />}
             </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
-        const homeCard = searchBar && !favouritesView && !this.isShowTimetable() && emptyCardStack &&
+        const homeCard = enableHomeCard && searchBar && !favouritesView && !this.isShowTimetable() && emptyCardStack &&
             <div className={this.state.fadeOutHome ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
                 <TKUIHomeCard
                     onMyBookings={() => this.setState({ showMyBookings: true })}
@@ -1175,7 +1180,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         });
 
         // Focus location search box on web-app load.        
-        setTimeout(() => !this.props.directionsView && !this.props.query.to
+        setTimeout(() => this.props.focusSearchOnLoad !== false && !this.props.directionsView && !this.props.query.to
             && document.visibilityState === "visible" && document.hasFocus()    // Just focus if page is visible and has focus (e.g. not loading in background tab).
             && this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
@@ -1187,7 +1192,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (fadeOutHome) {
             this.setState({ fadeOutHome: true });
         } else {
-            setTimeout(() => this.state.fadeOutHomeBounce !== this.state.fadeOutHome && this.setState({ fadeOutHome: fadeOutHome }), 500);
+            setTimeout(() => this.state.fadeOutHomeBounce !== this.state.fadeOutHome && this.setState({ fadeOutHome: this.state.fadeOutHomeBounce }), 500);
         }
     }
 

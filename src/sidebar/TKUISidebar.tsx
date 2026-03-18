@@ -21,7 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: () => void;
     onShowFavourites?: () => void;
     onShowSettings?: () => void;
-    menuItems?: (defaultMenuItems: React.ReactNode) => React.ReactNode;
+    menuItems?: (defaultMenuItems: React.ReactNode, menuItemsRef: React.RefObject<HTMLDivElement>) => React.ReactNode;
     nativeAppsTitle?: string;
     renderNativeAppLinks?: () => React.ReactNode;
     appStoreUrl?: string;
@@ -62,7 +62,9 @@ export const buttonStylesOverride = (theme: TKUITheme) => ({
 
 const TKUISidebar: React.FunctionComponent<IProps> = props => {
     const { open = true, renderLogo, classes, t, menuItems: menuItemsProp } = props;
-    const { isSupportedFavourites } = useContext(TKFavouritesContext)
+    const { isSupportedFavourites } = useContext(TKFavouritesContext);
+
+    const menuItemsRef = React.useRef<HTMLDivElement>(null);
 
     function getDefaultMenuItems() {
         const { t } = props;
@@ -103,7 +105,7 @@ const TKUISidebar: React.FunctionComponent<IProps> = props => {
     }
 
     const defaultMenuItems = getDefaultMenuItems();
-    const menuItems = menuItemsProp ? menuItemsProp(defaultMenuItems) : defaultMenuItems;
+    const menuItems = menuItemsProp ? menuItemsProp(defaultMenuItems, menuItemsRef) : defaultMenuItems;
     const logo = renderLogo ? renderLogo() : <div></div>;
     return (
         <Modal
@@ -141,7 +143,7 @@ const TKUISidebar: React.FunctionComponent<IProps> = props => {
                     </button>
                 </div>
                 <div className={classes.body}>
-                    <div className={classes.menuItems}>
+                    <div className={classes.menuItems} ref={menuItemsRef}>
                         {menuItems}
                     </div>
                     {(props.renderNativeAppLinks || props.appStoreUrl || props.playStoreUrl) &&
