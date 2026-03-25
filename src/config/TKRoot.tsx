@@ -8,6 +8,7 @@ import { TKState } from "./TKState";
 import TKStateProvider from "./TKStateProvider";
 import classNames from "classnames";
 import { genClassNames } from "../css/GenStyle.css";
+import { TRIPKIT_REACT_BUILD_DATE, TRIPKIT_REACT_BUILD_SHA } from "../build-info";
 
 interface IProps {
     /**
@@ -54,5 +55,9 @@ class TKRoot extends React.Component<IProps, {}> {
         )
     }
 }
+
+// This doesn't work, try changing the return strings in writeBuildInfo.mjs to find out why it doesn't work.
+// console.log("Build SHA:", TRIPKIT_REACT_BUILD_SHA);
+console.log("Build Date:", TRIPKIT_REACT_BUILD_DATE);
 
 export default TKRoot;

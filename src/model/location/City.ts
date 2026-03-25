@@ -26,6 +26,10 @@ class City extends Location {
     get name(): string {
         return this.title.includes(",") ? this.title.substring(0, this.title.indexOf(",")) : this.title;
     }
+
+    set name(value: string) {
+
+    }
 }
 
 export default City;

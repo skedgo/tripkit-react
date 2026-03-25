@@ -23,14 +23,22 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         },
         boxSizing: 'border-box'
     },
-
+    // Stop using modalContent class, currently passed to react-modal as inline style, and use instead modal class, passed to react-modal as className.
     modalContent: {
+        position: 'absolute',
+        inset: '40px 40px 40px 50%',
         background: 'none',
         border: 'none',
         padding: '5px',
         transform: 'translate(-50%, 0)',
-        left: '50%',
-        width: '500px'
+        width: '500px',
+        overflow: 'auto',
+        borderRadius: '4px',
+        outline: 'none'
+    },
+
+    modal: {
+
     },
 
     modalOverlay: {
@@ -47,6 +55,50 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         overflow: 'hidden',
         ...theme.cardBackground
+    },
+
+    bottomSheetRoot: {
+        fontFamily: theme.fontFamily,
+        ...theme.textColorDefault,
+        ...theme.textSizeBody,
+        '& > div': {
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                width: queryWidth + 'px',
+                left: cardSpacing() + 'px!important',
+            }
+        }
+    },
+
+    noDrag: {
+        '& div[data-rsbs-header]': {
+            paddingTop: '0!important',
+            '&::before': {
+                display: 'none'
+            }
+        }
+    },
+
+    '@global': {
+        '[data-rsbs-overlay]': {
+            zIndex: 'var(--bottom-sheet-z-index)!important',
+            ...theme.cardBackground
+        },
+        '[data-rsbs-header]': {
+            boxShadow: 'none!important',
+            fontFamily: theme.fontFamily,
+            paddingLeft: '0!important',
+            paddingRight: '0!important',
+            paddingBottom: '0!important'
+        },
+        '[data-rsbs-footer]': {
+            boxShadow: 'none!important',
+            fontFamily: theme.fontFamily,
+            padding: 0
+        },
+        '[data-rsbs-scroll]': {
+        },
+        '[data-rsbs-content]': {
+        }
     },
 
     mainForSlideUp: {
@@ -86,4 +138,7 @@ export const tKUICardDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '6px'
     },
 
+    hidden: {
+        display: 'none!important'
+    }
 });

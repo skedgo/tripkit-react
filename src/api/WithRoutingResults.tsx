@@ -23,13 +23,14 @@ import { TKError } from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
-import GATracker, { ACTION_COMPUTE_TRIPS, CATEGORY_TRIP_RESULTS } from "../analytics/GATracker";
+import GATracker, { ACTION_COMPUTE_TRIPS, ACTION_TRIP_DETAILS, CATEGORY_TRIP_RESULTS } from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
 import ModeLocation from "../model/location/ModeLocation";
 import TKUserMode from "../account/TKUserMode";
 import { SignInStatus } from "../account/TKAccountContext";
 import { MultiPolygon } from "geojson";
 import { SegmentType } from "../model/trip/SegmentTemplate";
+import Tracker from "../analytics/Tracker";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -208,8 +209,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             GATracker.event({
                 category: CATEGORY_TRIP_RESULTS,
                 action: ACTION_COMPUTE_TRIPS,
-                label: label
+                label
             });
+            Tracker.event(ACTION_COMPUTE_TRIPS, { cause: label });
         }
 
         public onQueryUpdate(update: Partial<RoutingQuery>) {
@@ -261,6 +263,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public onTripDetailsView(tripDetailsView: boolean) {
             if (this.state.tripDetailsView !== tripDetailsView) {
                 this.setState({ tripDetailsView: tripDetailsView });
+                if (tripDetailsView) {
+                    Tracker.event(ACTION_TRIP_DETAILS);
+                }
             }
         }
 
@@ -835,13 +840,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             )
         }
 
-        public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
+        public setRoutingState({ query, trips, selected, computeTripsForQuery, waiting, tripDetailsView }: Partial<IWithRoutingResultsState> & { query: RoutingQuery }): void {
             this.setState(prevState => ({
                 query: query ?? prevState.query,
                 trips: trips ?? prevState.trips,
                 selected: selected ?? prevState.selected,
                 computeTripsForQuery: computeTripsForQuery ?? prevState.computeTripsForQuery,
-                waiting: false
+                waiting: false,
+                tripDetailsView: tripDetailsView ?? prevState.tripDetailsView
             }), () => this.refreshRegion());
             if (selected) {
                 this.onReqRealtimeFor(selected);

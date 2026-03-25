@@ -5,7 +5,6 @@ import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
 import TKUISettingLink from "../options/TKUISettingLink";
-import { TKI18nContext } from '../i18n/TKI18nProvider';
 
 const userAccountSettingJss = (theme: TKUITheme) => ({
     main: {
@@ -30,9 +29,8 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
 }
 
 const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
-    const { moreSettings, classes } = props;
+    const { moreSettings, classes, t } = props;
     const { userAccount } = useContext(TKAccountContext);
-    const { t } = useContext(TKI18nContext);
     const [showAccountView, setShowAccountView] = useState<boolean>(false);
     if (!userAccount) {
         return null;

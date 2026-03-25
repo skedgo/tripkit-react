@@ -223,6 +223,12 @@ export class RegionsData {
         return [this.getRegion(segment.from)!, this.getRegion(segment.to)!];
     }
 
+    public aIAccessAvailabilityP(): Promise<boolean> {
+        return this.regionsRequest.then((regionResults: RegionResults) => {
+            return regionResults.aiAccessAvailability;
+        });
+    }
+
     public getCoverageGeoJson() {
         if (!this.coverageGeoJson) {
             const world = [

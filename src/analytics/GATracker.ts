@@ -9,6 +9,7 @@ export const ACTION_COMPUTE_TRIPS = "compute trips";
 export const ACTION_PICK_FROM_LOCATION = "pick from location";
 export const ACTION_PICK_TO_LOCATION = "pick to location";
 export const ACTION_SELECT_TIME_PREF = "select time pref";
+export const ACTION_TRIP_DETAILS = "trip details";
 
 class GATracker {
 

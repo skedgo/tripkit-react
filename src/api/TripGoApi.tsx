@@ -10,6 +10,7 @@ import BookingReview from "../model/trip/BookingReview";
 import { i18n } from "../i18n/TKI18nConstants";
 import { BookingPaymentForm } from "../model/payment/BookingPaymentForm";
 import { v4 as uuidv4 } from 'uuid';
+import BookingSuccess from "../model/trip/BookingSuccess";
 
 type TripGoApiHeader = "x-tripgo-version" | "x-tripgo-key" | "x-tripgo-client-id" | "x-tsp-client-userid" | "x-tsp-client-tenantid" | "x-account-access-token" | "userid" | "usertoken";
 export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
@@ -190,7 +191,7 @@ class TripGoApi {
             .then(this.deserializeBookingResult);
     }
 
-    public static submitBookingOptionAndFinish(bookingForm: BookingInfo): Promise<{ updateURL: string }> {
+    public static submitBookingOptionAndFinish(bookingForm: BookingInfo): Promise<BookingSuccess> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm));
     }
 
@@ -223,6 +224,10 @@ class TripGoApi {
 
     public static deserializeProviderOptions(resultsJson): ProviderOptionsForm {
         return Util.deserialize(resultsJson, ProviderOptionsForm);
+    }
+
+    public static deserializePaidResult(resultsJson): BookingSuccess {
+        return Util.deserialize(resultsJson, BookingSuccess);
     }
 
     public static equivalentTrips(tripA: Trip, tripB: Trip): boolean {

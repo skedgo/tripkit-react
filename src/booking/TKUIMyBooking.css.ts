@@ -55,6 +55,7 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
     },
     status: {
         ...genStyles.alignSelfCenter,
+        flexBasis: 'min-content',
         background: ({ activeTrip }) => {
             const status = activeTrip?.confirmation?.status?.value;
             switch (status) {

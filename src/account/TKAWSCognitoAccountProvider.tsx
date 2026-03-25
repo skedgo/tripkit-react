@@ -5,9 +5,9 @@ import TKAuthResponse from "./TKAuthResponse";
 import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
+import { IAccountContext, SignInStatus, staticAccountContext, TKAccountContext } from "./TKAccountContext";
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from 'aws-amplify/auth';
 import UIUtil from '../util/UIUtil';
 
 class AuthStorage extends LocalStorageItem<TKAuthResponse> {
@@ -161,6 +161,12 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             return Promise.reject("Still signing in");
         }
     }
+    async function onUserChange(update: TKUserAccount): Promise<TKUserAccount> {
+        setUserAccount(update);
+        const updateResult = await TripGoApi.apiCallT<TKUserAccount>("/data/user/", "PUT", TKUserAccount, update);
+        setUserAccount(updateResult);
+        return updateResult;
+    }
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
@@ -197,6 +203,10 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     //         console.log(error);
     //     }
     // }
+
+    useEffect(() => {
+        staticAccountContext.notifyStatusChange(status);
+    }, [status]);
 
     const logoutHandler = () => {
         logout();
@@ -263,6 +273,8 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             {props.children({
                 status: status,
                 userAccount,
+                userToken,
+                onUserChange,
                 login,
                 logout: logoutHandler,
                 accountsSupported: true,
@@ -298,14 +310,18 @@ const TKAWSCognitoAccountProvider: React.FunctionComponent<IProps> = (props: IPr
     // const { onUserProfileChange } = useContext(OptionsContext);
     // useEffect(() => {
     //     props.exclusiveModes && onUserProfileChange(userProfile => Util.iAssign(userProfile, { exclusiveModes: true }));
-    // }, []);
+    // }, []);    
     return (
         <AWSCognitoToTKAccount {...restProps}>
-            {(context: IAccountContext) =>
-                <TKAccountContext.Provider
-                    value={{ ...context, returnToAfterLogin }}>
-                    {children}
-                </TKAccountContext.Provider>}
+            {(context: IAccountContext) => {
+                staticAccountContext.value = { ...context, returnToAfterLogin };
+                return (
+                    <TKAccountContext.Provider
+                        value={{ ...context, returnToAfterLogin }}>
+                        {children}
+                    </TKAccountContext.Provider>
+                );
+            }}
         </AWSCognitoToTKAccount>
     )
 };

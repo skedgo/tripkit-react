@@ -241,8 +241,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             return; // If locationValue === null may still need to clear input text
         }
         let inputText = this.state.inputText;
-        if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? LocationUtil.getMainText(locationValue, this.props.t) : '';
+        if (!highlighted) {   // Set location address as input text, except it's an AI prompt/open chat special location
+            inputText = !locationValue || locationValue.id === "ai_prompt" || locationValue.id === "ai_open_chat" ? '' : LocationUtil.getMainText(locationValue, this.props.t);
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
@@ -431,7 +431,9 @@ class TKUILocationBox extends Component<IProps, IState> {
             }
         }
         // Reset highlighted item, except that more results arrived for the same query.
-        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current) {
+        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current
+            && !((results[0]?.id === "ai_prompt" || results[0]?.id === "ai_open_chat") && this.autocompleteRef.current.state?.highlightedIndex === 0)
+        ) {
             this.autocompleteRef.current.setState({ highlightedIndex: null });
         }
         this.resultsArrivedForQuery = query;
@@ -576,6 +578,13 @@ class TKUILocationBox extends Component<IProps, IState> {
                 onClick={() => this.setValue(location, false, true)}
                 renderIcon={geocoder && geocoder.getOptions().renderIcon}
                 scrollIntoView={!!this.props.menuMaxHeightPx}
+                inputText={this.state.inputText}
+                onRefresh={() => this.refreshDisplayingResults()}
+                blurInput={() => {
+                    // The _ignoreBlur flag is used internally by Autocomplete to avoid blurring when clicking on an item.
+                    this.autocompleteRef.current && this.autocompleteRef.current.setIgnoreBlur(false);
+                    this.autocompleteRef.current && this.autocompleteRef.current.blur();
+                }}
             />
         );
     }

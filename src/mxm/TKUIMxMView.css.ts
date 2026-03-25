@@ -1,4 +1,4 @@
-import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
+import { cardSpacing, queryWidth, TKUITheme } from "../jss/TKUITheme";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 
 export const tKUIMxMViewDefaultStyle = (theme: TKUITheme) => ({
