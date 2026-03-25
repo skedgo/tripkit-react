@@ -31,6 +31,7 @@ import { SignInStatus } from "../account/TKAccountContext";
 import { MultiPolygon } from "geojson";
 import { SegmentType } from "../model/trip/SegmentTemplate";
 import Tracker from "../analytics/Tracker";
+import ModeIdentifier from "../model/region/ModeIdentifier";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -958,22 +959,31 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             (options.transportOptions.isModeEnabled(mode)
                 || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
+            const parkAndRideEnabled = enabledModes.includes("park-and-ride");
+            const routingModes = enabledModes.filter((mode: string) => mode !== "park-and-ride");
             const userModeRules = options.getUserModeRulesByRegion(region.name);
             if (userModeRules) {
                 userModeRules.forEach((modeRule: TKUserMode) => {
-                    if (!modeRule.rules.replaceWith || !enabledModes.includes(modeRule.mode)) {
+                    if (!modeRule.rules.replaceWith || !routingModes.includes(modeRule.mode)) {
                         return;
                     }
-                    enabledModes.splice(enabledModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
+                    routingModes.splice(routingModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
                 });
             }
             const impliedModes: string[] = [];
-            enabledModes.forEach((mode: string) => {
+            routingModes.forEach((mode: string) => {
                 impliedModes.push(...RegionsData.instance.getModeIdentifier(mode)?.implies ?? []);
             });
-            enabledModes.push(...impliedModes.filter((mode: string) => !enabledModes.includes(mode)));
-            const modeSets = enabledModes.map((mode: string) => [mode]);
-            const multiModalSet: string[] = enabledModes.slice();
+            routingModes.push(...impliedModes.filter((mode: string) => !routingModes.includes(mode)));
+            const modeSets = routingModes.map((mode: string) => [mode]);
+            const multiModalSet: string[] = routingModes.slice();
+            if (parkAndRideEnabled) {
+                [ModeIdentifier.PUBLIC_TRANSPORT_ID, ModeIdentifier.CAR_ID].forEach((mode: string) => {
+                    if (!multiModalSet.includes(mode)) {
+                        multiModalSet.push(mode);
+                    }
+                });
+            }
             if (multiModalSet.length > 1) {
                 modeSets.push(multiModalSet);
             }
