@@ -36,17 +36,18 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (props.config.parkAndRideMode) {
             RegionsData.instance.requireRegions().then(() => {
                 RegionsData.instance.getRegionList()!.forEach(region => {
-                    region.modes.push("park-and-ride")
+                    region.modes.push(ModeIdentifier.PARK_AND_RIDE_ID)
                 });
-                RegionsData.instance.getModes().set("park-and-ride", Util.deserialize({
+                const parkAndRideMode = Util.deserialize({
                     "title": "Park & Ride",
                     "color": {
                         "red": 45,
                         "green": 197,
                         "blue": 104
-                    },
-                    "icon": "parkAndRide",
-                }, ModeIdentifier));
+                    }
+                }, ModeIdentifier);
+                parkAndRideMode.identifier = ModeIdentifier.PARK_AND_RIDE_ID;
+                RegionsData.instance.getModes().set(ModeIdentifier.PARK_AND_RIDE_ID, parkAndRideMode);
             });
         }
     }

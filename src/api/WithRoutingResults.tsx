@@ -959,8 +959,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             (options.transportOptions.isModeEnabled(mode)
                 || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
-            const parkAndRideEnabled = enabledModes.includes("park-and-ride");
-            const routingModes = enabledModes.filter((mode: string) => mode !== "park-and-ride");
+            const parkAndRideEnabled = enabledModes.includes(ModeIdentifier.PARK_AND_RIDE_ID);
+            const routingModes = enabledModes.filter((mode: string) => mode !== ModeIdentifier.PARK_AND_RIDE_ID);
             const userModeRules = options.getUserModeRulesByRegion(region.name);
             if (userModeRules) {
                 userModeRules.forEach((modeRule: TKUserMode) => {
