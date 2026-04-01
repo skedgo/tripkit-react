@@ -36,7 +36,13 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (props.config.parkAndRideMode) {
             RegionsData.instance.requireRegions().then(() => {
                 RegionsData.instance.getRegionList()!.forEach(region => {
-                    region.modes.push(ModeIdentifier.PARK_AND_RIDE_ID)
+                    // Push park and ride mode after public transport mode, if it exists, otherwise push it to the end of the list
+                    const publicTransportIndex = region.modes.indexOf(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+                    if (publicTransportIndex !== -1) {
+                        region.modes.splice(publicTransportIndex + 1, 0, ModeIdentifier.PARK_AND_RIDE_ID);
+                    } else {
+                        region.modes.push(ModeIdentifier.PARK_AND_RIDE_ID);
+                    }
                 });
                 const parkAndRideMode = Util.deserialize({
                     "title": "Park & Ride",
