@@ -29,6 +29,7 @@ import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
 import DateTimeUtil from '../util/DateTimeUtil';
 import TKUICheckbox from '../util_components/TKUICheckbox';
 import BookingSuccess from '../model/trip/BookingSuccess';
+import { usePrevious } from '../util/ReactUtil';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -488,7 +489,19 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             } else {
                 setSelectedInitiative(newPaymentMethodAndPay ? cardPaymentOption?.preFilledInitiative : selectedMethod?.paymentOption.preFilledInitiative);
             }
-        }, [paymentMode, selectedDepartment]); // The default initiative selection should be updated on any update of these data. 
+        }, [paymentMode, selectedDepartment]); // The default initiative selection should be updated on any update of these data.
+
+        const prevSelectedMethod = usePrevious(selectedMethod);
+        const prevPaymentMode = usePrevious(paymentMode);
+        useEffect(() => {
+            if (paymentMode === "WALLET" && selectedMethod?.paymentOption.preFilledOrganization) {
+                // Wallet payment selected, and it has pre-filled organization, so select that organization.
+                setSelectedDepartmentId(selectedMethod.paymentOption.preFilledOrganization);
+            } else if (prevPaymentMode === "WALLET" && prevSelectedMethod && selectedDepartmentId === prevSelectedMethod.paymentOption.preFilledOrganization) {
+                // If switched from wallet payment with pre-filled organization, then reset the organization selection to default (which could also be undefined, meaning no organization selected).
+                setSelectedDepartmentId(defaultOrganizationOption?.value);
+            }
+        }, [paymentMode, selectedMethod]);
 
         useEffect(() => {
             if (newPaymentMethodAndPay || (selectedMethod && selectedMethod.paymentOption.paymentMode !== "INVOICE" || selectedDepartmentId)) {

@@ -13,6 +13,7 @@ interface PaymentOption {
     sponsorTitle?: string;
     sponsorDescription?: string;
     preFilledInitiative?: string;
+    preFilledOrganization?: string;
 }
 
 export default PaymentOption;
