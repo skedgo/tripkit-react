@@ -1,13 +1,15 @@
-import React, { ChangeEvent, useContext, useState, useRef } from 'react';
+import React, { ChangeEvent, useContext, useState } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from '../jss/StyleHelper';
 import { connect, mapperFromFunction } from '../config/TKConfigHelper';
 import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
 import { tKUISignInFormDefaultStyle } from './TKUISignInForm.css';
 import TKUIButton from '../buttons/TKUIButton';
-import { SignInStatus, TKAccountContext } from './TKAccountContext';
+import { LoginResult, SignInStatus, TKAccountContext } from './TKAccountContext';
 import { ReactComponent as IconLoading } from "../images/ic-spin-bar.svg";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> { }
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    onConfirmLogin?: (code: Exclude<LoginResult, void>) => void;
+}
 
 type IStyle = ReturnType<typeof tKUISignInFormDefaultStyle>
 
@@ -39,7 +41,10 @@ const TKUISignInForm: React.FunctionComponent<IProps> = (props: IProps) => {
     async function handleSignInClick(): Promise<void> {
         try {
             setErrorMsg('');
-            await login({ user: username, password: password });
+            const result = await login({ user: username, password: password });
+            if (result) {
+                props.onConfirmLogin?.(result);
+            }
         } catch (e) {
             setErrorMsg((e as any).message);
         }

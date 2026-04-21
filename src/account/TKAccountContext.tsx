@@ -5,13 +5,16 @@ export enum SignInStatus {
     signedIn, signedOut, loading
 }
 
+export type LoginResult = { signInStep: 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE', destination: string } | void;
+
 export interface IAccountContext {
     status: SignInStatus;
     userAccount?: TKUserAccount;
     userToken?: string;
     onUserChange?: (account: TKUserAccount) => Promise<TKUserAccount>;
     returnToAfterLogin?: string;
-    login: (props?: { user: string, password: string }) => Promise<void>;
+    login: (props?: { user: string, password: string }) => Promise<LoginResult>;
+    confirmLogin(props?: { code: string, remember?: boolean }): Promise<void>;
     logout: () => void;
     finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
     accountsSupported?: boolean;
@@ -22,6 +25,7 @@ export interface IAccountContext {
 export const TKAccountContext = React.createContext<IAccountContext>({
     status: SignInStatus.loading,
     login: () => Promise.resolve(),
+    confirmLogin: () => Promise.resolve(),
     logout: () => { },
     finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
     resetUserToken: () => { },
@@ -34,6 +38,7 @@ export const staticAccountContext: { value: IAccountContext, isSignedInP: () => 
     value: {
         status: SignInStatus.loading,
         login: () => Promise.resolve(),
+        confirmLogin: () => Promise.resolve(),
         logout: () => { },
         finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
         resetUserToken: () => { },

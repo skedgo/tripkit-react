@@ -181,6 +181,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
                 userAccount,
                 onUserChange,
                 login,
+                confirmLogin: () => Promise.resolve(),
                 logout: logoutHandler,
                 accountsSupported: true,
                 finishInitLoadingPromise,

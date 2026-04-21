@@ -5,9 +5,9 @@ import TKAuthResponse from "./TKAuthResponse";
 import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import { IAccountContext, SignInStatus, staticAccountContext, TKAccountContext } from "./TKAccountContext";
+import { IAccountContext, LoginResult, SignInStatus, staticAccountContext, TKAccountContext } from "./TKAccountContext";
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from 'aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput, confirmSignIn, SignInOutput, rememberDevice } from 'aws-amplify/auth';
 import UIUtil from '../util/UIUtil';
 
 class AuthStorage extends LocalStorageItem<TKAuthResponse> {
@@ -37,7 +37,7 @@ interface AuthTokens {
     refreshToken?: string;
 }
 
-function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, isAuthenticated: boolean, authTokens: AuthTokens | undefined, loginWithUserPass: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
+function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, isAuthenticated: boolean, authTokens: AuthTokens | undefined, loginWithUserPass: (input: SignInInput) => Promise<SignInOutput>, confirmLoginWithUserPass: (input: { challengeResponse: string, remember?: boolean }) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
     const [isLoading, setIsLoading] = useState(true);
     const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(undefined);
     const isAuthenticated = !!authTokens;
@@ -56,13 +56,34 @@ function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, is
     /**
      * In app login - User and password are collected in the app.     
      */
-    async function loginWithUserPass({ username, password }: SignInInput): Promise<void> {
+    async function loginWithUserPass({ username, password }: SignInInput): Promise<SignInOutput> {
         try {
-            const { isSignedIn, nextStep } = await signIn({ username, password });
+            const signInResult = await signIn({ username, password });
+            const { isSignedIn, nextStep } = signInResult;
+            if (isSignedIn) {
+                await fetchSession();
+                return signInResult;
+            } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE') {
+                return signInResult;
+            }
+            throw new Error("Unsupported sign in step " + nextStep.signInStep);
+        } finally {
+            // Notice the finally block will be executed even if returning with return signInResult.
+            setIsLoading(false);
+        }
+    }
+
+    async function confirmLoginWithUserPass({ challengeResponse, remember }: { challengeResponse: string, remember?: boolean }): Promise<void> {
+        try {
+            const { isSignedIn, nextStep } = await confirmSignIn({ challengeResponse });
             console.log('isSignedIn', isSignedIn);
             console.log('nextStep', nextStep);
-            if (nextStep.signInStep === 'DONE') {
+            if (isSignedIn) {
                 console.log('signed in');
+                // Remember this device to skip MFA next time
+                if (remember) {
+                    await rememberDevice();
+                }
                 return await fetchSession();
             }
         } finally {
@@ -101,7 +122,7 @@ function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, is
             fetchSession();
         }
     }, []);
-    return { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout };
+    return { isLoading, isAuthenticated, authTokens, loginWithUserPass, confirmLoginWithUserPass, loginWithRedirect, logout };
 }
 
 const AWSCognitoToTKAccount: React.FunctionComponent<{
@@ -114,7 +135,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const { amplifyConfig, requestUserToken, requestUserProfile, withPopup } = props;
     useMemo(() => Amplify.configure(amplifyConfig), []);
 
-    const { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout } = useAWSCognito(amplifyConfig);
+    const { isLoading, isAuthenticated, authTokens, loginWithUserPass, confirmLoginWithUserPass, loginWithRedirect, logout } = useAWSCognito(amplifyConfig);
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     // const [userToken, setUserToken] = useState<string | undefined>(undefined);  // FOR testing
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
@@ -250,11 +271,16 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         }
     }
     TripGoApi.resetUserToken = resetUserToken;
-    async function login(props?: { user: string, password: string }): Promise<void> {
+    async function login(props?: { user: string, password: string }): Promise<LoginResult> {
         setStatus(SignInStatus.loading);
         if (props) {
             try {
-                return await loginWithUserPass({ username: props.user, password: props.password });
+                const { nextStep } = await loginWithUserPass({ username: props.user, password: props.password });
+                const { signInStep } = nextStep;
+                if (signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE' && nextStep.codeDeliveryDetails?.destination) {
+                    return { signInStep, destination: nextStep.codeDeliveryDetails.destination };
+                }
+                // Otherwise, it successfully signed in, so we return void.
             } catch (error) {
                 setStatus(SignInStatus.signedOut);
                 throw error;
@@ -266,6 +292,15 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         }
     };
 
+    async function confirmLogin({ code, remember = false }: { code: string, remember?: boolean }): Promise<void> {
+        try {
+            return await confirmLoginWithUserPass({ challengeResponse: code, remember });
+        } catch (error) {
+            setStatus(SignInStatus.signedOut);
+            throw error;
+        }
+    }
+
     (window as any).loginWithRedirect = loginWithRedirect;
 
     return (
@@ -276,6 +311,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 userToken,
                 onUserChange,
                 login,
+                confirmLogin,
                 logout: logoutHandler,
                 accountsSupported: true,
                 finishInitLoadingPromise,
