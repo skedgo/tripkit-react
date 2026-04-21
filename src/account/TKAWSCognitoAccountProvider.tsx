@@ -277,7 +277,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             try {
                 const { nextStep } = await loginWithUserPass({ username: props.user, password: props.password });
                 const { signInStep } = nextStep;
-                if (signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE' && nextStep.codeDeliveryDetails?.destination) {
+                if ((signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE' || signInStep === 'CONFIRM_SIGN_IN_WITH_SMS_CODE') && nextStep.codeDeliveryDetails?.destination) {
                     return { signInStep, destination: nextStep.codeDeliveryDetails.destination };
                 }
                 // Otherwise, it successfully signed in, so we return void.

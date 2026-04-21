@@ -5,7 +5,7 @@ export enum SignInStatus {
     signedIn, signedOut, loading
 }
 
-export type LoginResult = { signInStep: 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE', destination: string } | void;
+export type LoginResult = { signInStep: 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE' | 'CONFIRM_SIGN_IN_WITH_SMS_CODE', destination: string } | void;
 
 export interface IAccountContext {
     status: SignInStatus;
