@@ -57,36 +57,31 @@ function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, is
      * In app login - User and password are collected in the app.     
      */
     async function loginWithUserPass({ username, password }: SignInInput): Promise<SignInOutput> {
-        try {
-            const signInResult = await signIn({ username, password });
-            const { isSignedIn, nextStep } = signInResult;
-            if (isSignedIn) {
-                await fetchSession();
-                return signInResult;
-            } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE') {
-                return signInResult;
-            }
-            throw new Error("Unsupported sign in step " + nextStep.signInStep);
-        } finally {
-            // Notice the finally block will be executed even if returning with return signInResult.
+        const signInResult = await signIn({ username, password });
+        const { isSignedIn, nextStep } = signInResult;
+        if (isSignedIn) {
+            await fetchSession();
             setIsLoading(false);
+            return signInResult;
+        } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_EMAIL_CODE' || nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_SMS_CODE') {
+            return signInResult;
         }
+        // Other steps (e.g. MFA) are not supported in this flow, so we sign out the user and throw an error.
+        setIsLoading(false);
+        throw new Error("Unsupported sign in step " + nextStep.signInStep);
     }
 
     async function confirmLoginWithUserPass({ challengeResponse, remember }: { challengeResponse: string, remember?: boolean }): Promise<void> {
-        try {
-            const { isSignedIn, nextStep } = await confirmSignIn({ challengeResponse });
-            console.log('isSignedIn', isSignedIn);
-            console.log('nextStep', nextStep);
-            if (isSignedIn) {
-                console.log('signed in');
-                // Remember this device to skip MFA next time
-                if (remember) {
-                    await rememberDevice();
-                }
-                return await fetchSession();
+        const { isSignedIn, nextStep } = await confirmSignIn({ challengeResponse });
+        console.log('isSignedIn', isSignedIn);
+        console.log('nextStep', nextStep);
+        if (isSignedIn) {
+            console.log('signed in');
+            // Remember this device to skip MFA next time
+            if (remember) {
+                await rememberDevice();
             }
-        } finally {
+            await fetchSession();
             setIsLoading(false);
         }
     }
@@ -293,12 +288,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     };
 
     async function confirmLogin({ code, remember = false }: { code: string, remember?: boolean }): Promise<void> {
-        try {
-            return await confirmLoginWithUserPass({ challengeResponse: code, remember });
-        } catch (error) {
-            setStatus(SignInStatus.signedOut);
-            throw error;
-        }
+        return await confirmLoginWithUserPass({ challengeResponse: code, remember });
     }
 
     (window as any).loginWithRedirect = loginWithRedirect;
