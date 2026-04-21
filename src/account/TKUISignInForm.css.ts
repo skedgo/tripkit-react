@@ -12,7 +12,9 @@ export const tKUISignInFormDefaultStyle = (theme: TKUITheme) => ({
             border: '1px solid ' + black(2, theme.isDark),
             ...genStyles.borderRadius(4),
             ...theme.textSizeBody,
-            padding: '5px 10px'
+            padding: '5px 10px',
+            background: white(1, theme.isDark),
+            ...theme.textColorDefault
         }
     },
     iconLoading: {
