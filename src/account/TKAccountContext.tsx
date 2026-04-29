@@ -46,6 +46,10 @@ export const staticAccountContext: { value: IAccountContext, isSignedInP: () => 
     },
     isSignedInP: () => {
         return new Promise<boolean>((resolve) => {
+            if (!staticAccountContext.value.accountsSupported) {
+                resolve(false);
+                return;
+            }
             if (staticAccountContext.value.status !== SignInStatus.loading) {
                 resolve(staticAccountContext.value.status === SignInStatus.signedIn);
                 return;

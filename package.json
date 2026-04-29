@@ -80,7 +80,7 @@
         "react-ga": "^3.3.1",
         "react-ga4": "^2.0.0",
         "react-jss": "^10.9.0",
-        "react-leaflet": "^2.0.1",
+        "react-leaflet": "^2.8.0",
         "react-leaflet-google-layer": "^1.1.6",
         "react-modal": "^3.14.3",
         "react-number-format": "^5.4.4",
