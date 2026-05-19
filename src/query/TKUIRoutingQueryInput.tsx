@@ -369,6 +369,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         borderTopRightRadius: '0'
                                     })
                                 }}
+                                showAIPrompt={false}
                             />
                         </TKUITooltip>
                         <div className={classes.divider} />
@@ -430,6 +431,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         borderTopRightRadius: '0'
                                     })
                                 }}
+                                showAIPrompt={false}
                             />
                         </TKUITooltip>
                     </div>

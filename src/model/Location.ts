@@ -27,6 +27,7 @@ class Location extends LatLng {
     @JsonProperty('source', String, true)
     public source: string | undefined = undefined;
     public suggestion?: any;
+    public geocodingResult?: any;
     public structured_formatting?: AutocompleteStructuredFormatting;
     public hasDetail?: boolean;
     // Set as optional since sometimes doesn't come. In docs it says it's required. See comment below.

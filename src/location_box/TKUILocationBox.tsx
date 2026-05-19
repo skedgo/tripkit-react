@@ -54,6 +54,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @default true
      */
     showCurrLoc?: boolean,
+    showAIPrompt?: boolean;
     /**
      * It determines if, when setting as value user's current location, it should be or not automatically resolved by using browser's Geolocation API.
      * @default true
@@ -696,8 +697,8 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
-    (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean, showAIPrompt?: boolean }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean, showAIPrompt?: boolean }) => {
         const routingContext = useContext(RoutingResultsContext);
         const config = useContext(TKUIConfigContext);
         const geocodingOptions = useMemo(() => getGeocodingOptions(config.geocoding), [config.geocoding]);
@@ -710,6 +711,9 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
             [routingContext.region, routingContext.viewport]);
         if (props.showCurrLoc === false) {
             delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
+        }
+        if (props.showAIPrompt === false) {
+            delete geocodingOptions.geocoders["ai"];
         }
         return (
             <Fragment>
@@ -724,7 +728,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({ inputProps, children }) =>
-        <Consumer showCurrLoc={inputProps.showCurrLoc}>
+        <Consumer showCurrLoc={inputProps.showCurrLoc} showAIPrompt={inputProps.showAIPrompt}>
             {(consumedProps: IConsumedProps) =>
                 children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
