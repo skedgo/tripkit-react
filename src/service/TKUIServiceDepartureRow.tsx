@@ -102,8 +102,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         if (departure.realTimeStatus === "CANCELLED") {
             status = t("Cancelled");
             statusClassname = classes.cancelled;
-        } else if (departure.realTimeDeparture === undefined) { // Means realtimeStatus !== "IS_REAL_TIME"
-            status = t("No.real-time.available");
+        } else if (departure.realTimeDeparture === undefined) { // Means realtimeStatus !== "IS_REAL_TIME". See rule in https://redmine.buzzhives.com/issues/24811
+            status = t("Scheduled");
         } else {
             // Truncates to minutes before subtract to make diff consistent with displayed actual and original times
             const realtimeDiffInMinutes = DateTimeUtil.getRealtimeDiffInMinutes(departure);
