@@ -12,6 +12,7 @@ export interface IAccountContext {
     userAccount?: TKUserAccount;
     userToken?: string;
     onUserChange?: (account: TKUserAccount) => Promise<TKUserAccount>;
+    getUserAccountRef: () => TKUserAccount | undefined;
     returnToAfterLogin?: string;
     login: (props?: { user: string, password: string }) => Promise<LoginResult>;
     confirmLogin(props?: { code: string, remember?: boolean }): Promise<void>;
@@ -27,6 +28,7 @@ export const TKAccountContext = React.createContext<IAccountContext>({
     login: () => Promise.resolve(),
     confirmLogin: () => Promise.resolve(),
     logout: () => { },
+    getUserAccountRef: () => undefined,
     finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
     resetUserToken: () => { },
     refreshUserProfile: () => Promise.resolve(new TKUserAccount())
@@ -40,6 +42,7 @@ export const staticAccountContext: { value: IAccountContext, isSignedInP: () => 
         login: () => Promise.resolve(),
         confirmLogin: () => Promise.resolve(),
         logout: () => { },
+        getUserAccountRef: () => undefined,
         finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
         resetUserToken: () => { },
         refreshUserProfile: () => Promise.resolve(new TKUserAccount())

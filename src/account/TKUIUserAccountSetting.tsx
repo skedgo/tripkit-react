@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { TKAccountContext } from "./TKAccountContext";
-import TKUIUserAccountView, { UserAccountViewMode } from "./TKUIUserAccountView";
+import TKUIUserAccountView, { RenderMoreAccountSettingsProps, UserAccountViewMode } from "./TKUIUserAccountView";
 import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
@@ -27,6 +27,7 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     phoneNote?: ReactNode;
     moreSettings?: ReactNode;
     mode?: UserAccountViewMode;
+    renderMoreAccountSettings?: (props: RenderMoreAccountSettingsProps) => ReactNode;
 }
 
 const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
@@ -54,7 +55,7 @@ const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
             />
             {moreSettings}
             {showAccountView &&
-                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} mode={props.mode} />}
+                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} mode={props.mode} renderMoreAccountSettings={props.renderMoreAccountSettings} />}
         </>
     )
 };

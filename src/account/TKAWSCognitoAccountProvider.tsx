@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
 import { User as Auth0User } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
 import TKAuthResponse from "./TKAuthResponse";
@@ -135,7 +135,13 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     // const [userToken, setUserToken] = useState<string | undefined>(undefined);  // FOR testing
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
-    const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
+    const [userAccount, _setUserAccount] = useState<TKUserAccount | undefined>(undefined);
+    function setUserAccount(update: TKUserAccount | undefined) {
+        userAccountRef.current = update;
+        _setUserAccount(update);
+    }
+
+    const userAccountRef = useRef<TKUserAccount | undefined>(undefined);
     // TODO: this won't work anymore since TKAccountContext.Provider is not below TKRoot anymore.
     // Indicate waiting other way, or provide a method setWaitingStateLoadHandler that RoutingResultsProviders sets.
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
@@ -143,6 +149,9 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         TripGoApi.apiCallT("/data/user/auth/cognito/" + accessToken, "POST", TKAuthResponse));
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
         TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount));
+    function getUserAccountRef(): TKUserAccount | undefined {
+        return userAccountRef.current;
+    }
     useEffect(() => {
         // Not Authenticated in Cognito, so cleanup our token + set status to SignInStatus.signedOut.
         if (!isLoading && !isAuthenticated) {
@@ -300,6 +309,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 userAccount,
                 userToken,
                 onUserChange,
+                getUserAccountRef,
                 login,
                 confirmLogin,
                 logout: logoutHandler,

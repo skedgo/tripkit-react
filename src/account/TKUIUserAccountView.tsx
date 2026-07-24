@@ -32,6 +32,12 @@ const userAccountViewJss = (theme: TKUITheme) => ({
             paddingBottom: 0
         }
     },
+    phoneEntry: {
+        '& > div:first-child': {         
+            paddingTop: 0,
+            paddingBottom: 0
+        }
+    },
     required: {
         background: theme.colorError,
         borderRadius: '6px',
@@ -40,7 +46,8 @@ const userAccountViewJss = (theme: TKUITheme) => ({
         padding: '0 5px'
     },
     phoneNote: {
-        padding: '0 30px',
+        padding: '0 20px',
+        marginTop: '10px',
         ...theme.textColorGray,
         ...theme.textSizeCaption,
         '& a': {
@@ -72,11 +79,17 @@ const userAccountViewJss = (theme: TKUITheme) => ({
 type IStyle = ReturnType<typeof userAccountViewJss>
 
 export type UserAccountViewMode = "readonly" | "editOnly" | "both";
+export interface RenderMoreAccountSettingsProps {
+    user: TKUserAccount;
+    onUserChange?: (user: TKUserAccount) => void;
+    readonly: boolean;
+}
 
 interface IProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     phoneNote?: ReactNode;
     mode?: UserAccountViewMode;
+    renderMoreAccountSettings?: (props: RenderMoreAccountSettingsProps) => ReactNode;
 }
 
 const digitsOnly = (s: string) => s.replace(/\D/g, "");
@@ -171,6 +184,16 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
             </div>;
     }
 
+    if (phoneEntry && props.phoneNote) {
+        phoneEntry =
+            <div className={classes.phoneEntry}>
+                {phoneEntry}
+                <div className={classes.phoneNote}>
+                    {props.phoneNote}
+                </div>
+            </div>
+    }
+
     async function handleSave() {
         if (!isFormValid(update)) {
             return;
@@ -243,10 +266,7 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                             {nameEntry}
                             {phoneEntry}
                         </TKUISettingSection>
-                        {user.phone && props.phoneNote &&
-                            <div className={classes.phoneNote}>
-                                {props.phoneNote}
-                            </div>}
+                        {props.renderMoreAccountSettings?.({ user: update, onUserChange: setUpdate, readonly: !editing })}
                         {footer}
                         {waiting &&
                             <div className={classes.loadingPanel}>
