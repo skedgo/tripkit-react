@@ -71,10 +71,12 @@ const userAccountViewJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof userAccountViewJss>
 
+export type UserAccountViewMode = "readonly" | "editOnly" | "both";
+
 interface IProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     phoneNote?: ReactNode;
-    readonly?: boolean;
+    mode?: UserAccountViewMode;
 }
 
 const digitsOnly = (s: string) => s.replace(/\D/g, "");
@@ -93,10 +95,11 @@ function isFormValid(update: TKUserAccount) {
 }
 
 const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
-    const { readonly = true, onRequestClose, classes } = useStyles(props, userAccountViewJss);
+    const { mode = "readonly", onRequestClose, classes } = useStyles(props, userAccountViewJss);
     const { t } = useI18n();
     const { userAccount: user, onUserChange } = useContext(TKAccountContext);
     const [update, setUpdate] = useState<TKUserAccount>(user!);
+    const [editing, setEditing] = useState<boolean>(mode === "editOnly");
     const [waiting, setWaiting] = useState<boolean>(false);
 
     if (!user) {
@@ -104,7 +107,7 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
     }
 
     let nameEntry;
-    if (readonly) {
+    if (!editing) {
         nameEntry = user.name &&
             <TKUIRow
                 title={t("Name")}
@@ -117,7 +120,6 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 onChange={(e) => {
                     setUpdate(Util.iAssign(update, { name: e.target.value || undefined }));
                 }}
-                disabled={readonly}
                 className={classes.phoneInput}
             />
         nameEntry =
@@ -133,7 +135,7 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
     }
 
     let phoneEntry;
-    if (readonly) {
+    if (!editing) {
         phoneEntry = user.phone &&
             <TKUIRow
                 title={t("Phone")}
@@ -155,7 +157,6 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
                 onValueChange={(values) => {
                     setUpdate(Util.iAssign(update, { phone: values.formattedValue || undefined }));
                 }}
-                disabled={readonly}
                 className={classes.phoneInput}
             />
         phoneEntry =
@@ -178,7 +179,11 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
             setWaiting(true);
             await onUserChange?.(update);
             setWaiting(false);
-            onRequestClose?.();
+            if (mode === "editOnly" && onRequestClose) {
+                onRequestClose();
+            } else {
+                setEditing(false);
+            }
         } catch (error) {
             UIUtil.errorMsg(error as Error);
         } finally {
@@ -186,18 +191,33 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
         }
     }
 
-    const footer = !readonly &&
+    function handleCancel() {
+        setUpdate(user!);
+        if (mode === "editOnly" && onRequestClose) {
+            onRequestClose();
+        } else {
+            setEditing(false);
+        }
+    }
+
+    const footer = editing ?
         <div className={classes.footer}>
-            {onRequestClose &&
-                <TKUIButton
-                    text={t("Cancel")}
-                    onClick={() => onRequestClose()}
-                    type={TKUIButtonType.SECONDARY}
-                />}
+            <TKUIButton
+                text={t("Cancel")}
+                onClick={() => handleCancel()}
+                type={TKUIButtonType.SECONDARY}
+            />
             <TKUIButton
                 text={t("save")}
                 disabled={!isFormValid(update)}
                 onClick={() => handleSave()}
+            />
+        </div> :
+        mode === "both" &&
+        <div className={classes.footer}>
+            <TKUIButton
+                text={t("edit")}
+                onClick={() => setEditing(true)}
             />
         </div>;
 
