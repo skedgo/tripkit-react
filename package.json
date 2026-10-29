@@ -118,7 +118,8 @@
         "webpack-dev-server": "5.2.4",
         "webpack-dev-middleware": "7.4.6",
         "resolve-url-loader": "5.0.0",
-        "serialize-javascript": "7.0.3"
+        "serialize-javascript": "7.0.3",
+        "@svgr/webpack": "8.1.0"
     },
     "peerDependencies": {
         "react": ">=18.3.1",
