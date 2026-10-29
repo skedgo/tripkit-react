@@ -321,7 +321,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             }
             const settings = TKShareHelper.parseSettingsQueryParam();
             if (settings) {
-                const update = Util.deserialize({ ...Util.serialize(tKState.userProfile), ...Util.serialize(settings) }, TKUserProfile);
+                const update = Util.deserialize({ ...Util.serialize(tKState.userProfile), settings }, TKUserProfile);
                 // If doing instead
                 // const update = Util.iAssign(tKState.userProfile, settings);
                 // the undefined properties in settings override those in userProfile.

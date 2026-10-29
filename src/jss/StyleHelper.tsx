@@ -242,7 +242,7 @@ export function withStyleInjection<
 export function useStyles<
     PROPS extends { styles?: TKUICustomStyles<STYLE, PROPS> },
     STYLE,
-    OUTPROPS = PROPS & TKUIWithClasses<STYLE, PROPS>
+    OUTPROPS = PROPS & Subtract<TKUIWithClasses<STYLE, PROPS>, TKI18nContextProps>
 >(props: PROPS, stylesJss: StyleCreator<keyof STYLE, TKUITheme, PROPS>): OUTPROPS {
     // >(props: PROPS, stylesJss: TKUIStyles<STYLE, PROPS>): OUTPROPS {
     const theme = useTheme();
@@ -251,7 +251,7 @@ export function useStyles<
     const classes = useStylesJSS({ ...props, theme: theme as any });
     const injectedStyles = resultStyles(theme as any) as any;
     // const appClasses = useAppGlobalStyles({ theme: theme as any });
-    const consumerProps = { ...props, classes, injectedStyles } as OUTPROPS; // See why I need to do this.
+    const consumerProps = { ...props, classes, injectedStyles, theme } as OUTPROPS; // See why I need to do this.
     return consumerProps;
 }
 
@@ -303,4 +303,4 @@ export function renderToStaticMarkup(elem) {
     return renderToStaticMarkupDomServer(elem);
 }
 
-export { createUseStyles };
+export { createUseStyles, useTheme };

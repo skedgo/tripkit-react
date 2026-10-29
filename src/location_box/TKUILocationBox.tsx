@@ -54,6 +54,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @default true
      */
     showCurrLoc?: boolean,
+    showAIPrompt?: boolean;
     /**
      * It determines if, when setting as value user's current location, it should be or not automatically resolved by using browser's Geolocation API.
      * @default true
@@ -85,6 +86,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype
      */
     iconEmpty?: JSX.Element;
+    iconLeft?: React.ReactNode;
     /**
      * To be called when the input element recives focus.
      * @ctype
@@ -240,8 +242,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             return; // If locationValue === null may still need to clear input text
         }
         let inputText = this.state.inputText;
-        if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? LocationUtil.getMainText(locationValue, this.props.t) : '';
+        if (!highlighted) {   // Set location address as input text, except it's an AI prompt/open chat special location
+            inputText = !locationValue || locationValue.id === "ai_prompt" || locationValue.id === "ai_open_chat" ? '' : LocationUtil.getMainText(locationValue, this.props.t);
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
@@ -430,7 +432,9 @@ class TKUILocationBox extends Component<IProps, IState> {
             }
         }
         // Reset highlighted item, except that more results arrived for the same query.
-        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current) {
+        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current
+            && !((results[0]?.id === "ai_prompt" || results[0]?.id === "ai_open_chat") && this.autocompleteRef.current.state?.highlightedIndex === 0)
+        ) {
             this.autocompleteRef.current.setState({ highlightedIndex: null });
         }
         this.resultsArrivedForQuery = query;
@@ -473,6 +477,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         const { classes } = this.props;
         return (
             <div className={classes.main} role="none">
+                {this.props.iconLeft}
                 <input type="text"
                     spellCheck={false}
                     autoComplete="off"
@@ -574,6 +579,13 @@ class TKUILocationBox extends Component<IProps, IState> {
                 onClick={() => this.setValue(location, false, true)}
                 renderIcon={geocoder && geocoder.getOptions().renderIcon}
                 scrollIntoView={!!this.props.menuMaxHeightPx}
+                inputText={this.state.inputText}
+                onRefresh={() => this.refreshDisplayingResults()}
+                blurInput={() => {
+                    // The _ignoreBlur flag is used internally by Autocomplete to avoid blurring when clicking on an item.
+                    this.autocompleteRef.current && this.autocompleteRef.current.setIgnoreBlur(false);
+                    this.autocompleteRef.current && this.autocompleteRef.current.blur();
+                }}
             />
         );
     }
@@ -685,8 +697,8 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
-    (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean, showAIPrompt?: boolean }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean, showAIPrompt?: boolean }) => {
         const routingContext = useContext(RoutingResultsContext);
         const config = useContext(TKUIConfigContext);
         const geocodingOptions = useMemo(() => getGeocodingOptions(config.geocoding), [config.geocoding]);
@@ -699,6 +711,9 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
             [routingContext.region, routingContext.viewport]);
         if (props.showCurrLoc === false) {
             delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
+        }
+        if (props.showAIPrompt === false) {
+            delete geocodingOptions.geocoders["ai"];
         }
         return (
             <Fragment>
@@ -713,7 +728,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({ inputProps, children }) =>
-        <Consumer showCurrLoc={inputProps.showCurrLoc}>
+        <Consumer showCurrLoc={inputProps.showCurrLoc} showAIPrompt={inputProps.showAIPrompt}>
             {(consumedProps: IConsumedProps) =>
                 children!({ ...consumedProps, ...inputProps })}
         </Consumer>;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Auth0Provider, User as Auth0User, useAuth0 } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
 import TKAuthResponse from "./TKAuthResponse";
@@ -35,13 +35,22 @@ const Auth0ToTKAccount: React.FunctionComponent<{
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
-    const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
+    const [userAccount, _setUserAccount] = useState<TKUserAccount | undefined>(undefined);
+    function setUserAccount(update: TKUserAccount | undefined) {
+        userAccountRef.current = update;
+        _setUserAccount(update);
+    }
+
+    const userAccountRef = useRef<TKUserAccount | undefined>(undefined);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const { onUserProfileChange } = useContext(OptionsContext);
     const requestUserTokenFc = requestUserToken ?? ((auth0AccessToken: string) =>
         TripGoApi.apiCallT("/data/user/auth/auth0/" + auth0AccessToken, "POST", TKAuthResponse));
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
         TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount));
+    function getUserAccountRef(): TKUserAccount | undefined {
+        return userAccountRef.current;
+    }
     useEffect(() => {
         // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
         // on login pupup closed, so login to our BE.
@@ -75,6 +84,18 @@ const Auth0ToTKAccount: React.FunctionComponent<{
                 });
         } else {
             return Promise.reject("Still signing in");
+        }
+    }
+    async function onUserChange(update: TKUserAccount): Promise<TKUserAccount> {
+        const originalUser = userAccountRef.current;
+        setUserAccount(update);
+        try {
+            const updateResult = await TripGoApi.apiCallT<TKUserAccount>("/data/user/", "PUT", TKUserAccount, update);
+            setUserAccount(updateResult);
+            return updateResult;
+        } catch (error) {
+            setUserAccount(originalUser);
+            throw error;
         }
     }
     useEffect(() => {
@@ -167,7 +188,10 @@ const Auth0ToTKAccount: React.FunctionComponent<{
             {props.children({
                 status: status,
                 userAccount,
+                onUserChange,
+                getUserAccountRef,
                 login,
+                confirmLogin: () => Promise.resolve(),
                 logout: logoutHandler,
                 accountsSupported: true,
                 finishInitLoadingPromise,

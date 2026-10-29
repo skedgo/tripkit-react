@@ -22,6 +22,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderIcon?: (location: Location) => JSX.Element;
     reference?: (el: any) => void;
     scrollIntoView?: boolean;
+    inputText?: string;
+    renderRight?: () => React.ReactNode;
+    onRefresh?: () => void;
+    blurInput?: () => void;
 }
 
 interface IStyle {
@@ -48,7 +52,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUIAutocompleteResult extends Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const { location, classes } = this.props;
+        const { location, renderRight, classes } = this.props;
         let addressComponent: JSX.Element;
         if (location.structured_formatting) { // Result with structured formatting
             let mainAddressComponent: JSX.Element;
@@ -94,6 +98,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                         this.props.location.isCurrLoc() ? <IconCurrLoc focusable="false" /> : <IconPin />}
                 </div>
                 {addressComponent}
+                {renderRight && renderRight()}
             </div>
         );
 

@@ -4,6 +4,7 @@ import { ReactComponent as IconRemove } from '../images/ic-cross2.svg';
 import { tKUICardHeaderJss } from "./TKUICardHeader.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import classNames from "classnames";
 
 type IStyle = ReturnType<typeof tKUICardHeaderJss>
 
@@ -47,7 +48,7 @@ const TKUICardHeader: React.FunctionComponent<IProps> = (props: IProps) => {
                         {onRequestClose &&
                             <button
                                 onClick={onRequestClose}
-                                className={classes.btnClear}
+                                className={classNames(classes.btnClear, "no-drag")}
                                 aria-label={closeAriaLabel ?? "Close"}>
                                 <IconRemove aria-hidden={true}
                                     className={classes.iconClear}

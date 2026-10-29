@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext, useEffect, useMemo } from "react";
 import { IThemeCreatorProps, TKUIConfig } from "./TKUIConfig";
 import { generateClassNameSeed, tKUIDeaultTheme, TKUITheme } from "../jss/TKUITheme";
 import { JssProvider, ThemeProvider, useTheme } from "react-jss";
 import GATracker from "../analytics/GATracker";
 import Util from "../util/Util";
-import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { OptionsContext } from "../options/OptionsProvider";
 
 export const TKUIConfigContext = React.createContext<TKUIConfig>({} as TKUIConfig);
 
@@ -24,44 +24,12 @@ interface IState {
     isOSHighContrast: boolean
 }
 
-class TKUIConfigProvider extends React.Component<IProps, IState> {
+const TKUIConfigProvider: React.FC<IProps> = (props: IProps) => {
+    const { config, children } = props;
+    const [isOSDark, setIsOSDark] = React.useState(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const [isOSHighContrast, setIsOSHighContrast] = React.useState(window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches);
 
-    constructor(props: IProps) {
-        super(props);
-        this.state = {
-            isOSDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-            isOSHighContrast: window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches
-        }
-    }
-
-    public render(): React.ReactNode {
-        const customThemeCreator = this.props.config && this.props.config.theme;
-        return (
-            <OptionsContext.Consumer>
-                {(optionsContext: IOptionsContext) => {
-                    // Make isDarkMode to override the user setting.
-                    const isDark = this.props.config.isDarkMode ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
-                    const isHighContrast = this.state.isOSHighContrast;
-                    const customTheme = Util.isFunction(customThemeCreator) ?
-                        (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
-                    return (
-                        <TKUIConfigContext.Provider value={{ ...this.props.config }}>
-                            <JssProvider generateId={generateClassNameSeed}>
-                                <ThemeProvider theme={{ ...tKUIDeaultTheme({ isDark, isHighContrast }), ...customTheme }}>
-                                    <>
-                                        {this.props.children}
-                                    </>
-                                </ThemeProvider>
-                            </JssProvider>
-                        </TKUIConfigContext.Provider>
-                    );
-                }}
-            </OptionsContext.Consumer>
-        );
-    }
-
-    public componentDidMount() {
-        const config = this.props.config;
+    useEffect(() => {
         if (config.analytics && config.analytics.google) {
             const gaConfig = config.analytics.google;
             GATracker.initialize(gaConfig);
@@ -69,9 +37,7 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
         const mediaQueryColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
         if (mediaQueryColorScheme) {
             const onAppearanceChange = e =>
-                this.setState({
-                    isOSDark: e.matches
-                });
+                setIsOSDark(e.matches);
             if (mediaQueryColorScheme.addEventListener) {
                 mediaQueryColorScheme.addEventListener('change', onAppearanceChange)
             } else if (mediaQueryColorScheme.addListener) {
@@ -83,9 +49,7 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
         const mediaQueryContrast = window.matchMedia && window.matchMedia('(prefers-contrast: more)');
         if (mediaQueryContrast) {
             const onContrastChange = e =>
-                this.setState({
-                    isOSHighContrast: e.matches
-                });
+                setIsOSHighContrast(e.matches);
             if (mediaQueryContrast.addEventListener) {
                 mediaQueryContrast.addEventListener('change', onContrastChange)
             } else if (mediaQueryContrast.addListener) {
@@ -94,8 +58,31 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
                 mediaQueryContrast.addListener(onContrastChange)
             }
         }
-    }
+    }, []);
 
+    const customThemeCreator = config && config.theme;
+    const optionsContext = useContext(OptionsContext);
+    // Make isDarkMode to override the user setting.
+    const isDark = config.isDarkMode ?? optionsContext.userProfile.isDarkMode ?? isOSDark;
+    const isHighContrast = isOSHighContrast;
+    // Avoid unnecesarily recreating the theme object on each render since it implies jss styles regeneration,
+    // which cause issues, as css animations being re-triggered.
+    const theme = useMemo(() => {
+        const customTheme = Util.isFunction(customThemeCreator) ?
+            (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
+        return { ...tKUIDeaultTheme({ isDark, isHighContrast }), ...customTheme };
+    }, [customThemeCreator, isDark, isHighContrast]);
+    return (
+        <TKUIConfigContext.Provider value={{ ...config }}>
+            <JssProvider generateId={generateClassNameSeed}>
+                <ThemeProvider theme={theme}>
+                    <>
+                        {children}
+                    </>
+                </ThemeProvider>
+            </JssProvider>
+        </TKUIConfigContext.Provider>
+    );
 }
 
 export default TKUIConfigProvider;

@@ -15,29 +15,36 @@ export const tKUIColors = {
     black3: '#212a332e',
     black4: '#212a331f',
     black5: '#212a3314',
+    black6: '#0000000F',
     white: '#ffffff',
     white1: '#ffffffa6',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
     white4: '#ffffff1f',
-    white5: '#ffffff14'
+    white5: '#ffffff14',
+    white6: '#ffffff0f',
+
 };
 
 export function colorWithOpacity(colorS: string, opacity: number): string {
     return Color.createFromString(colorS).toRGBA(opacity);
 }
 
-export const queryWidth = 384;
+export function setQueryWidth(width: number): void {
+    queryWidth = width;
+}
+
+export let queryWidth = 384;
 function cardSpacing(landscape: boolean = true) {
     return landscape ? 16 : 5;
 }
 
-export function black(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
+export function black(n: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0, dual: boolean = false): string {
     return dual ? white(n) : tKUIColors[Object.keys(tKUIColors)[n]];
 }
 
-export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
-    return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 6]];
+export function white(n: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0, dual: boolean = false): string {
+    return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 7]];
 }
 
 function important(style: Properties): Properties {
@@ -63,6 +70,8 @@ export interface TKUITheme {
 
     isDark: boolean;
     isLight: boolean;    // Shouldn't be customizable, it's derived: always the opposite of isDark.
+
+    isHighContrast: boolean;
 
     // textColorDefault: CSSProps<{}>;
     textColorDefault: any;
@@ -105,15 +114,19 @@ const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
              * @ignore
              */
             isLight: isLight,
+            /**
+             * @ignore
+             */
+            isHighContrast,
 
             textColorDefault: {
-                color: isLight ? tKUIColors.black : tKUIColors.white
+                color: isHighContrast ? (isLight ? 'black' : 'white') : (isLight ? tKUIColors.black : tKUIColors.white),
             },
             textColorGray: {
-                color: isLight ? tKUIColors.black1 : tKUIColors.white1
+                color: isHighContrast ? (isLight ? tKUIColors.black : tKUIColors.white) : (isLight ? tKUIColors.black1 : tKUIColors.white1)
             },
             textColorDisabled: {
-                color: isLight ? tKUIColors.black2 : tKUIColors.white2
+                color: isHighContrast ? (isLight ? tKUIColors.black1 : tKUIColors.white1) : (isLight ? tKUIColors.black2 : tKUIColors.white2)
             },
 
             textSizeBody: genStyles.fontM,
@@ -135,15 +148,15 @@ const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
             cardBackground: {
                 backgroundColor: white(0, isDark),
                 boxShadow: !isDark ?
-                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important' :
-                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)!important',
-                ...genStyles.borderRadius(12)
+                    `0 0 4px 0 rgba(0,0,0,${isHighContrast ? 1 : .2}), 0 6px 12px 0 rgba(0,0,0,.08)!important` :
+                    `0 0 4px 0 rgba(255,255,255,${isHighContrast ? 1 : .2}), 0 6px 12px 0 rgba(255,255,255,.08)!important`,
+                ...genStyles.borderRadius(12),
             },
             secondaryBackground: {
                 backgroundColor: isLight ? '#F6F6F6' : '#384450',
             },
             divider: {
-                borderBottom: '1px solid ' + black(4, isDark)
+                borderBottom: '1px solid ' + black(isHighContrast ? 1 : 4, isDark)
             },
             modalFog: {
                 background: (!isDark ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),

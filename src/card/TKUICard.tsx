@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
 import { Subtract } from "utility-types";
@@ -16,11 +16,16 @@ import TKUICardHeader, { TKUICardHeaderClientProps } from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import { cardSpacing } from "../jss/TKUITheme";
+import { BottomSheet } from "react-spring-bottom-sheet";
+import { defaultSnapProps, snapPoints, SpringEvent } from "react-spring-bottom-sheet/dist/types";
+import { usePrevious } from "../util/ReactUtil";
+import 'react-spring-bottom-sheet/dist/style.css';
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
     MODAL,
     SLIDE_UP,
+    BOTTOM_SHEET,
     NONE,
     CONTENT // Just displays children. Possibly rename NONE to INLINE and CONTENT to NONE.
 }
@@ -80,6 +85,29 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     modalOptions?: any;
+
+    bottomSheetOptions?: {
+        onSpringStart?: (event: SpringEvent) => void;
+        onSpringCancel?: (event: SpringEvent) => void;
+        onSpringEnd?: (event: SpringEvent) => void;
+        open?: boolean;
+        className?: string;
+        footer?: React.ReactNode;
+        header?: React.ReactNode;
+        initialFocusRef?: false | React.RefObject<HTMLElement>;
+        onDismiss?: () => void;
+        blocking?: boolean;
+        maxHeight?: number;
+        scrollLocking?: boolean;
+        snapPoints?: snapPoints;
+        defaultSnap?: number | ((props: defaultSnapProps) => number);
+        reserveScrollBarGap?: boolean;
+        skipInitialTransition?: boolean;
+        expandOnContentDrag?: boolean;
+        snap?: ((props: Pick<defaultSnapProps, 'snapPoints'>) => number);
+        hide?: boolean;
+        disableDrag?: boolean;
+    }
 
     /**
      * @ignore
@@ -172,266 +200,344 @@ function hasHandle(props: IProps): boolean {
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
 
-interface IState {
-    handleRef?: any;
-    slideUpPosition: TKUISlideUpPosition;
-    cardOnTop: boolean;
-}
-
 export const cardHandleClass = "TKUICard-handleSelector";
 
-class TKUICard extends React.Component<IProps, IState> {
+let SLIDE_UP_COUNT = 0;
+let MODAL_COUNT = 0;
+let cardStack: any[] = [];
+let modalContainerId: string = "";
+export function setModalContainerId(id: string) {
+    modalContainerId = id;
+}
+let mainContainerId: string = "";
+export function setMainContainerId(id: string) {
+    mainContainerId = id;
+}
 
-    public static SLIDE_UP_COUNT = 0;
-    private static MODAL_COUNT = 0;
-    private zIndex = 1002;
-    private firstModal = false;
-    public static cardStack: any[] = [];
+const TKUICard: React.FC<IProps> = (props: IProps) => {
+    const { title, subtitle, open = true, onRequestClose, closeAriaLabel, className, children, presentation = CardPresentation.NONE, slideUpOptions, classes, ariaLabel } = props;
 
-    private bodyRef?: any;
-    private parentElement?: any;
-    private appMainElement?: any;
+    const [slideUpPosition, setSlideUpPosition] = React.useState<TKUISlideUpPosition>(slideUpOptions?.position ?? slideUpOptions?.initPosition ?? TKUISlideUpPosition.UP);
 
-    public static modalContainerId: string = "";
-    public static mainContainerId: string = "";
-
-    public static defaultProps: Partial<IProps> = {
-        presentation: CardPresentation.NONE,
-        open: true
-    };
-
-    constructor(props: IProps) {
-        super(props);
-        const slideUpPosition = !this.props.slideUpOptions ? TKUISlideUpPosition.UP :
-            this.props.slideUpOptions.position ? this.props.slideUpOptions.position :
-                this.props.slideUpOptions.initPosition ? this.props.slideUpOptions.initPosition : TKUISlideUpPosition.UP;
-        this.state = {
-            slideUpPosition: slideUpPosition,
-            cardOnTop: slideUpPosition === TKUISlideUpPosition.UP
-        };
-
-        if (this.props.presentation === CardPresentation.MODAL) {
-            TKUICard.MODAL_COUNT++;
-        } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
-            TKUICard.SLIDE_UP_COUNT++;
+    const [zIndex, firstModal] = useMemo(() => {
+        if (presentation === CardPresentation.MODAL) {
+            MODAL_COUNT++;
+        } else if (presentation === CardPresentation.SLIDE_UP) {
+            SLIDE_UP_COUNT++;
         }
-        // First modal at the moment of creation, so will show fog. Assume a dialogs close in reverse order they were
-        // opened, so the first opened (showing fog) is the last closed.
-        this.firstModal = TKUICard.MODAL_COUNT === 1;
         // Z-index is assigned on card construction, contemplating slide-ups and modals (since presentation can switch
         // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
         // created.
         // Issue when open a card and then close one below, e.g. menu > profile > Development > Open routing specs.
-        // Maybe use the stack instead to dynamically calculate the index.
-        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
-        if (!props.doNotStack) {
-            TKUICard.cardStack.push(this);
-        }
-        const parentElementId = props.parentElementId || TKUICard.modalContainerId;
-        this.parentElement = document.getElementById(parentElementId);
-        this.appMainElement = document.getElementById(TKUICard.mainContainerId);
-        this.close = this.close.bind(this);
-    }
+        // Maybe use the stack instead to dynamically calculate the index.    
+        const zIndexValue = 1001 + MODAL_COUNT + SLIDE_UP_COUNT;
+        // First modal at the moment of creation, so will show fog. Assume a dialogs close in reverse order they were
+        // opened, so the first opened (showing fog) is the last closed.
+        const firstModalValue = MODAL_COUNT === 1;
+        return [zIndexValue, firstModalValue];
+    }, []);
 
-    public render(): React.ReactNode {
-        const { title, subtitle, onRequestClose, closeAriaLabel, className, children, presentation, classes } = this.props;
-        if (presentation === CardPresentation.CONTENT) {
-            return children;
-        }
-        let cardAriaLabel = this.props.ariaLabel;
-        if (!cardAriaLabel) {
-            if (this.props.title && typeof this.props.title === "string") {
-                cardAriaLabel = this.props.title;
-            }
-            if (this.props.subtitle && typeof this.props.subtitle === "string") {
-                cardAriaLabel = cardAriaLabel ? cardAriaLabel + ". " : "";
-                cardAriaLabel += this.props.subtitle;
-            }
-        }
-        if (cardAriaLabel && presentation !== CardPresentation.MODAL) {
-            cardAriaLabel += " Card";
-        }
-        const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose || this.props.renderHeader;
-        const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props} />);
-        const showHandle = hasHandle(this.props);
-        const bodyContent =
-            <div className={classNames(classes.main, genClassNames.root, className,
-                DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
-                aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
-                ref={(ref: any) => this.bodyRef = ref}
-                tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
-                role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
-                // To avoid a click on modal or slide up content to bubble-up and trigger a handler on an ancestor element in the render tree.
-                // E.g. TKUISegmentOverview registers a click handler to go to MxM view in its main panel, and renders TKUIAlertsSummary, which in turn renders
-                // TKUIAlertsView in a TKUICard, so this avoids a click on that card content to trigger the handler in TKUISegmentOverview.
-                onClick={presentation === CardPresentation.MODAL || presentation === CardPresentation.SLIDE_UP ?
-                    e => e.stopPropagation() : undefined}
-            >
-                {(showHandle || showHeader || this.props.renderSubHeader) &&
-                    <div className={cardHandleClass}>
-                        {(showHandle || showHeader) &&
-                            <div ref={(ref: any) => {
-                                this.state.handleRef === undefined && this.setState({ handleRef: ref });
-                                this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
-                            }}
-                            >
-                                {showHandle &&
-                                    <div className={classes.handle}>
-                                        <div className={classes.handleLine} />
-                                    </div>}
-                                {showHeader &&
-                                    renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
-                            </div>}
-                        {this.props.renderSubHeader &&
-                            <div className={classes.subHeader}>
-                                {this.props.renderSubHeader()}
-                            </div>}
-                        {(showHandle || showHeader || this.props.renderSubHeader) &&
-                            <div className={classes.divider} />}
-                    </div>}
-                {this.props.scrollable !== false ?
-                    <div
-                        className={classes.body}
-                        style={{
-                            overflowY: 'auto',
-                            overflowX: 'hidden'
-                        }}
-                        ref={this.props.scrollRef}
-                    >
-                        {this.props.children}
-                    </div> :
-                    this.props.children
-                }
-            </div>;
-        const focusTrap = this.props.focusTrap !== undefined ? this.props.focusTrap : this.props.presentation === CardPresentation.MODAL;
-        const body = focusTrap ?
-            <FocusTrap>
-                {bodyContent}
-            </FocusTrap> : bodyContent
-        return (
-            presentation === CardPresentation.SLIDE_UP ?
-                <TKUISlideUp
-                    {...{ modalUp: { top: cardSpacing(this.props.landscape), unit: 'px' }, ...this.props.slideUpOptions }}
-                    handleSelector={"." + cardHandleClass}
-                    handleRef={this.state.handleRef}
-                    containerClass={classNames(classes.modalContainer, genClassNames.root, this.props.slideUpOptions?.containerClass)}
-                    open={this.props.open}
-                    onPositionChange={(position: TKUISlideUpPosition) => this.setState({ slideUpPosition: position })}
-                    cardOnTop={(onTop: boolean) => this.setState({ cardOnTop: onTop })}
-                    parentElement={this.parentElement}
-                    zIndex={this.props.slideUpOptions?.zIndex !== undefined ? this.props.slideUpOptions.zIndex : this.zIndex}
-                    ariaLabel={cardAriaLabel}
-                    role={this.props.role || "group"}
-                >
-                    {body}
-                </TKUISlideUp>
-                :
-                presentation === CardPresentation.MODAL ?
-                    <Modal
-                        isOpen={this.props.open!}
-                        style={{
-                            content: this.props.injectedStyles.modalContent,
-                            ...(!this.firstModal ?
-                                { overlay: { background: 'none' } } :
-                                { overlay: this.props.injectedStyles.modalOverlay }
-                            )
-                        }}
-                        shouldCloseOnEsc={true}
-                        onRequestClose={this.close}
-                        appElement={this.appMainElement}
-                        parentSelector={() => this.parentElement ? this.parentElement : document.getElementsByTagName("BODY")[0]}
-                        contentLabel={cardAriaLabel}
-                        {...this.props.modalOptions}
-                    >
-                        {body}
-                    </Modal> : this.props.open && body
-        );
-    }
+    const bodyRef = useRef<HTMLDivElement>(null);
+    const parentElement = useMemo(() => document.getElementById(props.parentElementId || modalContainerId), []);
+    const appMainElement = useMemo(() => document.getElementById(mainContainerId), []);
 
-    public componentDidUpdate(prevProps: Readonly<IProps>): void {
-        // TODO: make modalUp.top dynamic.
-        // if (this.props.top !== prevProps.top) {
-        //     this.props.refreshStyles();
-        // }
-        if (this.props.presentation !== prevProps.presentation) {
-            if (this.props.presentation === CardPresentation.MODAL) {
-                TKUICard.MODAL_COUNT++;
-            } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
-                TKUICard.SLIDE_UP_COUNT++;
-            }
-            if (prevProps.presentation === CardPresentation.MODAL) {
-                TKUICard.MODAL_COUNT--;
-            } else if (prevProps.presentation === CardPresentation.SLIDE_UP) {
-                TKUICard.SLIDE_UP_COUNT--;
-            }
-        }
-    }
+    const [handleRef, setHandleRef] = React.useState<any>(undefined);
+    const [cardOnTop, setCardOnTop] = React.useState<any>(undefined);
 
-    /**
-     * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
-     */
-    contentHasFocus = () =>
-        document.activeElement === this.bodyRef ||
-        this.bodyRef.contains(document.activeElement);
+    // Entry used for global card stack management
+    const stackEntryRef = useRef<{ isModal: () => boolean; close: () => void } | null>(null);
 
-    // Don't steal focus from inner elements
-    focusContent = () => {
-        const mainFocusElem = this.props.mainFocusElemId && document.getElementById(this.props.mainFocusElemId);
-        if (mainFocusElem && !this.contentHasFocus()) {
-            mainFocusElem.focus();
-        } else {
-            this.bodyRef &&
-                !this.contentHasFocus() &&
-                this.bodyRef.focus({ preventScroll: true });
-        }
-    };
+    // Keep latest presentation available to closures created at mount time
+    const presentationRef = useRef<CardPresentation>(presentation);
+    useEffect(() => {
+        presentationRef.current = presentation;
+    }, [presentation]);
 
     /**
      * Registers that the card actually gave focus to some (content) element, and so
      * it has to return the focus. It's false when shoudlFocusAfterRender = false.
      */
-    private gaveFocus;
+    const gaveFocus = useRef(false);
 
-    private close() {
-        this.props.onRequestClose && this.props.onRequestClose();
-        if (this.gaveFocus) {
+    useEffect(() => {
+        if (!props.doNotStack) {
+            const entry = {
+                isModal: () => presentationRef.current === CardPresentation.MODAL,
+                close
+            };
+            stackEntryRef.current = entry;
+            cardStack.push(entry);
+        }
+
+        // Handle focus when not modal
+        if (props.presentation !== CardPresentation.MODAL) {
+            const shouldFocusAfterRender = props.shouldFocusAfterRender ?? (props.isUserTabbing || DeviceUtil.isTouch()); // For VO on iOS.
+            if (shouldFocusAfterRender) {
+                markForFocusLater();
+                focusContent();
+                gaveFocus.current = true;
+            }
+        }
+
+        return () => {
+            // Decrement counters on unmount
+            if (presentation === CardPresentation.MODAL) {
+                MODAL_COUNT--;
+            } else if (presentation === CardPresentation.SLIDE_UP) {
+                SLIDE_UP_COUNT--;
+            }
+            // Remove from stack
+            const idx = cardStack.indexOf(stackEntryRef.current);
+            if (idx !== -1) {
+                cardStack.splice(idx, 1);
+            }
+        };
+    }, []);
+
+    const prevPresentation = usePrevious(presentation);
+    useEffect(() => {
+        if (prevPresentation === undefined) { // Avoid updating counters on first render            
+            return;
+        }
+        if (presentation === CardPresentation.MODAL) {
+            MODAL_COUNT++;
+        } else if (presentation === CardPresentation.SLIDE_UP) {
+            SLIDE_UP_COUNT++;
+        }
+        if (prevPresentation === CardPresentation.MODAL) {
+            MODAL_COUNT--;
+        } else if (prevPresentation === CardPresentation.SLIDE_UP) {
+            SLIDE_UP_COUNT--;
+        }
+    }, [presentation]);
+
+    const sheetRef = useRef<any>(null);
+    const snapPointsRef = useRef<number[]>(undefined);
+    const [expandOnContentDrag, setExpandOnContentDrag] = useState(false);
+    const snap = props.bottomSheetOptions?.snap?.(snapPointsRef.current ? { snapPoints: snapPointsRef.current } : { snapPoints: [] });
+
+    useEffect(() => {
+        if (!sheetRef.current) {
+            return;
+        }
+        if (snap !== undefined) {
+            sheetRef.current.snapTo(snap);
+        } else {
+            sheetRef.current.snapTo(props.bottomSheetOptions?.defaultSnap ?? (({ snapPoints }) => snapPoints[1]));
+        }
+    }, [snap]);
+
+    /**
+     * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
+     */
+    function contentHasFocus() {
+        return document.activeElement === bodyRef.current ||
+            bodyRef.current?.contains(document.activeElement);
+    }
+    // Don't steal focus from inner elements
+    function focusContent() {
+        const mainFocusElem = props.mainFocusElemId && document.getElementById(props.mainFocusElemId);
+        if (mainFocusElem && !contentHasFocus()) {
+            mainFocusElem.focus();
+        } else {
+            bodyRef.current &&
+                !contentHasFocus() &&
+                bodyRef.current.focus({ preventScroll: true });
+        }
+    };
+
+    function close() {
+        onRequestClose?.();
+        if (gaveFocus.current) {
             returnFocus();
         }
     }
 
-    componentDidMount() {
-        if (this.props.presentation !== CardPresentation.MODAL) {
-            const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
-                this.props.shouldFocusAfterRender :
-                (this.props.isUserTabbing
-                    || DeviceUtil.isTouch()); // For VO on iOS.
-            if (!shouldFocusAfterRender) {
-                return;
-            }
-            // setupScopedFocus(this.bodyRef);
-            markForFocusLater();
-            this.focusContent();
-            this.gaveFocus = true;
+
+    if (presentation === CardPresentation.CONTENT) {
+        return children;
+    }
+    let cardAriaLabel = ariaLabel;
+    if (!cardAriaLabel) {
+        if (title && typeof title === "string") {
+            cardAriaLabel = title;
+        }
+        if (subtitle && typeof subtitle === "string") {
+            cardAriaLabel = cardAriaLabel ? cardAriaLabel + ". " : "";
+            cardAriaLabel += subtitle;
         }
     }
-
-    public componentWillUnmount() {
-        if (this.props.presentation === CardPresentation.MODAL) {
-            TKUICard.MODAL_COUNT--;
-        } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
-            TKUICard.SLIDE_UP_COUNT--;
-        }
-        const thisIndex = TKUICard.cardStack.indexOf(this);
-        if (thisIndex !== -1) {
-            TKUICard.cardStack.splice(thisIndex, 1);
-        }
+    if (cardAriaLabel && presentation !== CardPresentation.MODAL) {
+        cardAriaLabel += " Card";
+    }
+    const showHeader = title || subtitle || onRequestClose || props.renderHeader;
+    const renderHeaderFc = props.renderHeader ?? (props => <TKUICardHeader{...props} />);
+    const showHandle = hasHandle(props);
+    const bodyContent =
+        <div className={classNames(classes.main, genClassNames.root, className,
+            DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || slideUpOptions) && classes.mainForSlideUp)}
+            aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
+            ref={bodyRef}
+            tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
+            role={presentation === CardPresentation.NONE ? props.role || "group" : undefined}
+            // To avoid a click on modal or slide up content to bubble-up and trigger a handler on an ancestor element in the render tree.
+            // E.g. TKUISegmentOverview registers a click handler to go to MxM view in its main panel, and renders TKUIAlertsSummary, which in turn renders
+            // TKUIAlertsView in a TKUICard, so this avoids a click on that card content to trigger the handler in TKUISegmentOverview.
+            onClick={presentation === CardPresentation.MODAL || presentation === CardPresentation.SLIDE_UP ?
+                e => e.stopPropagation() : undefined}
+        >
+            {(showHandle || showHeader || props.renderSubHeader) &&
+                <div className={cardHandleClass}>
+                    {(showHandle || showHeader) &&
+                        <div ref={(ref: any) => {
+                            handleRef === undefined && setHandleRef(ref);
+                            handleRef === undefined && props.handleRef && props.handleRef(ref);
+                        }}
+                        >
+                            {showHandle &&
+                                <div className={classes.handle}>
+                                    <div className={classes.handleLine} />
+                                </div>}
+                            {showHeader &&
+                                renderHeaderFc({ title, subtitle, onRequestClose: onRequestClose ? close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
+                        </div>}
+                    {props.renderSubHeader &&
+                        <div className={classes.subHeader}>
+                            {props.renderSubHeader()}
+                        </div>}
+                    {(showHandle || showHeader || props.renderSubHeader) &&
+                        <div className={classes.divider} />}
+                </div>}
+            {props.scrollable !== false ?
+                <div
+                    className={classNames(classes.body, "no-drag")}
+                    style={{
+                        overflowY: 'auto',
+                        overflowX: 'hidden'
+                    }}
+                    ref={props.scrollRef}
+                >
+                    {children}
+                </div> :
+                children
+            }
+        </div>;
+    const focusTrap = props.focusTrap !== undefined ? props.focusTrap : presentation === CardPresentation.MODAL;
+    const body = focusTrap ?
+        <FocusTrap>
+            {bodyContent}
+        </FocusTrap> : bodyContent
+    if (presentation === CardPresentation.SLIDE_UP) {
+        return (
+            <TKUISlideUp
+                {...{ modalUp: { top: cardSpacing(props.landscape), unit: 'px' }, ...props.slideUpOptions }}
+                handleSelector={"." + cardHandleClass}
+                handleRef={handleRef}
+                containerClass={classNames(classes.modalContainer, genClassNames.root, slideUpOptions?.containerClass)}
+                open={open}
+                onPositionChange={(position: TKUISlideUpPosition) => setSlideUpPosition(position)}
+                cardOnTop={(onTop: boolean) => setCardOnTop(onTop)}
+                parentElement={parentElement}
+                zIndex={slideUpOptions?.zIndex !== undefined ? slideUpOptions.zIndex : zIndex}
+                ariaLabel={cardAriaLabel}
+                role={props.role || "group"}
+            >
+                {body}
+            </TKUISlideUp>
+        )
+    } else if (presentation === CardPresentation.MODAL) {
+        return (
+            <Modal
+                isOpen={open!}
+                style={{
+                    content: props.injectedStyles.modalContent,
+                    ...(!firstModal && !props.modalOptions?.ensureOverlay ?
+                        { overlay: { background: 'none' } } :
+                        { overlay: props.injectedStyles.modalOverlay }
+                    )
+                }}
+                className={classes.modal}
+                shouldCloseOnEsc={true}
+                onRequestClose={close}
+                appElement={appMainElement}
+                parentSelector={() => parentElement ? parentElement : document.getElementsByTagName("BODY")[0]}
+                contentLabel={cardAriaLabel}
+                {...props.modalOptions}
+            >
+                {body}
+            </Modal>
+        );
+    } else if (presentation === CardPresentation.BOTTOM_SHEET) {
+        return (
+            <BottomSheet
+                open={!!open}
+                className={classNames(classes.bottomSheetRoot, genClassNames.root, props.bottomSheetOptions?.hide && classes.hidden, props.bottomSheetOptions?.disableDrag && classes.noDrag)}
+                style={{
+                    '--bottom-sheet-z-index': zIndex
+                } as React.CSSProperties}
+                skipInitialTransition
+                ref={sheetRef}
+                // initialFocusRef={focusRef}
+                defaultSnap={({ snapPoints }) => snapPoints[1]}
+                snapPoints={({ maxHeight }) => {
+                    const snapPoints = [
+                        maxHeight - 16,
+                        maxHeight * 0.6,
+                        maxHeight / 4
+                    ];
+                    snapPointsRef.current = snapPoints;
+                    return snapPoints;
+                }}
+                onSpringEnd={(e: SpringEvent) => {
+                    if (e.type === 'SNAP' && sheetRef.current && snapPointsRef.current) {
+                        console.log("expandOnContentDrag", Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
+                        setExpandOnContentDrag(Math.abs(sheetRef.current.height - snapPointsRef.current[snapPointsRef.current.length - 1]) < 2);
+                    }
+                }}
+                // expandOnContentDrag={expandOnContentDrag}
+                blocking={false}
+                header={
+                    (showHeader || props.renderSubHeader) &&
+                    <div
+                        className={cardHandleClass}
+                        {...props.bottomSheetOptions?.disableDrag ? {
+                            onPointerDownCapture: (e) => e.stopPropagation(),
+                            onTouchStartCapture: (e) => e.stopPropagation()
+                        } : {}}
+                    >
+                        {showHeader &&
+                            <div ref={(ref: any) => {
+                                handleRef === undefined && setHandleRef(ref);
+                                handleRef === undefined && props.handleRef && props.handleRef(ref);
+                            }}
+                            >
+                                {showHeader &&
+                                    renderHeaderFc({ title, subtitle, onRequestClose: onRequestClose ? close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
+                            </div>}
+                        {props.renderSubHeader &&
+                            <div className={classes.subHeader}>
+                                {props.renderSubHeader()}
+                            </div>}
+                        {(showHeader || props.renderSubHeader) &&
+                            <div className={classes.divider} />}
+                    </div>
+                }
+                {...props.bottomSheetOptions}
+            >
+                {children}
+            </BottomSheet >
+        );
+    } else {
+        return open && body;
     }
 }
 
 window.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.keyCode === 27 && TKUICard.cardStack.length > 0) {
-        const topCard = TKUICard.cardStack[TKUICard.cardStack.length - 1];
-        topCard.props.presentation !== CardPresentation.MODAL && topCard.close();
+    if (e.key === 'Escape' && cardStack.length > 0) {
+        const topCard = cardStack[cardStack.length - 1];
+        if (!topCard.isModal()) {
+            topCard.close();
+        }
     }
 });
 

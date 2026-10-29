@@ -10,21 +10,45 @@ import BookingReview from "../model/trip/BookingReview";
 import { i18n } from "../i18n/TKI18nConstants";
 import { BookingPaymentForm } from "../model/payment/BookingPaymentForm";
 import { v4 as uuidv4 } from 'uuid';
+import BookingSuccess from "../model/trip/BookingSuccess";
 
 type TripGoApiHeader = "x-tripgo-version" | "x-tripgo-key" | "x-tripgo-client-id" | "x-tsp-client-userid" | "x-tsp-client-tenantid" | "x-account-access-token" | "userid" | "usertoken";
 export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
+
+const USER_UUID_KEY = 'tripgo-user-uuid';
+
+function getOrCreateUserUuid(): string {
+    try {
+        const stored = localStorage.getItem(USER_UUID_KEY);
+        if (stored) {
+            return stored;
+        }
+    } catch {
+        // Storage unavailable; keep the browser UUID in memory.
+    }
+
+    const uuid = uuidv4();
+
+    try {
+        localStorage.setItem(USER_UUID_KEY, uuid);
+    } catch {
+        // Persistence is optional for this session.
+    }
+
+    return uuid;
+}
 
 class TripGoApi {
 
     public static SATAPP = "https://api.tripgo.com/v1";
     public static SATAPP_STAGING = "https://api.tripgo.com/v1";
-    public static SATAPP_BETA = "https://api-beta.tripgo.com/v1";
+    public static SATAPP_BETA = "https://beta.api.tripgo.com/v1";
 
     public static isBetaServer = false;
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
     public static userToken?: string = undefined;
-    public static uuid: string = uuidv4();
+    public static uuid: string = getOrCreateUserUuid();
     public static resetUserToken: () => void = () => { };
     public static clientID?: string = undefined;
     public static accountAccessToken?: string = undefined;
@@ -190,7 +214,7 @@ class TripGoApi {
             .then(this.deserializeBookingResult);
     }
 
-    public static submitBookingOptionAndFinish(bookingForm: BookingInfo): Promise<{ updateURL: string }> {
+    public static submitBookingOptionAndFinish(bookingForm: BookingInfo): Promise<BookingSuccess> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm));
     }
 
@@ -223,6 +247,10 @@ class TripGoApi {
 
     public static deserializeProviderOptions(resultsJson): ProviderOptionsForm {
         return Util.deserialize(resultsJson, ProviderOptionsForm);
+    }
+
+    public static deserializePaidResult(resultsJson): BookingSuccess {
+        return Util.deserialize(resultsJson, BookingSuccess);
     }
 
     public static equivalentTrips(tripA: Trip, tripB: Trip): boolean {

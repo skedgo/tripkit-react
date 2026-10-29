@@ -350,23 +350,23 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     },
 
     fontL: {
-        fontSize: '20px',
-        lineHeight: '28px'
+        fontSize: '1.25rem',
+        lineHeight: '1.75rem'
     },
 
     fontM: {
-        fontSize: '16px',
-        lineHeight: '24px'
+        fontSize: '1rem',
+        lineHeight: '1.5rem'
     },
 
     fontS: {
-        fontSize: '14px',
-        lineHeight: '20px'
+        fontSize: '.875rem',
+        lineHeight: '1.25rem'
     },
 
     fontSM: {
-        fontSize: '12px',
-        lineHeight: '16px'
+        fontSize: '.75rem',
+        lineHeight: '1rem'
     },
 
     // TODO: maybe move to a stylesheet that can be customized on SDK config.

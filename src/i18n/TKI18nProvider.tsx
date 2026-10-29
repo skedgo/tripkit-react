@@ -31,6 +31,10 @@ export const TKI18nContext = React.createContext<TKI18nContextProps>({
     i18nOverridden: false
 });
 
+export function useI18n(): TKI18nContextProps {
+    return React.useContext(TKI18nContext);
+}
+
 const WithTranslate = translate()(
     (props: { t: TranslationFunction, children: any }) => {
         i18n.t = props.t;

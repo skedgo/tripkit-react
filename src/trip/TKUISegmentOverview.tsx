@@ -122,6 +122,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             </div> : null}
                         <div className={classes.subtitle}>
                             {transferAction}
+                            {segment.getNotes().length > 0 ?
+                                <div className={classes.notes}>
+                                    {segment.getNotes().map((note: string, i: number) =>
+                                        <div key={i}>{note}</div>
+                                    )}
+                                </div> : null}
                         </div>
                         {this.props.actions}
                     </div>

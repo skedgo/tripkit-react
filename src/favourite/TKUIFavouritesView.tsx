@@ -19,6 +19,7 @@ import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import UIUtil from "../util/UIUtil";
 import { TKError } from "../error/TKError";
 import { useResponsiveUtil } from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -27,7 +28,9 @@ export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IPro
     slideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IConsumedProps extends IFavouritesContext { }
+interface IConsumedProps extends IFavouritesContext {
+    renderMore?: () => React.ReactNode;
+}
 
 export type IStyle = ReturnType<typeof tKUIFavouritesViewDefaultStyle>
 
@@ -43,12 +46,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
-    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
+    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites, renderMore } = props;
     const { landscape } = useResponsiveUtil();
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
     const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
-    const { onWaitingStateLoad } = useContext(RoutingResultsContext);    
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const handleEditClose = async (update?: Favourite) => {
         setEditingFav(undefined);
         if (update) {
@@ -84,7 +87,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
         <>
             <TKUICard
                 title={title}
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={DeviceUtil.isTouch() ? CardPresentation.BOTTOM_SHEET : CardPresentation.SLIDE_UP}
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
                         <TKUIButton text={editing ? t("Done") : t("edit")}
@@ -116,6 +119,13 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                 styles={{
                     subHeader: overrideClass({ padding: '0 16px' })
                 }}
+                bottomSheetOptions={{
+                    ...slideUpOptions.modalUp?.top !== undefined && {
+                        snapPoints: ({ maxHeight }) => landscape ? [maxHeight - slideUpOptions.modalUp!.top!] : [maxHeight - slideUpOptions.modalUp!.top!, maxHeight * 0.50, 80]
+                    },
+                    defaultSnap: ({ snapPoints }) => Math.max(...snapPoints),
+                    disableDrag: landscape
+                }}
             >
                 <div className={classes.main}>
                     <TKUIReorderList
@@ -137,6 +147,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                         <div className={classes.loadingPanel}>
                             <TKLoading />
                         </div>}
+                    {renderMore?.()}
                 </div>
             </TKUICard>
             {(editingFav || isCreatingFav) &&
@@ -168,5 +179,6 @@ export default connect((config: TKUIConfig) => config.TKUIFavouritesView, config
 
 export const TKUIFavouritesViewHelpers = {
     TKStateProps: Consumer,
-    useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
+    useTKStateProps: () => { },   // Hook version of TKStateProps, not defined for now.
+    Class: TKUIFavouritesView
 }

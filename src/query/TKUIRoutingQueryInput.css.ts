@@ -27,7 +27,8 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         ...genStyles.grow,
         '& input': {
-            fontSize: '16px!important',
+            ...important(theme.textSizeBody),
+            lineHeight: '30px!important',
             ...theme.textColorDefault
         },
         '& input::placeholder': {
@@ -61,7 +62,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         background: black(1, theme.isDark)
     },
     divider: {
-        borderBottom: '1px solid ' + black(4, theme.isDark)
+        borderBottom: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark)
     },
     swap: {
         ...resetStyles.button,
@@ -77,7 +78,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         flexWrap: 'wrap',
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
-        borderTop: '1px solid ' + tKUIColors.black4,
+        borderTop: '1px solid ' + black(theme.isHighContrast ? 1 : 4),
         padding: '6px 12px',
         ...genStyles.flex,
         ...genStyles.alignCenter,
@@ -87,7 +88,10 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     timeContainer: {
-        ...genStyles.flex
+        ...genStyles.flex,
+        '& > *:not(:first-child)': {
+            fontSize: '16px'
+        }
     },
     timePrefSelect: {
         ...genStyles.flex,
@@ -98,6 +102,8 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         background: ({ value }) => value.value !== TimePreference.NOW ? colorWithOpacity(theme.colorPrimary, .2) : 'none',
         '& *': {
             ...theme.textSizeCaption,
+            fontSize: 'clamp(14px, .875rem, 16px)',
+            lineHeight: 'clamp(20px, 1.25rem, 24px)',
             ...theme.textWeightSemibold,
             color: ({ value }) => value.value !== TimePreference.NOW ? (theme.colorPrimary + '!important') : black(1, theme.isDark) + '!important'
         },
@@ -129,6 +135,8 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         padding: '3px 10px',
         whiteSpace: 'nowrap',
         ...theme.textSizeCaption,
+        fontSize: 'clamp(14px, .875rem, 16px)',
+        lineHeight: 'clamp(20px, 1.25rem, 24px)',
         ...theme.textWeightSemibold,
         ...theme.textColorDefault,
         marginLeft: 'auto'

@@ -1,5 +1,5 @@
 import genStyles from "../css/GenStyle.css";
-import { TKUITheme } from "../jss/TKUITheme";
+import { TKUITheme, white } from "../jss/TKUITheme";
 
 export const tKUIFromToDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -39,7 +39,9 @@ export const tKUIFromToDefaultStyle = (theme: TKUITheme) => ({
         gridColumnStart: '2'
     },
     pickupAddress: {
-        gridColumnStart: '2'
+        gridColumnStart: '2',
+        display: 'flex',
+        alignItems: 'center'
     },
     dropoffLabel: {
         gridColumnStart: '2',
@@ -55,6 +57,19 @@ export const tKUIFromToDefaultStyle = (theme: TKUITheme) => ({
         gridColumnStart: '2'
     },
     dropoffAddress: {
-        gridColumnStart: '2'
+        gridColumnStart: '2',
+        display: 'flex',
+        alignItems: 'center'
+    },
+    newBadge: {
+        background: theme.colorSuccess,
+        color: white(),
+        ...theme.textSizeCaption,
+        padding: '2px 6px',
+        borderRadius: '12px',
+        marginLeft: '8px'
+    },
+    strikedOut: {
+        textDecoration: 'line-through'
     }
 });

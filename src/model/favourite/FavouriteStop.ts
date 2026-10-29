@@ -8,8 +8,11 @@ class FavouriteStop extends Favourite {
     public region: string = "";
     @JsonProperty('stopCode', String, true)
     public stopCode: string = "";
+    @JsonProperty('stopName', String, true)
+    public stopName?: string = undefined;
 
-    public stop?: StopLocation;
+    // Undefined means not loaded, null means loaded but not found
+    public stop?: StopLocation | null = undefined;
 
     public static create(stop: StopLocation): FavouriteStop {
         const instance = new FavouriteStop();
@@ -17,6 +20,7 @@ class FavouriteStop extends Favourite {
         instance.name = stop.shortName ?? stop.address ?? "";
         instance.region = stop.region ?? "";
         instance.stopCode = stop.code;
+        instance.stopName = stop.name;
         instance.type = "stop";
         return instance;
     }

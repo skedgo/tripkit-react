@@ -110,7 +110,7 @@ export class ConfirmationPrompt {
 @JsonObject
 export class BookingAction {
     @JsonProperty("type", String, true)
-    public type: string = "";   // values: CANCEL, CONFIRM
+    public type: "CANCEL" | "REVIEW" | "CONFIRM" | "REQUESTANOTHER" | "SHOW_RELATED_TRIP" | "CALL" | "UNKNOWN" = "UNKNOWN";   // values: CANCEL, CONFIRM
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("internalURL", String, true)

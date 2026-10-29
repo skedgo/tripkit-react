@@ -191,6 +191,10 @@ export class RegionsData {
         return this._regionList;
     }
 
+    public getModes(): Map<string, ModeIdentifier> {
+        return this._modes;
+    }
+
     public getRegionInfoP(code: string): Promise<RegionInfo> {
         if (!this.regionInfosRequests.get(code)) {
             const regionInfoRequest =
@@ -217,6 +221,12 @@ export class RegionsData {
      */
     public getSegmentRegions(segment: Segment): [Region, Region] {
         return [this.getRegion(segment.from)!, this.getRegion(segment.to)!];
+    }
+
+    public aIAccessAvailabilityP(): Promise<boolean> {
+        return this.regionsRequest.then((regionResults: RegionResults) => {
+            return regionResults.aiAccessAvailability;
+        });
     }
 
     public getCoverageGeoJson() {

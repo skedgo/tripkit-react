@@ -27,6 +27,7 @@ export const tKUICardHeaderJss = (theme: TKUITheme) => ({
     title: {
         ...genStyles.flex,
         ...genStyles.fontL,
+        lineHeight: 'clamp(28px, 1.75rem, 32px)',
         ...theme.textColorDefault,
         gridColumn: props => props.renderLeft ? '2' : '1',
         justifyContent: props => props.renderLeft ? 'center' : 'flex-start'

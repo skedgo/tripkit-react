@@ -9,6 +9,9 @@ import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import TKAccessibilityProvider, { TKAccessibilityContext } from "./TKAccessibilityProvider";
 import TKState from "./TKState";
+import { RegionsData } from "../data/RegionsData";
+import ModeIdentifier from "../model/region/ModeIdentifier";
+import Util from "../util/Util";
 
 interface IProps {
     config: TKUIConfig;
@@ -29,6 +32,29 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (props.config.i18n) {
             TripGoApi.locale = Promise.resolve(props.config.i18n)
                 .then(({ locale }) => locale);
+        }
+        if (props.config.parkAndRideMode) {
+            RegionsData.instance.requireRegions().then(() => {
+                RegionsData.instance.getRegionList()!.forEach(region => {
+                    // Push park and ride mode after public transport mode, if it exists, otherwise push it to the end of the list
+                    const publicTransportIndex = region.modes.indexOf(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+                    if (publicTransportIndex !== -1) {
+                        region.modes.splice(publicTransportIndex + 1, 0, ModeIdentifier.PARK_AND_RIDE_ID);
+                    } else {
+                        region.modes.push(ModeIdentifier.PARK_AND_RIDE_ID);
+                    }
+                });
+                const parkAndRideMode = Util.deserialize({
+                    "title": "Park & Ride",
+                    "color": {
+                        "red": 45,
+                        "green": 197,
+                        "blue": 104
+                    }
+                }, ModeIdentifier);
+                parkAndRideMode.identifier = ModeIdentifier.PARK_AND_RIDE_ID;
+                RegionsData.instance.getModes().set(ModeIdentifier.PARK_AND_RIDE_ID, parkAndRideMode);
+            });
         }
     }
 

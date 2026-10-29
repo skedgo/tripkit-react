@@ -133,6 +133,9 @@ class TransportUtil {
         if (modeId.startsWith(ModeIdentifier.SCHOOLBUS_ID)) {
             return "school-bus";
         }
+        if (modeId === ModeIdentifier.PARK_AND_RIDE_ID) {
+            return "p-r";
+        }
         if (modeId.startsWith("cy_bic-s")) {
             return "bicycle-share";
         }

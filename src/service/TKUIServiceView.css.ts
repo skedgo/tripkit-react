@@ -1,12 +1,13 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { TKUIServiceViewProps, TKUIServiceViewStyle } from "./TKUIServiceView";
+import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIServiceViewProps> =
     (theme: TKUITheme) => ({
         main: {
             height: '100%',
+            minHeight: '100px', // Need this since the bottom sheet doesnt render if content height is 0, which happens while loading results.
             ...genStyles.flex,
             ...genStyles.column
         },

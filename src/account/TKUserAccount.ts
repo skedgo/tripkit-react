@@ -1,10 +1,10 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import CurrentBundle from "../model/user/CurrentBundle";
 import FutureBundle from "../model/user/FutureBundle";
 
 @JsonObject
 class TKUserAccount {
-    @JsonProperty('userId', String, true)
+    @JsonProperty('userID', String, true)
     public userID?: string = undefined;
     @JsonProperty('email', String, true)
     public email?: string = undefined;
@@ -20,6 +20,12 @@ class TKUserAccount {
     public currentBundle?: CurrentBundle = undefined;
     @JsonProperty('futureBundle', FutureBundle, true)
     public futureBundle?: FutureBundle = undefined;
+    @JsonProperty('aiEarlyAccess', String, true)
+    public aiEarlyAccess?: "GRANTED" | "REQUESTED" = undefined;
+    @JsonProperty('optIn', Any, true)
+    public optIn?: { aiFeatures?: boolean } = undefined;
+    @JsonProperty('appData', Any, true)
+    public appData?: any = undefined;
 }
 
 export default TKUserAccount;

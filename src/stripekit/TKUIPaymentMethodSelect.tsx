@@ -156,6 +156,16 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                             <div>{paymentMethod.paymentOption.description} to department</div>
                         </div>
                     );
+                case "CASH":
+                    return (
+                        <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
+                            <TKUIRadio checked={value === paymentMethod} theme={theme} />
+                            <div className={classNames(classes.icon, classes.iconBalance)}>
+                                <IconBalance />
+                            </div>
+                            <div>{paymentMethod.paymentOption.description}</div>
+                        </div>
+                    );
                 default:
                     return null;
             }

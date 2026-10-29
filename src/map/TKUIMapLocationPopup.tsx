@@ -20,6 +20,7 @@ import { ReactComponent as Battery100 } from '../images/location/ic-battery.svg'
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
+    isFrom?: boolean;
     onAction?: () => void;
 }
 
@@ -37,9 +38,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMapLocationPopup: React.FunctionComponent<IProps> = (props: IProps) => {
-    const location = props.location;
-    const t = props.t;
-    const classes = props.classes;
+    const { location, classes, t } = props;
     const info = () => {
         if (location instanceof CarParkLocation) {
             return (

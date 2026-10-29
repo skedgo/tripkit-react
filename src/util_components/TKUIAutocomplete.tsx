@@ -8,7 +8,7 @@ const TKUIAutocomplete = forwardRef<any, any>((props, ref) => {
         }
     }, []);
     return (
-        <Autocomplete {...props} ref={ref} />
+        <Autocomplete {...props as any} ref={ref} />
     );
 });
 

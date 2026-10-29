@@ -53,9 +53,9 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
             (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
         width: (props: TKUIButtonProps) =>
             (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
-        border: '2px solid ' + black(4, theme.isDark),
+        border: '2px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
         '&:hover': {
-            borderColor: black(2, theme.isDark),
+            borderColor: black(theme.isHighContrast ? 0 : 2, theme.isDark),
         },
         '&:disabled': {
             borderColor: black(4, theme.isDark),

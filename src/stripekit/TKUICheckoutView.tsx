@@ -28,6 +28,8 @@ import { BookingField } from '../model/trip/BookingInfo';
 import { ReactComponent as IconRecent } from "../images/ic-recent.svg";
 import DateTimeUtil from '../util/DateTimeUtil';
 import TKUICheckbox from '../util_components/TKUICheckbox';
+import BookingSuccess from '../model/trip/BookingSuccess';
+import { usePrevious } from '../util/ReactUtil';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -156,7 +158,7 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     bookingPaymentForm: BookingPaymentForm;
-    onSubmit: (data: { updateURL?: string }) => void;
+    onSubmit: (data: BookingSuccess) => void;
     onClose?: () => void;
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
@@ -181,7 +183,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUICheckoutViewClientProps = IClientProps;
 
-function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
+function handlePayResponse(request: Promise<any>, onSubmit: (data: BookingSuccess) => void, setWaiting?: (waiting: boolean) => void) {
     setWaiting?.(true);
     request.then(data => {
         if (data.warning) {
@@ -196,7 +198,7 @@ function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?:
         }
         return data;
     })
-        .then(data => onSubmit(data))
+        .then(data => onSubmit(TripGoApi.deserializePaidResult(data)))
         .catch(UIUtil.errorMsg)
         .finally(() => setWaiting?.(false));
 }
@@ -243,7 +245,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     + (method === NetworkUtil.MethodType.GET && selectedInitiative) ? `?initiativeID=${selectedInitiative}` : "";
                 const body: any = method === NetworkUtil.MethodType.POST && (selectedInitiative || selectedOrganizationId) ?
                     { initiativeID: selectedInitiative, organizationID: selectedOrganizationId } : undefined;
-                if (paymentOption.paymentMode === "WALLET" || paymentOption.paymentMode === "INVOICE") {
+                if (paymentOption.paymentMode === "WALLET" || paymentOption.paymentMode === "INVOICE" || paymentOption.paymentMode === "CASH") {
                     handlePayResponse(TripGoApi.fetchAPI(paymentOptionUrl, { method, body }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;
@@ -472,15 +474,34 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
 
         useEffect(() => {
             if (paymentMode === "INVOICE") {
-                if (selectedDepartment?.initiatives.length === 1) {
+                if (selectedDepartment?.initiatives.length === 1) {  // Invoicing to CBA with one initiative
                     setSelectedInitiative(selectedDepartment.initiatives[0].id);
-                } else {    // To contemplate the case where the organization changed, so need to reset the value.
-                    setSelectedInitiative(undefined);
+                } else if (!selectedDepartment || selectedDepartment.initiatives.length > 1) { // No CBA selected, or invoicing to CBA with more than one initiative
+                    setSelectedInitiative(undefined); // Leave the initiative blank
+                } else { // Invoicing to CBA without initiative (selectedDepartment.initiatives.length === 0)
+                    // Prefill with the last used by the user, if any, otherwise with the initiative in the user's profile, if there's exactly one.
+                    // Call setSelectedInitiative even if prefillInitiative is undefined, to contemplate the case where the organization changed, so need to reset the value.
+                    const prefillInitiative =
+                        initiativeField?.options?.filter(option => !!option.lastUsed).sort((a, b) => b.lastUsed!.localeCompare(a.lastUsed!))[0] ??
+                            initiativeField?.options?.filter(option => option.atUserProfile).length === 1 ? initiativeField.options.find(option => option.atUserProfile)?.id : undefined;
+                    setSelectedInitiative(prefillInitiative);
                 }
             } else {
                 setSelectedInitiative(newPaymentMethodAndPay ? cardPaymentOption?.preFilledInitiative : selectedMethod?.paymentOption.preFilledInitiative);
             }
-        }, [paymentMode, selectedDepartment]); // The default initiative selection should be updated on any update of these data. 
+        }, [paymentMode, selectedDepartment]); // The default initiative selection should be updated on any update of these data.
+
+        const prevSelectedMethod = usePrevious(selectedMethod);
+        const prevPaymentMode = usePrevious(paymentMode);
+        useEffect(() => {
+            if (paymentMode === "WALLET" && selectedMethod?.paymentOption.preFilledOrganization) {
+                // Wallet payment selected, and it has pre-filled organization, so select that organization.
+                setSelectedDepartmentId(selectedMethod.paymentOption.preFilledOrganization);
+            } else if (prevPaymentMode === "WALLET" && prevSelectedMethod && selectedDepartmentId === prevSelectedMethod.paymentOption.preFilledOrganization) {
+                // If switched from wallet payment with pre-filled organization, then reset the organization selection to default (which could also be undefined, meaning no organization selected).
+                setSelectedDepartmentId(defaultOrganizationOption?.value);
+            }
+        }, [paymentMode, selectedMethod]);
 
         useEffect(() => {
             if (newPaymentMethodAndPay || (selectedMethod && selectedMethod.paymentOption.paymentMode !== "INVOICE" || selectedDepartmentId)) {

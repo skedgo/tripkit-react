@@ -20,15 +20,10 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     from?: boolean;
     imgHtml?: string;
+    contentIcon?: React.ReactNode;
 }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    iconPin: CSSProps<IProps>;
-    icon: CSSProps<IProps>;
-    iconInverted: CSSProps<IProps>;
-    clickAndHold: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUIMapLocationIconDefaultStyle>;
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -70,8 +65,7 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const { location, imgHtml, classes } = this.props;
-        let transIcon: React.ReactNode;
+        const { location, imgHtml, contentIcon, classes } = this.props;
         let invertedWrtMode = false;
         if (imgHtml) {
             return (
@@ -83,6 +77,18 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
                 </div>
             );
         }
+        if (contentIcon) {
+            return (
+                <div className={classes.main} id={this.id}>
+                    <IconPin className={classes.iconPin} />
+                    <div className={classes.contentIcon}>
+                        {contentIcon}
+                    </div>
+                </div>
+            );
+        }
+
+        let transIcon: React.ReactNode;
         if (location instanceof FacilityLocation) {
             transIcon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} />;
         } else if (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE")) {

@@ -1,6 +1,6 @@
-import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
-import genStyles, {keyFramesStyles} from "../css/GenStyle.css";
-import {resetStyles} from "../css/ResetStyle.css";
+import { black, colorWithOpacity, tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import genStyles, { keyFramesStyles } from "../css/GenStyle.css";
+import { resetStyles } from "../css/ResetStyle.css";
 
 export const tKUISidebarDefaultStyle = (theme: TKUITheme) => ({
     modalContainer: {
@@ -25,13 +25,14 @@ export const tKUISidebarDefaultStyle = (theme: TKUITheme) => ({
         animation: keyFramesStyles.keyframes.leftSlideIn + ' .1s linear'
     },
     slideOut: {
-        animation: keyFramesStyles.keyframes.leftSlideOut+ ' .1s linear',
+        animation: keyFramesStyles.keyframes.leftSlideOut + ' .1s linear',
         animationFillMode: 'forwards'
     },
     main: {
         ...genStyles.flex,
         ...genStyles.grow,
         ...genStyles.column,
+        overflow: 'hidden',
         ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
             /* IE10+ CSS styles go here */
             width: '100%'
@@ -60,13 +61,15 @@ export const tKUISidebarDefaultStyle = (theme: TKUITheme) => ({
     body: {
         ...genStyles.flex,
         ...genStyles.column,
-        ...genStyles.grow
+        ...genStyles.grow,
+        overflow: 'hidden'
     },
     menuItems: {
         ...genStyles.flex,
         ...genStyles.column,
         ...genStyles.grow,
         ...genStyles.alignStart,
+        overflowY: 'auto',
         padding: '16px 8px 0 8px',
         '&>*': {
             marginBottom: '8px'

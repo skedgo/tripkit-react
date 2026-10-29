@@ -103,7 +103,7 @@ class PeliasGeocoder implements IGeocoder {
             }).then(NetworkUtil.jsonCallback).then((json: any) => {
                 const features = (json as FeatureCollection).features;
                 let locationResults = !features ? [] : features
-                    .map(result => PeliasGeocoder.locationFromAutocompleteResult(result, query));
+                    .map(result => PeliasGeocoder.locationFromAutocompleteResult(result, query, { geocodingResult: json }));
                 if (this.options.ammendments) {
                     const remove = this.options.ammendments?.remove || [];
                     locationResults = locationResults.filter(result => {
@@ -209,7 +209,7 @@ class PeliasGeocoder implements IGeocoder {
         });
     }
 
-    private static locationFromAutocompleteResult(result: Feature, query?: string): Location {
+    private static locationFromAutocompleteResult(result: Feature, query?: string, options?: { geocodingResult: FeatureCollection }): Location {
         const id = result.properties !== null ? result.properties.gid : "";
         const point = result.geometry as Point;
         const latLng = LatLng.createLatLng(point.coordinates[1], point.coordinates[0]);
@@ -224,6 +224,7 @@ class PeliasGeocoder implements IGeocoder {
         const name = '';
         const location = Location.create(latLng, address, id, name);
         location.suggestion = result;
+        location.geocodingResult = options?.geocodingResult;
         // TODO: enable to make LocaitonBox resolve the location to get details.
         // location.hasDetail = false;
         if (query) {

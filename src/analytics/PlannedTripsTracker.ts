@@ -60,9 +60,9 @@ class PlannedTripsTracker {
                 TripGoApi.apiCallUrl(this._selected.plannedURL, NetworkUtil.MethodType.POST, body)
             }
         }
-        else {
-            TripGoApi.apiCallUrl("http://httpbin.org/post", NetworkUtil.MethodType.POST, body)
-        }
+        // else {
+        //     TripGoApi.apiCallUrl("http://httpbin.org/post", NetworkUtil.MethodType.POST, body)
+        // }
     }
 }
 

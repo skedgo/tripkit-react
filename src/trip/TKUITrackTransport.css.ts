@@ -60,7 +60,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     info: {
-        fontSize: '13px',
+        fontSize: 'clamp(13px, .8125rem, 16px)',
         lineHeight: 'normal',
         ...genStyles.flex,
         ...genStyles.column,
@@ -90,7 +90,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     subtitle: {
-        color: black(1, theme.isDark),
+        ...theme.textColorGray,
         ...genStyles.flex,
         ...genStyles.center
     }

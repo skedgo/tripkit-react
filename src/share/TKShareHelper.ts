@@ -250,10 +250,10 @@ class TKShareHelper {
         return queryMap && queryMap.transports && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.transports)), TKTransportOptions);
     }
 
-    public static parseSettingsQueryParam(): TKUserProfile | undefined {
+    public static parseSettingsQueryParam(): object | undefined {
         const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
-        return queryMap && queryMap.settings && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.settings)), TKUserProfile);
+        return queryMap && queryMap.settings && JSON.parse(decodeURIComponent(queryMap.settings));
     }
 
     public static parseViewport(): { center: LatLng, zoom: number } | undefined {

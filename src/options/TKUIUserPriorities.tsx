@@ -35,6 +35,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const slidePrefTo = (prefs: TKWeightingPreferences, pref: WeightingPreference, value: number): TKWeightingPreferences => {
     const result = Util.clone(prefs);
+    result.updatedAt = new Date().toISOString();
     if (value === 2) {
         Object.keys(WeightingPreference).forEach(prefName => result[prefName] = Math.min(result[prefName], 1))
     }

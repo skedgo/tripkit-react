@@ -364,9 +364,9 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
         const routingError = this.props.routingError;
         if (!this.props.waiting && routingError) {
             const errorMessage = TKErrorHelper.hasErrorCode(routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
-                (this.props.query ?
+                ((this.props.query && this.props.query.from && this.props.query.to) ?
                     t("Routing.from.X.to.X.is.not.yet.supported",
-                        { 0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t) }) + "." :
+                        { 0: LocationUtil.getMainText(this.props.query.from, t), 1: LocationUtil.getMainText(this.props.query.to, t) }) + "." :
                     t("Routing.between.these.locations.is.not.yet.supported.")
                 )
                 :

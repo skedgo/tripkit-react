@@ -27,6 +27,7 @@ class Location extends LatLng {
     @JsonProperty('source', String, true)
     public source: string | undefined = undefined;
     public suggestion?: any;
+    public geocodingResult?: any;
     public structured_formatting?: AutocompleteStructuredFormatting;
     public hasDetail?: boolean;
     // Set as optional since sometimes doesn't come. In docs it says it's required. See comment below.
@@ -160,8 +161,8 @@ class Location extends LatLng {
     equals(other: any): boolean {
         return other &&
             JSON.stringify(
-                Util.iAssign(this as any, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined })) ===
-            JSON.stringify(Util.iAssign(other, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined }));
+                Util.iAssign(this as any, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined, structured_formatting: undefined })) ===
+            JSON.stringify(Util.iAssign(other, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined, structured_formatting: undefined }));
     }
 }
 

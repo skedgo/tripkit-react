@@ -95,6 +95,8 @@ import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKU
 import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKUIBookingReview";
 import { TKUIBookingProviderOptionsProps, TKUIBookingProviderOptionsStyle } from "../booking/TKUIBookingProviderOptions";
 import { TKUIProviderTicketsFormProps, TKUIProviderTicketsFormStyle } from "../stripekit/TKUIProviderTicketsForm";
+import { TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle } from "../booking/TKUIBookingActionRequired";
+import { TKUIMapTripSegmentProps, TKUIMapTripSegmentStyle } from "../map/TKUIMapTripSegment";
 
 /**
  * SDK configuration
@@ -209,6 +211,10 @@ export interface ITKUIConfigOptional {
      */
     computeModeSetsBuilder: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     /**
+     * @ignore
+     */
+    parkAndRideMode?: boolean;
+    /**
      * @ignore     
      */
     booking: {
@@ -322,6 +328,8 @@ export interface ITKUIConfigOptional {
     TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;
     TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
     TKUIFromTo: TKComponentConfig<TKUIFromToProps, TKUIFromToStyle>;
+    TKUIBookingActionRequired: TKComponentConfig<TKUIBookingActionRequiredProps, TKUIBookingActionRequiredStyle>;
+    TKUIMapTripSegment: TKComponentConfig<TKUIMapTripSegmentProps, TKUIMapTripSegmentStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

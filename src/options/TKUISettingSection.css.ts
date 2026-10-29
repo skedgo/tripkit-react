@@ -1,6 +1,6 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUISettingSectionProps, TKUISettingSectionStyle} from "./TKUISettingSection";
-import {black, TKUITheme} from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { TKUISettingSectionProps, TKUISettingSectionStyle } from "./TKUISettingSection";
+import { black, TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUISettingSectionDefaultStyle: TKUIStyles<TKUISettingSectionStyle, TKUISettingSectionProps> =
@@ -14,7 +14,7 @@ export const tKUISettingSectionDefaultStyle: TKUIStyles<TKUISettingSectionStyle,
         },
         sectionBody: {
             padding: '0 30px',
-            borderTop: '1px solid ' + black(4, theme.isDark),
+            borderTop: '1px solid ' + black(theme.isHighContrast ? 1 : 4, theme.isDark),
             ...genStyles.flex,
             ...genStyles.column,
             ...theme.divider,

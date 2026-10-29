@@ -10,7 +10,7 @@ import Util from "../util/Util";
 import FavouritesData from "../data/FavouritesData";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
-import { ReactComponent as IconFavourite } from '../images/ic-fav-star.svg';
+import { ReactComponent as IconFavourite } from "../images/ic-favorite-outline.svg";
 import { ReactComponent as IconCity } from '../images/location/ic-city.svg';
 import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 import City from "../model/location/City";
@@ -92,7 +92,8 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
                     favourite instanceof FavouriteStop ? favourite.stop! :
                         favourite instanceof FavouriteLocation ? favourite.location : (favourite as FavouriteTrip).endLocation,
                     { // To avoid mutating original location.
-                        source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites
+                        source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites,
+                        name: favourite.name
                     }));
         // TODO: remove redundant / analogous favourites, which may happen since they come
         // from different sources. Probably use the analogResults function below, but
@@ -106,8 +107,10 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     const recentGeocoder = new StaticGeocoder({
         emptyMatchAll: true,
         resultsLimit: 3,
-        renderIcon: (location: Location) => FavouritesData.instance.getLocations()
-            .find((loc: Location) => location.equals(loc)) ? <IconFavourite /> : <IconClock />
+        renderIcon: (location: Location) => {
+            return favToLocations(staticFavouriteData.values, false)
+                .find((loc: Location) => location.lat === loc.lat && location.lng === loc.lng && location.address === loc.address) ? <IconFavourite /> : <IconClock />;
+        }
     });
     const recLocations = favToLocations(FavouritesData.recInstance.get(), true);
     recentGeocoder.setValues(recLocations);
@@ -185,17 +188,17 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         if (mutualRelevance > .8 && distanceInMetres < 100 ||   // very similar and very close
             (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .6 && distanceInMetres < 300 || // rather similar and rather close, when one is a school
             (r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && mutualRelevance > .5 && distanceInMetres < 70) {  // a bit less similar but very close, when one is a school
-            console.log("----- Analog -----");
-            console.log(r1DisplayString, r1);
-            console.log(r2DisplayString, r2);
-            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            // console.log("----- Analog -----");
+            // console.log(r1DisplayString, r1);
+            // console.log(r2DisplayString, r2);
+            // console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
             return true;
         } else if ((r1 instanceof SchoolLocation || r2 instanceof SchoolLocation) && distanceInMetres < 300) {
-            console.log("----- NOT Analog -----");
-            console.log(r1DisplayString, r1);
-            console.log(r2DisplayString, r2);
-            console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
-            console.log("--------");
+            // console.log("----- NOT Analog -----");
+            // console.log(r1DisplayString, r1);
+            // console.log(r2DisplayString, r2);
+            // console.log("relevance", mutualRelevance, "distanceInMetres", distanceInMetres);
+            // console.log("--------");
         }
         return false;
     }

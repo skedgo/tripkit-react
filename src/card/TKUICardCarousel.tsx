@@ -20,6 +20,7 @@ type IStyle = ReturnType<typeof tKUICardCarouselDefaultStyle>;
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: number;
     onChange?: (selected: number) => void;
+    presentation?: "SLIDE_UP" | "NONE";
     slideUpOptions?: TKUISlideUpOptions;
     children?: any;
     showControls?: boolean;
@@ -45,7 +46,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     freezeCarousel: boolean;
     handles: Map<number, any>;
-    hideOtherPages: boolean;    // This is to avoid browser to give focus to elements on the other pages on keyboard navigation.
+    hideOtherPages: boolean;    // This is to avoid browser to give focus to elements on the other pages on keyboard navigation.    
 }
 
 class TKUICardCarousel extends React.Component<IProps, IState> {
@@ -75,7 +76,43 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
             (this.props.children as (registerHandle: (index: number, handle: any) => void) => JSX.Element)(this.registerHandle) :
             this.props.children;
         const { classes, animated, renderJustSelected } = this.props;
-        return (
+        const content =
+            <div className={classNames(classes.main,
+                children && Array.isArray(children) && children.length > 12 && classes.lotOfPages)}>
+                <Carousel
+                    showStatus={false}
+                    showThumbs={false}
+                    showArrows={this.props.showControls !== undefined ? this.props.showControls : !DeviceUtil.isTouch()}
+                    showIndicators={this.props.showControls}
+                    transitionTime={500}
+                    selectedItem={this.props.selected}
+                    onChange={(selected: number) => {
+                        this.props.onChange && this.props.onChange(selected);
+                        this.setState({ hideOtherPages: false });
+                        setTimeout(() => this.setState({ hideOtherPages: true }), 1000);
+                    }}
+                    // emulateTouch={true}
+                    swipeable={this.props.swipeable !== false && !this.state.freezeCarousel}
+                    useKeyboardArrows={DeviceUtil.isDesktop}
+                >
+                    {React.Children.map(children, (child: any, i: number) => animated !== false ?
+                        <div className={classNames(classes.pageWrapper,
+                            i !== this.props.selected && this.state.hideOtherPages && classes.hiddenChildren)} key={i}>
+                            {child}
+                        </div>
+                        :
+                        <div></div>
+                    )}
+                </Carousel>
+                {animated === false && !renderJustSelected && React.Children.map(children, (child: any, i: number) => <div className={classNames(classes.pageWrapper, i !== this.props.selected && classes.hidden)} key={i}>
+                    {child}
+                </div>)}
+                {animated === false && renderJustSelected &&
+                    <div className={classNames(classes.pageWrapper)}>
+                        {children[this.props.selected ?? 0]}
+                    </div>}
+            </div>;
+        return this.props.presentation === "NONE" ? content :
             <TKUISlideUp
                 {...this.props.slideUpOptions}
                 containerClass={classes.modalContainer}
@@ -89,45 +126,8 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                 handleRef={this.props.selected !== undefined && this.state.handles.get(this.props.selected)}
                 parentElement={this.props.parentElement}
             >
-                <div className={classNames(classes.main,
-                    children && Array.isArray(children) && children.length > 12 && classes.lotOfPages)}>
-                    <Carousel
-                        showStatus={false}
-                        showThumbs={false}
-                        showArrows={this.props.showControls !== undefined ? this.props.showControls : !DeviceUtil.isTouch()}
-                        showIndicators={this.props.showControls}
-                        transitionTime={500}
-                        selectedItem={this.props.selected}
-                        onChange={(selected: number) => {
-                            this.props.onChange && this.props.onChange(selected);
-                            this.setState({ hideOtherPages: false });
-                            setTimeout(() => this.setState({ hideOtherPages: true }), 1000);
-                        }}
-                        // emulateTouch={true}
-                        swipeable={this.props.swipeable !== false && !this.state.freezeCarousel}
-                        useKeyboardArrows={DeviceUtil.isDesktop}
-                    >
-                        {React.Children.map(children, (child: any, i: number) =>
-                            animated !== false ?
-                                <div className={classNames(classes.pageWrapper,
-                                    i !== this.props.selected && this.state.hideOtherPages && classes.hiddenChildren)} key={i}>
-                                    {child}
-                                </div>
-                                :
-                                <div></div>
-                        )}
-                    </Carousel>
-                    {animated === false && !renderJustSelected && React.Children.map(children, (child: any, i: number) =>
-                        <div className={classNames(classes.pageWrapper, i !== this.props.selected && classes.hidden)} key={i}>
-                            {child}
-                        </div>)}
-                    {animated === false && renderJustSelected &&
-                        <div className={classNames(classes.pageWrapper)}>
-                            {children[this.props.selected ?? 0]}
-                        </div>}
-                </div>
-            </TKUISlideUp>
-        );
+                {content}
+            </TKUISlideUp>;
     }
 
     componentDidMount() {

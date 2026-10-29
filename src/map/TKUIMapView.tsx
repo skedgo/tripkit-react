@@ -1,12 +1,12 @@
 import React, { MutableRefObject, useContext, useMemo } from "react";
-import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps, Polygon } from "react-leaflet";
+import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps, Polygon, AttributionControl } from "react-leaflet";
 import L, { FitBoundsOptions, LatLngBounds, LatLngExpression } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import Trip from "../model/trip/Trip";
-import MapTripSegment from "./MapTripSegment";
+import MapTripSegment from "./TKUIMapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import LocationUtil from "../util/LocationUtil";
@@ -550,13 +550,15 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {this.props.rightClickMenu?.map(({ label, effect, effectFc }, i) =>
                         <div
                             className={classes.menuPopupItem}
-                            onClick={() => {
+                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                 const clickedLatLng = LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng);
                                 if (effect) {
                                     this.onMapLocChanged(effect === "SET_FROM", clickedLatLng);
                                 }
                                 this.setState({ menuPopupPosition: undefined });
                                 effectFc?.(clickedLatLng);
+                                e.stopPropagation();
+                                e.preventDefault();
                             }}
                             key={i}
                         >
@@ -620,7 +622,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         }
                     }}
                     zoomControl={false}
-                    attributionControl={this.props.attributionControl !== false}
+                    attributionControl={false} // Disabled to implement a custom one below without the "Leaflet" attribution.
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
                         if (!this.props.readonly && this.props.rightClickMenu) {
                             this.setState({ menuPopupPosition: e });
@@ -673,7 +675,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                             }}
                             isFrom={true}
                         >
-                            {this.getLocationPopup(this.props.from!)}
+                            {this.getLocationPopup(this.props.from!, true)}
                         </TKUIMapLocationMarker>}
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
                         <TKUIMapLocationMarker
@@ -684,7 +686,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                                 this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                         >
-                            {this.getLocationPopup(this.props.to!)}
+                            {this.getLocationPopup(this.props.to!, false)}
                         </TKUIMapLocationMarker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
@@ -710,7 +712,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                             onLocationAction={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
                                 this.props.locationActionHandler && this.props.locationActionHandler(segment.from) : undefined}
                             key={i}
-                            t={this.props.t} />
+                        />
                     ))}
                     {service &&
                         <MapService
@@ -747,6 +749,8 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {menuPopup}
                     {this.props.children}
                     {this.props.childrenThis?.(this)}
+                    {this.props.attributionControl !== false &&
+                        <AttributionControl position="bottomright" prefix={false} />}
                 </RLMap>
                 <ResizeObserverWrapper
                     onResize={() => {
@@ -795,7 +799,13 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         </Popup>;
     }
 
-    private getLocationPopup(location: Location) {
+    /**
+     * 
+     * @param location 
+     * @param isFrom true if corresponds to the from location, false if corresponds to the to location, undefined otherwise.
+     * @returns 
+     */
+    private getLocationPopup(location: Location, isFrom?: boolean) {
         return <Popup
             offset={location.isCurrLoc() ? [0, 0] : [0, -30]}
             closeButton={false}
@@ -805,6 +815,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         >
             <TKUIMapLocationPopup
                 location={location}
+                isFrom={isFrom}
                 onAction={this.props.locationActionHandler && this.props.locationActionHandler(location)}
             />
         </Popup>;

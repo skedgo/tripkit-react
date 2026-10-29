@@ -87,7 +87,7 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     },
     reportBtnPortrait: {
         bottom: undefined,
-        top: (props: TKUITripPlannerProps) => props.directionsView ? '128px' : '113px',
+        top: (props: TKUITripPlannerProps) => props.directionsView ? '128px' : props.searchCallToAction ? '158px' : '113px',
         zIndex: '1000'
     },
     carouselPage: {

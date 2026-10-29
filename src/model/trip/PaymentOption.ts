@@ -1,7 +1,7 @@
 interface PaymentOption {
     url: string;
     method: "GET" | "POST";
-    paymentMode: "INTERNAL" | "EXTERNAL" | "FREE" | "WALLET" | "INVOICE";
+    paymentMode: "INTERNAL" | "EXTERNAL" | "FREE" | "WALLET" | "INVOICE" | "CASH";
     currency: string;
     discountedPrice?: number;
     fullPrice: number;
@@ -13,6 +13,7 @@ interface PaymentOption {
     sponsorTitle?: string;
     sponsorDescription?: string;
     preFilledInitiative?: string;
+    preFilledOrganization?: string;
 }
 
 export default PaymentOption;

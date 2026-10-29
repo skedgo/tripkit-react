@@ -22,6 +22,7 @@ import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMyBookings: () => void;
+    children?: React.ReactNode;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps, IAccountContext {
@@ -47,7 +48,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 let refreshActiveTripInterval: any;
 
 const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, userAccount, t, landscape, status, classes } = props;
+    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, userAccount, t, landscape, status, classes, children } = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     const [waitingForActiveTrip, setWaitingForActiveTrip] = useState<boolean>(false);
     const tKConfig = useContext(TKUIConfigContext);
@@ -87,40 +88,42 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const bookingSupport = !!tKConfig.booking;
-
-    // For now just display home card if booking is supported. TODO: contemplate other features that also require the home card, as the mobility bundles / wallet.
-    if (!bookingSupport) {
-        return null;
-    }
+    const activeTripUI = bookingSupport &&
+        <TKUIActiveTrip
+            activeTrip={activeTrip}
+            onShowTrip={url => {
+                onWaitingStateLoad(true);
+                onTripJsonUrl(url)
+                    .then(trips => {
+                        onWaitingStateLoad(false);
+                        onTripDetailsView(true);
+                        if (trips && trips.length > 0) {
+                            const bookingId = activeTrip?.id;
+                            const selectedTrip = trips[0];
+                            const selectedSegment = selectedTrip.segments.find(segment => segment.booking?.confirmation?.purchase?.id === bookingId);
+                            selectedSegment && setSelectedTripSegment(selectedSegment);
+                        }
+                    })
+                    .catch((error: Error) => onWaitingStateLoad(false,
+                        new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+            }}
+            onMyBookings={onMyBookings} />;
 
     // Hide subscription component if waiting for user or no bundle
     const showSubscription = userAccount?.currentBundle || userAccount?.futureBundle;
+    const subscriptionUI = showSubscription &&
+        <TKUISubscription />;
+
+    if (!activeTripUI && !subscriptionUI && !children) {
+        return null;
+    }
+
     return (
         <TKUICard>
             <div className={classes.main}>
-                <TKUIActiveTrip
-                    activeTrip={activeTrip}
-                    onShowTrip={url => {
-                        onWaitingStateLoad(true);
-                        onTripJsonUrl(url)
-                            .then(trips => {
-                                onWaitingStateLoad(false);
-                                onTripDetailsView(true);
-                                if (trips && trips.length > 0) {
-                                    const bookingId = activeTrip?.id
-                                    const selectedTrip = trips[0];
-                                    const selectedSegment = selectedTrip.segments.find(segment =>
-                                        segment.booking?.confirmation?.purchase?.id === bookingId);
-                                    selectedSegment && setSelectedTripSegment(selectedSegment);
-                                }
-                            })
-                            .catch((error: Error) => onWaitingStateLoad(false,
-                                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
-                    }}
-                    onMyBookings={onMyBookings}
-                />
-                {showSubscription &&
-                    <TKUISubscription />}
+                {activeTripUI}
+                {subscriptionUI}
+                {children}
             </div>
         </TKUICard>
     );

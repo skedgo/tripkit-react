@@ -5,6 +5,7 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIFromToDefaultStyle } from "./TKUIFromTo.css";
 import Location from "../model/Location";
 import DateTimeUtil from '../util/DateTimeUtil';
+import classNames from 'classnames';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     from: Location;
@@ -17,6 +18,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     timezone?: string;
     showGMT?: boolean;
     status?: string;
+    externalFrom?: Location;
+    externalTo?: Location;
     onClick?: () => void;
 }
 
@@ -34,7 +37,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { from, to, startTime, endTime, queryIsLeaveAfter = true, showDate, formatRelativeDay = true, timezone, showGMT, status, onClick, classes, t } = props;
+    const {
+        from, to, externalFrom, externalTo,
+        startTime, endTime, queryIsLeaveAfter = true, showDate, formatRelativeDay = true, timezone, showGMT, status, onClick,
+        classes, t
+    } = props;
     const startMoment = startTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)) : undefined;
     let startTimeText = startMoment && (
         showDate ?
@@ -73,9 +80,10 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
             endTimeText = undefined;
         }
     }
+    const pickupRowCount = 1 + (startTimeText ? 1 : 0) + 1 + (externalFrom ? 1 : 0);
     return (
         <div className={classes.main} onClick={onClick} style={onClick && { cursor: 'pointer' }}>
-            <div className={classes.fromToTrack}>
+            <div className={classes.fromToTrack} style={{ gridRowEnd: pickupRowCount + 2 }}>
                 <div className={classes.circle} />
                 <div className={classes.line} />
                 <div className={classes.circle} />
@@ -87,9 +95,14 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.pickupTime}>
                     {startTimeText}
                 </div>}
-            <div className={classes.pickupAddress}>
+            <div className={classNames(classes.pickupAddress, externalFrom ? classes.strikedOut : undefined)}>
                 {from.getDisplayString(true)}
             </div>
+            {externalFrom &&
+                <div className={classes.pickupAddress}>
+                    {externalFrom.getDisplayString(true)}
+                    <div className={classes.newBadge}>NEW</div>
+                </div>}
             <div className={classes.dropoffLabel}>
                 {t("Drop-off")}
             </div>
@@ -97,9 +110,14 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.dropoffTime}>
                     {endTimeText}
                 </div>}
-            <div className={classes.dropoffAddress}>
+            <div className={classNames(classes.dropoffAddress, externalTo ? classes.strikedOut : undefined)}>
                 {to.getDisplayString(true)}
             </div>
+            {externalTo &&
+                <div className={classes.dropoffAddress}>
+                    {externalTo.getDisplayString(true)}
+                    <div className={classes.newBadge}>NEW</div>
+                </div>}
         </div>
     );
 };
