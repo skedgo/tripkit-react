@@ -10,7 +10,7 @@ import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import LatLng from "../model/LatLng";
-import * as queryString from "query-string";
+import queryString from "query-string";
 import Util from "../util/Util";
 import { TKError } from "../error/TKError";
 import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";

@@ -7,7 +7,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import LatLng from "../model/LatLng";
 import DateTimeUtil from "../util/DateTimeUtil";
-import * as queryString from "query-string";
+import queryString from "query-string";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import Util from "../util/Util";
 import TripGoApi from "../api/TripGoApi";
