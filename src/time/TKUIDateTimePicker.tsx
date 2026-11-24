@@ -102,14 +102,6 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         const nativeTimeInputSupport = DeviceUtil.supportInputType('time');
         const customTimeInput = !nativeDateTimeInput && !nativeTimeInputSupport &&
             <TimePicker
-                value={format(displayDate, "HH:mm")}
-                onChange={(update) => {
-                    const displayDateUpdate = new Date(displayDate.getTime());
-                    displayDateUpdate.setHours(update.getHours(), update.getMinutes());
-                    const updateUTCValue = zonedTimeToUtc(displayDateUpdate, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
-                    const updateMomentTZValue = DateTimeUtil.momentTZ(updateUTCValue, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
-                    this.setState({ dateSelection: updateMomentTZValue })
-                }}
                 disableClock={true}
                 clearIcon={null}
                 className={classes.timePicker}
@@ -130,8 +122,9 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     onChange={(value: Date) => {
                         const dateUTCValue = zonedTimeToUtc(value, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
                         const momentTZValue = DateTimeUtil.momentTZ(dateUTCValue, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+                        // The picker can carry over seconds from the previous value.
                         this.setState({
-                            dateSelection: momentTZValue
+                            dateSelection: momentTZValue.startOf("minute")
                         });
                     }}
                     shouldCloseOnSelect={!!shouldCloseOnSelect}

@@ -345,15 +345,11 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
             action: ACTION_SELECT_TIME_PREF,
             label: timePref.toLowerCase()
         });
-        if (timePref === TimePreference.NOW) {
-            this.onQueryUpdate({
-                timePref: timePref,
-                time: DateTimeUtil.getNow()
-            });
-        } else {
-            this.onQueryUpdate({
-                timePref: timePref
-            })
+        const { query, onQueryChange } = this.props;
+        if (query && onQueryChange) {
+            const updatedQuery = Util.iAssign(query, { timePref });
+            updatedQuery.time = timePref === TimePreference.NOW ? DateTimeUtil.getNow() : updatedQuery.time.clone().startOf("minute");
+            onQueryChange(updatedQuery);
         }
     }
 

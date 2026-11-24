@@ -194,17 +194,15 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             action: ACTION_SELECT_TIME_PREF,
             label: timePref.toLowerCase()
         });
-        if (timePref === TimePreference.NOW
-            || (this.props.value.timePref === TimePreference.NOW && !this.props.value.isComplete(true))) {
-            this.updateQuery({
-                timePref: timePref,
-                time: DateTimeUtil.getNow()
-            });
-        } else {
-            this.updateQuery({
-                timePref: timePref
-            })
+        const currentQuery = this.props.value;
+        const updatedQuery = Util.iAssign(currentQuery, { timePref });
+        if (timePref === TimePreference.NOW || (currentQuery.timePref === TimePreference.NOW && !currentQuery.isComplete(true))) {
+            updatedQuery.time = DateTimeUtil.getNow();
         }
+        if (timePref !== TimePreference.NOW) {
+            updatedQuery.time = updatedQuery.time.clone().startOf("minute");
+        }
+        this.setQuery(updatedQuery);
     }
 
     private onSwapClicked() {
