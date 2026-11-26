@@ -7,6 +7,7 @@ export interface ITicketOption {
     price: number;
     currency: string;
     value: number;
+    min?: number;
 }
 
 export interface PurchasedTicket {
@@ -34,6 +35,8 @@ class TicketOption implements ITicketOption {
     public currency: string = "";
     @JsonProperty("value", Number, true)
     public value: number = 0;
+    @JsonProperty("min", Number, true)
+    public min?: number = undefined;
     @JsonProperty("max", Number, true)
     public max?: number = undefined;
     @JsonProperty("purchasedTickets", [Any], true)

@@ -215,7 +215,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                                 update.forEach((t) => t.value = 0);
                                             }
                                             const ticketIndex = update.indexOf(ticket);
-                                            update[ticketIndex] = Util.iAssign(update[ticketIndex], { value: 1 });
+                                            update[ticketIndex] = Util.iAssign(update[ticketIndex], { value: Math.max(1, ticket.min ?? 0) });
                                             onChange!(update);
                                         }}
                                         type={TKUIButtonType.SECONDARY}
@@ -229,6 +229,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                             <TKUIButton
                                                 type={TKUIButtonType.SECONDARY_VERTICAL}
                                                 onClick={() => onTicketValueChange(ticket, false)}
+                                                disabled={ticket.value <= (ticket.min ?? 0)}
                                                 icon={<IconRemove />}
                                                 styles={{ secondary: overrideClass(injectedStyles.stepperBtn) }}
                                             />
